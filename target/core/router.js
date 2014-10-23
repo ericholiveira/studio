@@ -1,21 +1,40 @@
 (function() {
-  var Q, Router, Timer;
+  var Bacon, Q, Router, Timer;
 
   Timer = require('./util/timer');
 
   Q = require('q');
 
+  Bacon = require('baconjs');
+
   Router = (function() {
     function Router() {}
 
-    Router.prototype.routes = {};
+    Router.prototype.routes = {
+      broadcast: {
+        stream: new Bacon.Bus()
+      }
+    };
 
     Router.prototype.filters = [];
 
     Router.prototype.registerActor = function(actor) {
-      return this.routes[actor.id] = {
-        actor: actor
-      };
+      var filter, stream, _i, _len, _ref;
+      if (!this.routes[actor.id]) {
+        stream = new Bacon.Bus();
+        stream.plug(this.routes.broadcast.stream);
+        this.routes[actor.id] = {
+          stream: stream
+        };
+      }
+      _ref = this.filters;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        filter = _ref[_i];
+        if (filter.regex.test(actor.id)) {
+          this.addFilterToRoute(actor.id, filter);
+        }
+      }
+      return this.routes[actor.id].stream;
     };
 
     Router.prototype.registerFilter = function(regex, filter) {
@@ -27,9 +46,7 @@
       _results = [];
       for (id in this.routes) {
         if (regex.test(id)) {
-          _results.push((function(id) {
-            return addFilterToRoute(id, filter);
-          })(id));
+          _results.push(this.addFilterToRoute(id, filter));
         }
       }
       return _results;
@@ -37,35 +54,45 @@
 
     Router.prototype.addFilterToRoute = function(id, filter) {
       var _ref;
-      return (_ref = this.routes[id]) != null ? _ref.filter = filter : void 0;
+      if ((_ref = this.routes[id]) != null) {
+        _ref.filters = this.routes[id].filters || [];
+      }
+      return this.routes[id].filters.push(filter);
     };
 
     Router.prototype.sendMessage = function(sender, receiver, message) {
-      var defer, route;
+      var defer, filter, route, _fn, _i, _len, _message, _ref;
       defer = Q.defer();
       route = this.routes[receiver];
-      Timer.enqueue(function() {
-        var err, filter, result, _fn, _i, _len, _ref;
-        try {
-          _ref = route.filters;
-          _fn = function(filter) {
-            return message = filter.filter(message, sender);
-          };
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            filter = _ref[_i];
-            _fn(filter);
-          }
-          result = route.actor.process(message, sender);
-          if (result && Q.isPromiseAlike(result)) {
-            return result.then(defer.resolve)["catch"](defer.reject);
+      _message = {
+        sender: sender,
+        receiver: receiver,
+        body: message,
+        callback: function(err, result) {
+          if (err) {
+            return defer.reject(err);
           } else {
             return defer.resolve(result);
           }
-        } catch (_error) {
-          err = _error;
-          return defer.reject(err);
         }
-      });
+      };
+      _ref = route.filters || [];
+      _fn = function(filter) {
+        var result;
+        result = filter.filter(_message);
+        if (result != null) {
+          return _message = result;
+        }
+      };
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        filter = _ref[_i];
+        _fn(filter);
+      }
+      if (_message !== false) {
+        Timer.enqueue(function() {
+          return route.stream.push(_message);
+        });
+      }
       return defer.promise;
     };
 
@@ -77,4 +104,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\router.js.map
+//# sourceMappingURL=../maps/router.js.map
