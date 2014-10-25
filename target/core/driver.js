@@ -10,8 +10,8 @@
       this.parser = options.parser;
     }
 
-    Driver.prototype.deliver = function(sender, receiver, message) {
-      return router.sendMessage(sender, receiver, message);
+    Driver.prototype.send = function(sender, receiver, message) {
+      return router.send(sender, receiver, message);
     };
 
     return Driver;
@@ -22,4 +22,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/driver.js.map
+//# sourceMappingURL=..\maps\driver.js.map

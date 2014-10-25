@@ -15,4 +15,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/timer.js.map
+//# sourceMappingURL=..\..\maps\timer.js.map

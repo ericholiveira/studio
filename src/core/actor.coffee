@@ -2,14 +2,11 @@ router = require('./router')
 class Actor
   constructor: (options) ->
     {@id,@process} = options
-    @stream = router.registerActor(this)
+    @stream = router.getOrCreateRoute(@id)
     @unsubscribe = @stream.onValue(@doProcess)
   doProcess:(message) =>
     _doProcess=(message) =>
-      sender = message.sender
-      body = message.body
-      receiver = message.receiver
-      callback = message.callback
+      {sender,body,receiver,callback} = message
       try
         result=@process(body,sender,receiver)
         if result and Q.isPromiseAlike(result)
@@ -26,7 +23,7 @@ class Actor
     @unsubscribe()
     @stream = funktion(@stream)
     @unsubscribe = @stream.onValue(@doProcess)
-  sendMessage: (receiver,message)->
-    router.sendMessage(@id,receiver,message)
+  send: (receiver,message)->
+    router.send(@id,receiver,message)
 
 module.exports = Actor

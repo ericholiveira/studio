@@ -8,7 +8,7 @@
     function Actor(options) {
       this.doProcess = __bind(this.doProcess, this);
       this.id = options.id, this.process = options.process;
-      this.stream = router.registerActor(this);
+      this.stream = router.getOrCreateRoute(this.id);
       this.unsubscribe = this.stream.onValue(this.doProcess);
     }
 
@@ -17,10 +17,7 @@
       _doProcess = (function(_this) {
         return function(message) {
           var body, callback, err, receiver, result, sender;
-          sender = message.sender;
-          body = message.body;
-          receiver = message.receiver;
-          callback = message.callback;
+          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
           try {
             result = _this.process(body, sender, receiver);
             if (result && Q.isPromiseAlike(result)) {
@@ -56,8 +53,8 @@
       return this.unsubscribe = this.stream.onValue(this.doProcess);
     };
 
-    Actor.prototype.sendMessage = function(receiver, message) {
-      return router.sendMessage(this.id, receiver, message);
+    Actor.prototype.send = function(receiver, message) {
+      return router.send(this.id, receiver, message);
     };
 
     return Actor;
@@ -68,4 +65,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map
