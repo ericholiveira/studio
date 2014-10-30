@@ -1,6 +1,8 @@
 Bacon = require('baconjs')
 router = require('./router')
-class Driver
+BaseClass = require('./util/baseClass')
+
+class Driver extends BaseClass
   constructor: (options) ->
     {@parser} = options
   send: (sender,receiver,message)->
