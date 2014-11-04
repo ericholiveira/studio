@@ -2,6 +2,7 @@
 router = require('./router')
 BaseClass = require('./util/baseClass')
 Q = require('q')
+clone = require('./util/clone')
 
 # Base class for all actors.
 
@@ -24,7 +25,7 @@ class Actor extends BaseClass
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   doProcess:(message) =>
     _doProcess=(message) =>
-      {sender,body,receiver,callback} = message
+      {sender,body,receiver,callback} = clone(message)
       try
         result=@process(body,sender,receiver)
         if result and Q.isPromiseAlike(result)

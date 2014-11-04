@@ -19,7 +19,9 @@ grunt.initConfig({
   },
   watch: {
     scripts: {
-      files: ['src/**/*.{coffee,js}', '*.{coffee,js}', 'tests/core/*.{coffee,js}'],
+      files: ['src/**/*.{coffee,js}', '*.{coffee,js}',
+        'tests/core/*.{coffee,js}'
+      ],
       tasks: ['all'],
       options: {
         spawn: false
@@ -57,26 +59,28 @@ grunt.initConfig({
     }
   },
   jasmine: {
-    src: 'tests/target/broadway-core-with-tests.js'
+    src: ['tests/target/broadway-core-with-tests.js']
   },
   browserify: {
     dist: {
       files: {
-        'dist/broadway-core.js': ['target/core/broadway.js'],
+        'dist/broadway-core.js': ['target/core/broadway.js']
       }
     },
     testCore: {
       files: {
-        'tests/target/broadway-core-with-tests.js': ['tests/core/*.js'],
+        'tests/target/broadway-core-with-tests.js': ['tests/core/*.js']
       }
     }
   }
 
 });
 
-grunt.registerTask("all", [ "all-coffee","all-js", "browserify:testCore", "jasmine"]);
+grunt.registerTask("all", ["all-coffee", "all-js", "browserify:testCore",
+  "jasmine"
+]);
 grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("release", ["all","codo:all", "browserify:dist"]);
+grunt.registerTask("release", ["all", "codo:all", "browserify:dist"]);

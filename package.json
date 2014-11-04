@@ -18,9 +18,9 @@
     "grunt-concurrent": "1.0.0",
     "grunt-execute": "0.2.2",
     "source-map-support": "0.2.7",
-    "grunt-codo":"0.2.0",
-    "csextends":"1.0.3",
-    "grunt-contrib-jasmine":"0.8.1",
-    "grunt-browserify":"3.1.0"
+    "grunt-codo": "0.2.0",
+    "csextends": "1.0.3",
+    "grunt-contrib-jasmine": "0.8.1",
+    "grunt-browserify": "3.1.0"
   }
 }
