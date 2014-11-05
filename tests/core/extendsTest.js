@@ -1,4 +1,4 @@
-Broadway = require('../../target/core/broadway');
+Broadway = require('../../compiled/core/broadway');
 
 describe("Actor class", function () {
   it("must have a extends function", function () {

@@ -1,4 +1,4 @@
-Broadway = require('../../target/core/broadway');
+Broadway = require('../../compiled/core/broadway');
 
 describe("On error an actor", function () {
   var SENDER_ID = 'sender',

@@ -36,12 +36,12 @@ grunt.initConfig({
     multiple: {
       options: {
         sourceMap: true,
-        sourceMapDir: 'target/maps/'
+        sourceMapDir: 'compiled/maps/'
       },
       expand: true,
       cwd: 'src',
       src: '**/*.coffee',
-      dest: 'target/',
+      dest: 'compiled/',
       ext: '.js'
     }
   },
@@ -50,7 +50,7 @@ grunt.initConfig({
       expand: true,
       cwd: 'src/',
       src: '**/*.js',
-      dest: 'target/'
+      dest: 'compiled/'
     }
   },
   codo: {
@@ -60,17 +60,17 @@ grunt.initConfig({
     }
   },
   jasmine: {
-    src: ['tests/target/broadway-core-with-tests.js']
+    src: ['tests/target/broadway-with-dependencies-with-tests.js']
   },
   browserify: {
     dist: {
       files: {
-        'dist/broadway-core.js': ['target/core/broadway.js']
+        'dist/broadway-with-dependencies.js': ['compiled/core/broadway.js']
       }
     },
     testCore: {
       files: {
-        'tests/target/broadway-core-with-tests.js': ['tests/core/*.js']
+        'tests/target/broadway-with-dependencies-with-tests.js': ['tests/core/*.js']
       }
     }
   },

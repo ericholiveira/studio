@@ -1,5 +1,5 @@
 # Namespace
-_global = window or {}
+_global = window? and window or {}
 oldBroadway = _global.Broadway
 module.exports=_global.Broadway={
   router:require('./router'),

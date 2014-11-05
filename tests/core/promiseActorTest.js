@@ -1,4 +1,4 @@
-Broadway = require('../../target/core/broadway');
+Broadway = require('../../compiled/core/broadway');
 Q = require('q');
 
 describe("An async actor", function () {

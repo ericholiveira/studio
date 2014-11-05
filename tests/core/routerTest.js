@@ -1,4 +1,4 @@
-Broadway = require('../../target/core/broadway');
+Broadway = require('../../compiled/core/broadway');
 
 describe("A router", function() {
   var SENDER_ID = 'sender_test_router',

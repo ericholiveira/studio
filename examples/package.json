@@ -1,0 +1,11 @@
+{
+  "name": "example",
+  "version": "0.0.2",
+  "author": {
+    "name": "Erich Oliveira",
+    "url": "https://github.com/ericholiveira"
+  },
+  "dependencies": {
+    "bollywood": "0.0.6"
+  }
+}
