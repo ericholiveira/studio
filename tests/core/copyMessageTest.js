@@ -17,20 +17,20 @@ describe("A message", function() {
     }
   });
   it("should be copied", function(done) {
-    var _message = {
+    var message = {
       hello: 'hello',
       inner: {
         content: 'content'
       },
       toDelete: 'delete'
     };
-    sender.send(RECEIVER_ID, _message).then(function(message) {
-      expect(message.hello).toBeDefined();
-      expect(message.hello).not.toBe(_message.hello);
-      expect(message.inner).toBeDefined();
-      expect(message.inner.content).not.toBe(_message.inner.content);
-      expect(message.toDelete).toBeUndefined();
-      expect(_message.toDelete).toBeDefined();
+    sender.send(RECEIVER_ID, message).then(function(result) {
+      expect(result.hello).toBeDefined();
+      expect(result.hello).not.toBe(message.hello);
+      expect(result.inner).toBeDefined();
+      expect(result.inner.content).not.toBe(message.inner.content);
+      expect(result.toDelete).toBeUndefined();
+      expect(message.toDelete).toBeDefined();
       done();
     });
   });
