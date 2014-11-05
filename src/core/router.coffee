@@ -42,6 +42,7 @@ class Router
       route.stream.push(_message)
     )
     defer.promise
+  # Retrieves all defined routes for this router
   getAllRoutes:()->
     route for route of _routes
 module.exports = new Router()

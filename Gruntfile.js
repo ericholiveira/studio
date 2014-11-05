@@ -7,6 +7,7 @@ grunt.loadNpmTasks('grunt-contrib-copy');
 grunt.loadNpmTasks('grunt-codo');
 grunt.loadNpmTasks('grunt-contrib-jasmine');
 grunt.loadNpmTasks('grunt-browserify');
+grunt.loadNpmTasks('grunt-release');
 
 grunt.initConfig({
   coffeelint: {
@@ -72,6 +73,13 @@ grunt.initConfig({
         'tests/target/broadway-core-with-tests.js': ['tests/core/*.js']
       }
     }
+  },
+  release: {
+    options: {
+      bump: false,
+      npm:true,
+      npmTag:"<%= version %>"
+    }
   }
 
 });
@@ -83,4 +91,4 @@ grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("release", ["all", "codo:all", "browserify:dist"]);
+grunt.registerTask("prod", ["all", "doc", "browserify:dist" , "release"]);

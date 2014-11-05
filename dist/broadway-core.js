@@ -5130,7 +5130,7 @@ return Q;
 }).call(this,require('_process'))
 },{"_process":3}],5:[function(require,module,exports){
 (function() {
-  var Actor, BaseClass, Q, router,
+  var Actor, BaseClass, Q, clone, router,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -5141,22 +5141,24 @@ return Q;
 
   Q = require('q');
 
+  clone = require('./util/clone');
+
   Actor = (function(_super) {
     __extends(Actor, _super);
 
     function Actor(options) {
-      this.doProcess = __bind(this.doProcess, this);
+      this._doProcess = __bind(this._doProcess, this);
       this.id = options.id, this.process = options.process;
-      this.stream = router.getOrCreateRoute(this.id);
-      this.unsubscribe = this.stream.onValue(this.doProcess);
+      this.stream = router.createOrGetRoute(this.id);
+      this.unsubscribe = this.stream.onValue(this._doProcess);
     }
 
-    Actor.prototype.doProcess = function(message) {
-      var _doProcess, _i, _len, _message, _results;
-      _doProcess = (function(_this) {
+    Actor.prototype._doProcess = function(message) {
+      var __doProcess, _i, _len, _message, _results;
+      __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, err, receiver, result, sender;
-          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
+          var body, callback, err, receiver, result, sender, _ref;
+          _ref = clone(message), sender = _ref.sender, body = _ref.body, receiver = _ref.receiver, callback = _ref.callback;
           try {
             result = _this.process(body, sender, receiver);
             if (result && Q.isPromiseAlike(result)) {
@@ -5178,11 +5180,11 @@ return Q;
         _results = [];
         for (_i = 0, _len = message.length; _i < _len; _i++) {
           _message = message[_i];
-          _results.push(_doProcess(_message));
+          _results.push(__doProcess(_message));
         }
         return _results;
       } else {
-        return _doProcess(message);
+        return __doProcess(message);
       }
     };
 
@@ -5206,29 +5208,40 @@ return Q;
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":8,"./util/baseClass":9,"q":4}],6:[function(require,module,exports){
-var _global = window || {};
-var oldBroadway = _global.Broadway;
-module.exports=_global.Broadway={
-  router:require('./router'),
-  Actor :require('./actor'),
-  Driver :require('./driver'),
-  noConflict:function(){
-    var Broadway =  _global.Broadway;
-    if(typeof oldBroadway!=='undefined'){
-      _global.Broadway=oldBroadway;
-    }else{
-      delete _global.Broadway;
+},{"./router":8,"./util/baseClass":9,"./util/clone":10,"q":4}],6:[function(require,module,exports){
+(function() {
+  var oldBroadway, _global;
+
+  _global = window || {};
+
+  oldBroadway = _global.Broadway;
+
+  module.exports = _global.Broadway = {
+    router: require('./router'),
+    Actor: require('./actor'),
+    Driver: require('./driver'),
+    noConflict: function() {
+      var Broadway;
+      Broadway = _global.Broadway;
+      if (typeof oldBroadway !== 'undefined') {
+        _global.Broadway = oldBroadway;
+      } else {
+        delete _global.Broadway;
+      }
+      return Broadway;
     }
-    return Broadway;
-  }
-};
+  };
+
+}).call(this);
+
+//# sourceMappingURL=../maps/broadway.js.map
 
 },{"./actor":5,"./driver":7,"./router":8}],7:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, router,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
 
   Bacon = require('baconjs');
 
@@ -5240,12 +5253,15 @@ module.exports=_global.Broadway={
     __extends(Driver, _super);
 
     function Driver(options) {
-      this.parser = options.parser;
+      var parser;
+      parser = options.parser;
+      this.send = function() {
+        var args, message, receiver, sender, _ref;
+        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        _ref = parser.apply(null, args), sender = _ref.sender, receiver = _ref.receiver, message = _ref.message;
+        return router.send(sender, receiver, message);
+      };
     }
-
-    Driver.prototype.send = function(sender, receiver, message) {
-      return router.send(sender, receiver, message);
-    };
 
     return Driver;
 
@@ -5259,7 +5275,7 @@ module.exports=_global.Broadway={
 
 },{"./router":8,"./util/baseClass":9,"baconjs":1}],8:[function(require,module,exports){
 (function() {
-  var Bacon, Q, Router, Timer;
+  var Bacon, Q, Router, Timer, _routes;
 
   Timer = require('./util/timer');
 
@@ -5267,33 +5283,26 @@ module.exports=_global.Broadway={
 
   Bacon = require('baconjs');
 
+  _routes = {};
+
   Router = (function() {
     function Router() {}
 
-    Router.prototype._routes = {
-      broadcast: {
-        stream: new Bacon.Bus()
-      }
-    };
-
-    Router.prototype._filters = [];
-
-    Router.prototype.getOrCreateRoute = function(id) {
+    Router.prototype.createOrGetRoute = function(id) {
       var stream;
-      if (!this._routes[id]) {
+      if (!_routes[id]) {
         stream = new Bacon.Bus();
-        stream.plug(this._routes.broadcast.stream);
-        this._routes[id] = {
+        _routes[id] = {
           stream: stream
         };
       }
-      return this._routes[id].stream;
+      return _routes[id].stream;
     };
 
     Router.prototype.send = function(sender, receiver, message) {
       var defer, route, _message;
       defer = Q.defer();
-      route = this._routes[receiver];
+      route = _routes[receiver];
       _message = {
         sender: sender,
         receiver: receiver,
@@ -5312,6 +5321,15 @@ module.exports=_global.Broadway={
       return defer.promise;
     };
 
+    Router.prototype.getAllRoutes = function() {
+      var route, _results;
+      _results = [];
+      for (route in _routes) {
+        _results.push(route);
+      }
+      return _results;
+    };
+
     return Router;
 
   })();
@@ -5322,7 +5340,7 @@ module.exports=_global.Broadway={
 
 //# sourceMappingURL=../maps/router.js.map
 
-},{"./util/timer":10,"baconjs":1,"q":4}],9:[function(require,module,exports){
+},{"./util/timer":11,"baconjs":1,"q":4}],9:[function(require,module,exports){
 (function() {
   var BaseClass, csextends;
 
@@ -5346,6 +5364,47 @@ module.exports=_global.Broadway={
 //# sourceMappingURL=../../maps/baseClass.js.map
 
 },{"csextends":2}],10:[function(require,module,exports){
+(function() {
+  var clone;
+
+  clone = function(obj) {
+    var flags, key, newInstance;
+    if ((obj == null) || typeof obj !== 'object') {
+      return obj;
+    }
+    if (obj instanceof Date) {
+      return new Date(obj.getTime());
+    }
+    if (obj instanceof RegExp) {
+      flags = '';
+      if (obj.global != null) {
+        flags += 'g';
+      }
+      if (obj.ignoreCase != null) {
+        flags += 'i';
+      }
+      if (obj.multiline != null) {
+        flags += 'm';
+      }
+      if (obj.sticky != null) {
+        flags += 'y';
+      }
+      return new RegExp(obj.source, flags);
+    }
+    newInstance = new obj.constructor();
+    for (key in obj) {
+      newInstance[key] = clone(obj[key]);
+    }
+    return newInstance;
+  };
+
+  module.exports = clone;
+
+}).call(this);
+
+//# sourceMappingURL=../../maps/clone.js.map
+
+},{}],11:[function(require,module,exports){
 (function() {
   var Timer;
 
