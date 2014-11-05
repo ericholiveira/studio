@@ -91,4 +91,4 @@ grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all", "doc", "browserify:dist" , "release"]);
+grunt.registerTask("prod", ["all", "browserify:dist" , "release"]);
