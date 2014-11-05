@@ -1,20 +1,36 @@
 Timer = require('./util/timer')
 Q = require('q')
 Bacon = require('baconjs')
+
+_routes ={}
+# Base class for Router (is singleton, should not be reimplemented nor reinstantiated, and probably not direct accessed).
 class Router
-  _routes :{
-    broadcast:{stream:new Bacon.Bus()}
-  }
-  _filters :[]
-  getOrCreateRoute: (id) ->
-    if not @_routes[id]
+  # Constructs a new Router
+  constructor: () ->
+  # Creates a route, if it already exists return this route
+  # @param [String] id the route identification
+  # @example How create or get a message
+  #   router.createOrGetRoute('myActor')
+  createOrGetRoute: (id) ->
+    if not _routes[id]
       stream = new Bacon.Bus()
-      stream.plug(@_routes.broadcast.stream)
-      @_routes[id] = {stream:stream}
-    @_routes[id].stream
+      _routes[id] = {stream:stream}
+    _routes[id].stream
+  # sends a message to the receivers
+  # @param [String] sender the sender identification
+  # @param [String] receiver the receiver route identification
+  # @param [Object] message the message to be delivered
+  # @example How to send a string(or any primitive) message
+  #   router.send('mySenderActor','myReceiverActor', 'HELLO WORLD')
+  # @example How to send an object message
+  #   router.send('mySenderActor','myReceiverActor', {hello:'hello',
+  #                                  obj:{
+  #                                    count:1
+  #                                  }
+  #                                })
   send: (sender,receiver,message)->
     defer = Q.defer()
-    route = @_routes[receiver]
+    route = _routes[receiver]
     _message = {
       sender:sender
       receiver:receiver
@@ -26,4 +42,6 @@ class Router
       route.stream.push(_message)
     )
     defer.promise
+  getAllRoutes:()->
+    route for route of _routes
 module.exports = new Router()
