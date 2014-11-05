@@ -1,3 +1,5 @@
 node_modules/
 target/
 tests/target/
+.grunt/
+_SpecRunner.html
