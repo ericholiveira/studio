@@ -6,6 +6,6 @@
     "url": "https://github.com/ericholiveira"
   },
   "dependencies": {
-    "bollywood": "0.0.6"
+    "studio": "0.0.1"
   }
 }
