@@ -60,17 +60,17 @@ grunt.initConfig({
     }
   },
   jasmine: {
-    src: ['tests/target/broadway-with-dependencies-with-tests.js']
+    src: ['tests/target/studio-with-dependencies-with-tests.js']
   },
   browserify: {
     dist: {
       files: {
-        'dist/broadway-with-dependencies.js': ['compiled/core/broadway.js']
+        'dist/studio-with-dependencies.js': ['compiled/core/studio.js']
       }
     },
     testCore: {
       files: {
-        'tests/target/broadway-with-dependencies-with-tests.js': ['tests/core/*.js']
+        'tests/target/studio-with-dependencies-with-tests.js': ['tests/core/*.js']
       }
     }
   },

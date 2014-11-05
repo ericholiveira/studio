@@ -1,9 +1,9 @@
-Broadway = require('../../compiled/core/broadway');
+Studio = require('../../compiled/core/studio');
 
 describe("Actor class", function () {
   it("must have a extends function", function () {
-    expect(Broadway.Actor.extends).toBeDefined();
-    var TestActor = Broadway.Actor.extends({
+    expect(Studio.Actor.extends).toBeDefined();
+    var TestActor = Studio.Actor.extends({
       test:function(){}
     });
     var testActor = new TestActor({
@@ -18,8 +18,8 @@ describe("Actor class", function () {
 
 describe("Driver class", function () {
   it("must have a extends function", function () {
-    expect(Broadway.Driver.extends).toBeDefined();
-    var TestDriver = Broadway.Driver.extends({
+    expect(Studio.Driver.extends).toBeDefined();
+    var TestDriver = Studio.Driver.extends({
       test:function(){}
     });
     var testActor = new TestDriver({});

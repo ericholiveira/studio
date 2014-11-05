@@ -1,20 +1,20 @@
-Broadway = require('../../compiled/core/broadway');
+Studio = require('../../compiled/core/studio');
 
 describe("A message", function() {
   var SENDER_ID = 'sender_message',
     RECEIVER_ID = 'receiver_always_async',
     RECEIVER_ID_ERROR = 'receiver_always_async_error';
-  var sender = new Broadway.Actor({
+  var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function(message, sender) {}
   });
-  var receiver = new Broadway.Actor({
+  var receiver = new Studio.Actor({
     id: RECEIVER_ID,
     process: function(message, sender) {
       return message;
     }
   });
-  var receiverError = new Broadway.Actor({
+  var receiverError = new Studio.Actor({
     id: RECEIVER_ID_ERROR,
     process: function(message, sender) {
       throw new Error();

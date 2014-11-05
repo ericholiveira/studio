@@ -1,13 +1,13 @@
-Broadway = require('../../compiled/core/broadway');
+Studio = require('../../compiled/core/studio');
 
 describe("An actor process function", function() {
   var SENDER_ID = 'sender_this',
     RECEIVER_ID = 'receiver_this';
-  var sender = new Broadway.Actor({
+  var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function(message, sender) {}
   });
-  var receiver = new Broadway.Actor({
+  var receiver = new Studio.Actor({
     id: RECEIVER_ID,
     process: function(message, sender) {
       return this;

@@ -1,11 +1,11 @@
 {
-  "name": "bollywood",
-  "version": "0.0.6",
+  "name": "studio",
+  "version": "0.0.1",
   "author": {
     "name": "Erich Oliveira",
     "url": "https://github.com/ericholiveira"
   },
-  "main":"./compiled/core/broadway.js",
+  "main":"./compiled/core/studio.js",
   "dependencies": {
     "baconjs": "0.7.22",
     "q": "1.0.1"

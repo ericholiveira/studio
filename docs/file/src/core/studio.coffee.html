@@ -3,41 +3,80 @@
   <head>
   <meta charset='UTF-8'>
   <title>Documentation</title>
-  <script src='../../javascript/application.js'></script>
-  <script src='../../javascript/search.js'></script>
-  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+  <script src='../../../javascript/application.js'></script>
+  <script src='../../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../../stylesheets/application.css' type='text/css'>
 </head>
   <body>
-    <div id='base' data-path='../../'></div>
+    <div id='base' data-path='../../../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../../extra/README.md.html' title='Codo'>
+    <a href='../../../extra/README.md.html' title='Codo'>
       Codo
     </a>
     &raquo;
-    <a href='../../alphabetical_index.html' title='Index'>
+    <a href='../../../alphabetical_index.html' title='Index'>
       Index
     </a>
     &raquo;
     <span class='title'>src</span>
     &raquo;
-    <span class='title'>teste.coffee</span>
+    <span class='title'>core</span>
+    &raquo;
+    <span class='title'>studio.coffee</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         File:
-        teste.coffee
+        studio.coffee
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src</td>
+          <td>src&#47;core</td>
         </tr>
       </table>
+      <h2>Variables Summary</h2>
+      <dl class='constants'>
+  <dt id='oldStudio-variable'>
+    oldStudio
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>_global</code></pre>
+    
+  </dd>
+  <dt id='_global.Studio-variable'>
+    _global.Studio
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  router: require(&#39;.&#47;router&#39;),
+  Actor: require(&#39;.&#47;actor&#39;),
+  Driver: require(&#39;.&#47;driver&#39;),
+
+  &#47;*
+  Change the global Studio to the previous to avoid conflicts
+   *&#47;
+  noConflict: function() {
+    var Studio;
+    Studio = _global.Studio;
+    if (typeof oldStudio !== &#39;undefined&#39;) {
+      _global.Studio = oldStudio;
+    } else {
+      delete _global.Studio;
+    }
+    return Studio;
+  }
+}</code></pre>
+    
+  </dd>
+</dl>
     </div>
     <div id='footer'>
-  October 30, 14 14:57:19 by
+  November 05, 14 18:29:54 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

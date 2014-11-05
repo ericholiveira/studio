@@ -1,4 +1,4 @@
-Broadway = require('../../compiled/core/broadway');
+Studio = require('../../compiled/core/studio');
 Q = require('q');
 
 describe("An async actor", function () {
@@ -7,11 +7,11 @@ describe("An async actor", function () {
     RECEIVER_OK_RESULT = 'TEST',
     RECEIVER_ERROR_ID = 'receiverError',
     RECEIVER_ERROR_RESULT = 'TEST';
-  var sender = new Broadway.Actor({
+  var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function (message, sender) {}
   });
-  var receiverOk = new Broadway.Actor({
+  var receiverOk = new Studio.Actor({
     id: RECEIVER_OK_ID,
     process: function (message, sender) {
       var defer = Q.defer();
@@ -21,7 +21,7 @@ describe("An async actor", function () {
       return defer.promise;
     }
   });
-  var receiverError = new Broadway.Actor({
+  var receiverError = new Studio.Actor({
     id: RECEIVER_ERROR_ID,
     process: function (message, sender) {
       var defer = Q.defer();

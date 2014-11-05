@@ -1,14 +1,14 @@
-Broadway = require('../../compiled/core/broadway');
+Studio = require('../../compiled/core/studio');
 
 describe("On error an actor", function () {
   var SENDER_ID = 'sender',
     RECEIVER_ID = 'receiver',
     RECEIVER_ERROR_MESSAGE='TEST';
-  var sender = new Broadway.Actor({
+  var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function (message, sender) {}
   });
-  var receiver = new Broadway.Actor({
+  var receiver = new Studio.Actor({
     id: RECEIVER_ID,
     process: function (message, sender) {
       throw new Error(RECEIVER_ERROR_MESSAGE);

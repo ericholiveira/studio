@@ -1,4 +1,4 @@
-Broadway = require('../../compiled/core/broadway');
+Studio = require('../../compiled/core/studio');
 
 describe("An actor", function () {
   var SENDER_ID = 'sender',
@@ -13,41 +13,41 @@ describe("An actor", function () {
     RECEIVER_DATE_RESULT = new Date(),
     RECEIVER_OBJECT_ID='object',
     RECEIVER_OBJECT_RESULT={};
-  var sender = new Broadway.Actor({
+  var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function (message, sender) {}
   });
-  var receiverUndef = new Broadway.Actor({
+  var receiverUndef = new Studio.Actor({
     id: RECEIVER_UNDEF_ID,
     process: function (message, sender) {
       expect(true).toBe(true);
     }
   });
-  var receiverBoolean = new Broadway.Actor({
+  var receiverBoolean = new Studio.Actor({
     id: RECEIVER_BOOLEAN_ID,
     process: function (message, sender) {
       return RECEIVER_BOOLEAN_RESULT;
     }
   });
-  var receiverNumber = new Broadway.Actor({
+  var receiverNumber = new Studio.Actor({
     id: RECEIVER_NUMBER_ID,
     process: function (message, sender) {
       return RECEIVER_NUMBER_RESULT;
     }
   });
-  var receiverString = new Broadway.Actor({
+  var receiverString = new Studio.Actor({
     id: RECEIVER_STRING_ID,
     process: function (message, sender) {
       return RECEIVER_STRING_RESULT;
     }
   });
-  var receiverDate = new Broadway.Actor({
+  var receiverDate = new Studio.Actor({
     id: RECEIVER_DATE_ID,
     process: function (message, sender) {
       return RECEIVER_DATE_RESULT;
     }
   });
-  var receiverObject = new Broadway.Actor({
+  var receiverObject = new Studio.Actor({
     id: RECEIVER_OBJECT_ID,
     process: function (message, sender) {
       return RECEIVER_OBJECT_RESULT;
