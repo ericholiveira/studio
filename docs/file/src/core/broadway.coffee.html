@@ -3,108 +3,80 @@
   <head>
   <meta charset='UTF-8'>
   <title>Documentation</title>
-  <script src='../javascript/application.js'></script>
-  <script src='../javascript/search.js'></script>
-  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+  <script src='../../../javascript/application.js'></script>
+  <script src='../../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../../stylesheets/application.css' type='text/css'>
 </head>
   <body>
-    <div id='base' data-path='../'></div>
+    <div id='base' data-path='../../../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../extra/README.md.html' title='Codo'>
+    <a href='../../../extra/README.md.html' title='Codo'>
       Codo
     </a>
     &raquo;
-    <a href='../alphabetical_index.html' title='Index'>
+    <a href='../../../alphabetical_index.html' title='Index'>
       Index
     </a>
     &raquo;
-    <span class='title'>Router</span>
+    <span class='title'>src</span>
+    &raquo;
+    <span class='title'>core</span>
+    &raquo;
+    <span class='title'>broadway.coffee</span>
   </div>
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Router
+        File:
+        broadway.coffee
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src\core\router.coffee</td>
+          <td>src&#47;core</td>
         </tr>
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
-  <dt id='_routes-variable'>
-    _routes
+  <dt id='oldBroadway-variable'>
+    oldBroadway
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>_global</code></pre>
+    
+  </dd>
+  <dt id='_global.Broadway-variable'>
+    _global.Broadway
     =
   </dt>
   <dd>
     <pre><code class='coffeescript'>{
-  broadcast: {
-    stream: new Bacon.Bus()
+  router: require(&#39;.&#47;router&#39;),
+  Actor: require(&#39;.&#47;actor&#39;),
+  Driver: require(&#39;.&#47;driver&#39;),
+
+  &#47;*
+  Change the global Broadway to the previous to avoid conflicts
+   *&#47;
+  noConflict: function() {
+    var Broadway;
+    Broadway = _global.Broadway;
+    if (typeof oldBroadway !== &#39;undefined&#39;) {
+      _global.Broadway = oldBroadway;
+    } else {
+      delete _global.Broadway;
+    }
+    return Broadway;
   }
 }</code></pre>
     
   </dd>
-  <dt id='_filters-variable'>
-    _filters
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    
-  </dd>
 </dl>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#getOrCreateRoute-dynamic'>
-        #
-(void)
-<b>getOrCreateRoute</b><span>(id)</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#send-dynamic'>
-        #
-(void)
-<b>send</b><span>(sender, receiver, message)</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-</ul>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='getOrCreateRoute-dynamic'>
-      #
-(void)
-<b>getOrCreateRoute</b><span>(id)</span>
-      <br>
-    </p>
-    
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='send-dynamic'>
-      #
-(void)
-<b>send</b><span>(sender, receiver, message)</span>
-      <br>
-    </p>
-    
-  </div>
-</div>
     </div>
     <div id='footer'>
-  November 04, 14 21:01:26 by
+  November 05, 14 13:50:00 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

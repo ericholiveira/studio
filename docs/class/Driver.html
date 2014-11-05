@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src\core\driver.coffee</td>
+          <td>src&#47;core&#47;driver.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -39,20 +39,12 @@
           </td>
         </tr>
       </table>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#send-dynamic'>
-        #
-(void)
-<b>send</b><span>(sender, receiver, message)</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-</ul>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all drivers.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
@@ -72,24 +64,45 @@
 <b>constructor</b><span>(options)</span>
       <br>
     </p>
-    
-  </div>
+    <div class='docstring'>
+  <p>Constructs a new Driver</p>
 </div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='send-dynamic'>
-      #
-(void)
-<b>send</b><span>(sender, receiver, message)</span>
-      <br>
-    </p>
-    
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the driver options </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>parser</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>a function who receives an input and parse it to the format {sender:sender , receiver: receiver ,message:message} </span>
+    </li>
+  </ul>
+</div>
   </div>
 </div>
     </div>
     <div id='footer'>
-  November 04, 14 21:01:26 by
+  November 05, 14 13:50:00 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src\core\actor.coffee</td>
+          <td>src&#47;core&#47;actor.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -39,14 +39,20 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all actors.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#doProcess-dynamic'>
+      <a href='#_doProcess-dynamic'>
         #
 (void)
-<b>doProcess</b><span>(message)</span>
+<b>_doProcess</b><span>(message)</span>
       </a>
     </span>
     <span class='bound note title'>Bound</span>
@@ -104,6 +110,13 @@
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
+      How to instantiate an actor (in javascript)
+    </h4>
+    <pre><code class='coffeescript'>var myActor = new Actor({
+            id: &#39;myActor&#39;,
+            process:function(body,sender,receiver){ console.log(body);}
+          });</code></pre>
+    <h4>
       How to instantiate an actor (in Coffescript)
     </h4>
     <pre><code class='coffeescript'>myActor = new Actor({
@@ -158,10 +171,10 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='doProcess-dynamic'>
+    <p class='signature' id='_doProcess-dynamic'>
       #
 (void)
-<b>doProcess</b><span>(message)</span>
+<b>_doProcess</b><span>(message)</span>
       <span class='bound note'>Bound</span>
       <br>
     </p>
@@ -183,6 +196,10 @@ Takes a stream message and open it for the actor process function format. And cr
   <p>Transform the message stream, so you can merge other streams, filter, buffer or do anything you can do with a baconjs stream</p>
   <div class='examples'>
     <h3>Examples:</h3>
+    <h4>
+      How to apply a filter transformation (in javascript)
+    </h4>
+    <pre><code class='coffeescript'>myActor.addTransformation(function(stream){return stream.filter(function(message){return message.sender == &#39;otherActor&#39;;});});</code></pre>
     <h4>
       How to apply a filter transformation (in Coffescript)
     </h4>
@@ -214,6 +231,21 @@ Takes a stream message and open it for the actor process function format. And cr
     </p>
     <div class='docstring'>
   <p>Sends message to an actor</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to send a string message
+    </h4>
+    <pre><code class='coffeescript'>myActor.send(&#39;otherActor&#39;, &#39;myMessage&#39;)</code></pre>
+    <h4>
+      How to send an object message
+    </h4>
+    <pre><code class='coffeescript'>myActor.send(&#39;otherActor&#39;, {hello:&#39;hello&#39;,
+                               obj:{
+                                 count:1
+                               }
+                             })</code></pre>
+  </div>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -244,7 +276,7 @@ Takes a stream message and open it for the actor process function format. And cr
 </div>
     </div>
     <div id='footer'>
-  November 04, 14 21:01:26 by
+  November 05, 14 13:50:00 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
