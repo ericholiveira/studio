@@ -35,8 +35,7 @@ class Router
       sender:sender
       receiver:receiver
       body:message
-      callback:(err,result)->
-        if err then defer.reject(err) else defer.resolve(result)
+      callback:(err,result)-> if err then defer.reject(err) else defer.resolve(result)
       }
     Timer.enqueue(()->
       route.stream.push(_message)
