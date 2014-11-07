@@ -9,6 +9,8 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
+    Q: require('q'),
+    Bacon: require('baconjs'),
     noConflict: function() {
       var Studio;
       Studio = _global.Studio;
