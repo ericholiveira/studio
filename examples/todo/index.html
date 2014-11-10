@@ -1,0 +1,31 @@
+
+<!doctype html>
+<html lang="en" data-framework="mithril">
+	<head>
+		<meta charset="utf-8">
+		<title>Studio • TodoMVC</title>
+		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+	</head>
+	<body>
+		<section id="todoapp">
+      <header id="header">
+				<h1>todos</h1>
+				<input id="new-todo" placeholder="What needs to be done?" autofocus>
+			</header>
+			<section id="main">
+				<input id="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul id="todo-list"></ul>
+			</section>
+    </section>
+		<footer id="info">
+			<p>Double-click to edit a todo</p>
+			<p>Created by <a href="https://github.com/ericholiveira/">Erich Oliveira</a></p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/todomvc-common/base.js"></script>
+		<script src="node_modules/studio/dist/studio-with-dependencies.js"></script>
+    <script src="todo.js"></script>
+	</body>
+</html>

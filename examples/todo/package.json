@@ -6,6 +6,8 @@
     "url": "https://github.com/ericholiveira"
   },
   "dependencies": {
-    "studio": "0.0.1"
+    "studio": "0.0.3",
+    "jquery":"2.1.1",
+    "todomvc-common":"0.3.1"
   }
 }

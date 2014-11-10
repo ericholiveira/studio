@@ -194,6 +194,8 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
+    Q: require('q'),
+    Bacon: require('baconjs'),
     noConflict: function() {
       var Studio;
       Studio = _global.Studio;
@@ -210,7 +212,7 @@
 
 //# sourceMappingURL=../maps/studio.js.map
 
-},{"./actor":1,"./driver":2,"./router":3}],5:[function(require,module,exports){
+},{"./actor":1,"./driver":2,"./router":3,"baconjs":8,"q":11}],5:[function(require,module,exports){
 (function() {
   var BaseClass, csextends;
 
