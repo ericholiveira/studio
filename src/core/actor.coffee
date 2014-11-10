@@ -51,7 +51,7 @@ class Actor extends BaseClass
   addTransformation:(funktion)->
     @unsubscribe()
     @stream = funktion(@stream)
-    @unsubscribe = @stream.onValue(@doProcess)
+    @unsubscribe = @stream.onValue(@_doProcess)
   # Sends message to an actor
   # @param [String] receiver the receiver id
   # @param [Object] message the content of the message (it could be any js object)

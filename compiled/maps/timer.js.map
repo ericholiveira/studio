@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "timer.js",
-  "sourceRoot": "../../../src/core/util/",
+  "sourceRoot": "..\\..\\..\\src\\core\\util\\",
   "sources": [
     "timer.coffee"
   ],

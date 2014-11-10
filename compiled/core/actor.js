@@ -60,7 +60,7 @@
     Actor.prototype.addTransformation = function(funktion) {
       this.unsubscribe();
       this.stream = funktion(this.stream);
-      return this.unsubscribe = this.stream.onValue(this.doProcess);
+      return this.unsubscribe = this.stream.onValue(this._doProcess);
     };
 
     Actor.prototype.send = function(receiver, message) {
@@ -75,4 +75,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map
