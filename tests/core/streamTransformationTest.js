@@ -16,8 +16,7 @@ describe("A Stream", function() {
 
   it("should be able to be grouped", function(done) {
     receiver.addTransformation(function(stream) {
-      var newStream = new Studio.Bacon.Bus();
-      stream.bufferWithCount(3).onValue(function(array) {
+      return stream.bufferWithCount(3).map(function(array) {
         var i = 0;
         var acc = {};
         for (; i < array.length; i++) {
@@ -34,9 +33,8 @@ describe("A Stream", function() {
             acc.callbacks[i](err, result);
           }
         };
-        newStream.push(acc);
+        return acc;
       });
-      return newStream;
     });
     Studio.Q.all(sender.send(RECEIVER_ID, 1), sender.send(RECEIVER_ID,
       2), sender.send(RECEIVER_ID, 3)).then(function(result) {
