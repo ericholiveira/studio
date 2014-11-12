@@ -1,22 +1,34 @@
-var todoEnterPressedDriver = new Studio.Driver({
-  parser: function (event) {
-
+var EnterPressedDriver = Studio.Driver.extends({
+  constructor: function (options) {
+    var that = this;
+    EnterPressedDriver.__super__.constructor.call(this,options);
+    $(options.selector).keypress(function (event) {
+      if ((event.keyCode || event.which) === 13) {
+        var element = this;
+        that.send($(element).val()).then(function(html){
+          $('#todo-list').append(html);
+          $(element).val('');
+        });
+      }
+    });
   }
 });
-window.$('#new-todo').keypress(function (event) {
-  var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-  if (event.keyCode || event.which === 13) {
-    todoEnterPressedDriver
+
+var todoEnterPressedDriver = new EnterPressedDriver({
+  selector:'#new-todo',
+  parser: function (content) {
+    return {
+      sender: 'userInput',
+      receiver: 'toDoHtml',
+      body: content
+    };
   }
 });
 
-/*
-<li>
-			<div class="view">
-				<input class="toggle" type="checkbox">
-				<label>jkjhk</label>
-				<button class="destroy"></button>
-			</div>
-			<input class="edit" value="jkjhk">
-		</li>
-*/
+
+var todoActor = new Studio.Actor({
+  id: 'toDoHtml',
+  process: function (message) {
+    return '<li><div class="view"><input class="toggle" type="checkbox"><label>'+message+'</label><button class="destroy"></button></div><input class="edit" value="'+message+'"></li>';
+  }
+});

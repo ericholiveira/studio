@@ -25,4 +25,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\studio.js.map
+//# sourceMappingURL=../maps/studio.js.map

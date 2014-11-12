@@ -17,10 +17,10 @@
       var parser;
       parser = options.parser;
       this.send = function() {
-        var args, message, receiver, sender, _ref;
+        var args, body, receiver, sender, _ref;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        _ref = parser.apply(null, args), sender = _ref.sender, receiver = _ref.receiver, message = _ref.message;
-        return router.send(sender, receiver, message);
+        _ref = parser.apply(null, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body;
+        return router.send(sender, receiver, body);
       };
     }
 
@@ -32,4 +32,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\driver.js.map
+//# sourceMappingURL=../maps/driver.js.map
