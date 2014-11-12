@@ -84,11 +84,11 @@ grunt.initConfig({
 
 });
 
-grunt.registerTask("all", ["all-coffee", "all-js", "browserify:testCore",
+grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist", "browserify:testCore",
   "jasmine"
 ]);
 grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all", "browserify:dist" , "release"]);
+grunt.registerTask("prod", ["all" , "release"]);
