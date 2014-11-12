@@ -12,7 +12,7 @@ class Driver extends BaseClass
     # Takes the arguments (i.e request,response on http requests or other arguments for different communication protocols / framework), parses it, and then sends the message to the right actor
     # @param [Arguments] args the arguments to build the message
     @send= (args...)->
-      {sender,receiver,message} = parser(args...)
-      router.send(sender,receiver,message)
+      {sender,receiver,body} = parser(args...)
+      router.send(sender,receiver,body)
 
 module.exports = Driver
