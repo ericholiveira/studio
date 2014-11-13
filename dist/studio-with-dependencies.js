@@ -18,9 +18,21 @@
 
     function Actor(options) {
       this._doProcess = __bind(this._doProcess, this);
-      this.id = options.id, this.process = options.process;
+      var property;
+      for (property in options) {
+        this[property] = options[property];
+      }
+      if (!this.id) {
+        throw new Error('You must provide an id');
+      }
+      if (!this.process) {
+        throw new Error('You must provide a process function');
+      }
       this.stream = router.createOrGetRoute(this.id);
       this.unsubscribe = this.stream.onValue(this._doProcess);
+      if (this.initialize) {
+        this.initialize(options);
+      }
     }
 
     Actor.prototype._doProcess = function(message) {
@@ -76,7 +88,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map
 
 },{"./router":3,"./util/baseClass":5,"./util/clone":6,"q":11}],2:[function(require,module,exports){
 (function() {
@@ -95,8 +107,16 @@
     __extends(Driver, _super);
 
     function Driver(options) {
-      var parser;
-      parser = options.parser;
+      var property;
+      for (property in options) {
+        this[property] = options[property];
+      }
+      if (!this.parser) {
+        throw new Error('You must provide a parser function');
+      }
+      if (this.initialize) {
+        this.initialize(options);
+      }
       this.send = function() {
         var args, body, receiver, sender, _ref;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -113,7 +133,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/driver.js.map
+//# sourceMappingURL=..\maps\driver.js.map
 
 },{"./router":3,"./util/baseClass":5,"baconjs":8}],3:[function(require,module,exports){
 (function() {
@@ -180,7 +200,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/router.js.map
+//# sourceMappingURL=..\maps\router.js.map
 
 },{"./util/timer":7,"baconjs":8,"q":11}],4:[function(require,module,exports){
 (function() {
@@ -210,7 +230,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/studio.js.map
+//# sourceMappingURL=..\maps\studio.js.map
 
 },{"./actor":1,"./driver":2,"./router":3,"baconjs":8,"q":11}],5:[function(require,module,exports){
 (function() {
@@ -233,7 +253,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/baseClass.js.map
+//# sourceMappingURL=..\..\maps\baseClass.js.map
 
 },{"csextends":9}],6:[function(require,module,exports){
 (function() {
@@ -274,7 +294,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/clone.js.map
+//# sourceMappingURL=..\..\maps\clone.js.map
 
 },{}],7:[function(require,module,exports){
 (function() {
@@ -294,7 +314,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/timer.js.map
+//# sourceMappingURL=..\..\maps\timer.js.map
 
 },{}],8:[function(require,module,exports){
 (function (global){

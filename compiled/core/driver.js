@@ -14,8 +14,16 @@
     __extends(Driver, _super);
 
     function Driver(options) {
-      var parser;
-      parser = options.parser;
+      var property;
+      for (property in options) {
+        this[property] = options[property];
+      }
+      if (!this.parser) {
+        throw new Error('You must provide a parser function');
+      }
+      if (this.initialize) {
+        this.initialize(options);
+      }
       this.send = function() {
         var args, body, receiver, sender, _ref;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -32,4 +40,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/driver.js.map
+//# sourceMappingURL=..\maps\driver.js.map

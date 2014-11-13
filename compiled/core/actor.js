@@ -17,9 +17,21 @@
 
     function Actor(options) {
       this._doProcess = __bind(this._doProcess, this);
-      this.id = options.id, this.process = options.process;
+      var property;
+      for (property in options) {
+        this[property] = options[property];
+      }
+      if (!this.id) {
+        throw new Error('You must provide an id');
+      }
+      if (!this.process) {
+        throw new Error('You must provide a process function');
+      }
       this.stream = router.createOrGetRoute(this.id);
       this.unsubscribe = this.stream.onValue(this._doProcess);
+      if (this.initialize) {
+        this.initialize(options);
+      }
     }
 
     Actor.prototype._doProcess = function(message) {
@@ -75,4 +87,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map
