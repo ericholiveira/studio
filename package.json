@@ -1,11 +1,11 @@
 {
   "name": "studio",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": {
     "name": "Erich Oliveira",
     "url": "https://github.com/ericholiveira"
   },
-  "main":"./compiled/core/studio.js",
+  "main": "./compiled/core/studio.js",
   "dependencies": {
     "baconjs": "0.7.22",
     "q": "1.0.1"
