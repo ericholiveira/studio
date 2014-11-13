@@ -17,9 +17,6 @@ var EnterPressedDriver = Studio.Driver.extends({
     });
   }
 });
-/*
-
-*/
 
 
 //Drivers object
