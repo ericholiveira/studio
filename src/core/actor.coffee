@@ -22,9 +22,12 @@ class Actor extends BaseClass
   #               process:(body,sender,receiver)-> console.log(body)
   #             })
   constructor: (options) ->
-    {@id,@process} = options
+    @[property] = options[property] for property of options
+    throw new Error('You must provide an id') if not @id
+    throw new Error('You must provide a process function') if not @process
     @stream = router.createOrGetRoute(@id)
     @unsubscribe = @stream.onValue(@_doProcess)
+    @initialize(options) if @initialize
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
