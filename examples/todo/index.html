@@ -22,13 +22,13 @@
       <span id="todo-count"><strong>1</strong> item left</span>
       <ul id="filters">
         <li>
-          <a class="selected" href="#/">All</a>
+          <a id="filters_all" class="selected" href="#/" onclick="showTodoClickDriver.send('all')">All</a>
         </li>
         <li>
-          <a href="#/active">Active</a>
+          <a id="filters_active" href="#/active" onclick="showTodoClickDriver.send('active')">Active</a>
         </li>
         <li>
-          <a href="#/completed">Completed</a>
+          <a id="filters_completed" href="#/completed" onclick="showTodoClickDriver.send('completed')">Completed</a>
         </li>
       </ul>
     </footer>
@@ -47,6 +47,15 @@
   <script src="todo_controller.js"></script>
   <script src="todo_dao.js"></script>
   <script src="todo_driver.js"></script>
+	<script>
+		/*
+		Reset storage, it should be done with actors, but since this is not the scope
+		of this exercise, i decided to do ir directly
+		*/
+		$( window ).unload(function() {
+			window.localStorage.clear();
+		});
+	</script>
 </body>
 
 </html>

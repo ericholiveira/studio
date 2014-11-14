@@ -7,7 +7,7 @@ var toDoInsertDao = new Studio.Actor({
     var item = {
       id: id,
       value: text,
-      status: 'incomplete'
+      status: 'active'
     };
     window.localStorage.setItem(id, JSON.stringify(item));
     return item;
@@ -25,7 +25,22 @@ var toDoDeleteDao = new Studio.Actor({
 var toDoUpdateDao = new Studio.Actor({
   id: 'toDoUpdateDao',
   process: function(newItem) {
-    window.localStorage.setItem(newItem.id, JSON.stringify(newItem))
+    window.localStorage.setItem(newItem.id, JSON.stringify(newItem));
     return newItem;
+  }
+});
+//Update
+var toDoReadDao = new Studio.Actor({
+  id: 'toDoReadDao',
+  process: function(id) {
+    return JSON.parse(window.localStorage.getItem(id));
+  }
+});
+
+//Counter
+var toDoCounterDao = new Studio.Actor({
+  id: 'toDoCounterDao',
+  process: function(id) {
+    return window.localStorage.length;
   }
 });

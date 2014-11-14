@@ -18,12 +18,45 @@ var todoEnterPressedDriver = new Studio.Driver({
     };
   }
 });
+
+var todoUpdateContentDriver = new Studio.Driver({
+  selector: '#new-todo',
+  parser: function(id) {
+    return {
+      sender: 'userInput',
+      receiver: 'toDoUpdateTextController',
+      body: {
+        id: id,
+        value: $('#todo_' + id + ' .edit').val()
+      }
+    };
+  }
+});
 var todoRemoveClickDriver = new Studio.Driver({
   parser: function(id) {
     return {
       sender: 'userInput',
-      receiver: 'toDoDeletController',
+      receiver: 'toDoDeleteController',
       body: id
+    };
+  }
+});
+
+var todoUpdateClickDriver = new Studio.Driver({
+  parser: function(id) {
+    return {
+      sender: 'userInput',
+      receiver: 'toDoUpdateStateController',
+      body: id
+    };
+  }
+});
+var showTodoClickDriver = new Studio.Driver({
+  parser: function(type) {
+    return {
+      sender: 'userInput',
+      receiver: 'showTodoController',
+      body: type
     };
   }
 });

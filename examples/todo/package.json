@@ -1,12 +1,12 @@
 {
   "name": "example",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": {
     "name": "Erich Oliveira",
     "url": "https://github.com/ericholiveira"
   },
   "dependencies": {
-    "studio": "0.0.7",
+    "studio": "0.0.8",
     "jquery": "2.1.1",
     "todomvc-common": "0.3.1"
   }
