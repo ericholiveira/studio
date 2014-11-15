@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src&#47;core&#47;actor.coffee</td>
+          <td>src\core\actor.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -83,6 +83,18 @@
     </span>
     <span class='desc'>
       Sends message to an actor 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#attachRoute-dynamic'>
+        #
+(void)
+<b>attachRoute</b><span>(routePattern)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      attach a named route as a function. 
     </span>
   </li>
 </ul>
@@ -163,6 +175,26 @@
       </span>
       &mdash;
       <span class='desc'>the process function which will be executed for every message </span>
+    </li>
+    <li>
+      <span class='name'>initialize</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>function called after actor creation </span>
+    </li>
+    <li>
+      <span class='name'>errorHandler</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>function called after and error happens on this actor (tipically you want to log the error) </span>
     </li>
   </ul>
 </div>
@@ -273,10 +305,47 @@ Takes a stream message and open it for the actor process function format. And cr
   </ul>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='attachRoute-dynamic'>
+      #
+(void)
+<b>attachRoute</b><span>(routePattern)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>attach a named route as a function.
+So if you use this.attachRoute(&#39;someRoute&#39;), you can use this.someRoute(someMessage)
+which is equivalent to this.send(&#39;someRoute&#39;,someMessage)</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to apply a filter transformation
+    </h4>
+    <pre><code class='coffeescript'>myActor.attachRoute(&#39;someRoute&#39;);
+myActor.attachRoute([&#39;someRoute1&#39;,&#39;someRoute2&#39;]);
+myActor.attachRoute(&#47;some&#47;g);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>routePattern</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>it can be a string, an array of routes to be attached or a regular expression of routes </span>
+    </li>
+  </ul>
+</div>
+  </div>
 </div>
     </div>
     <div id='footer'>
-  November 05, 14 18:32:33 by
+  November 14, 14 22:01:47 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

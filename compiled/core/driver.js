@@ -21,16 +21,17 @@
       if (!this.parser) {
         throw new Error('You must provide a parser function');
       }
-      if (this.initialize) {
+      if (typeof this.initialize === "function") {
         this.initialize(options);
       }
-      this.send = function() {
-        var args, body, receiver, sender, _ref;
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body;
-        return router.send(sender, receiver, body);
-      };
     }
+
+    Driver.prototype.send = function() {
+      var args, body, receiver, sender, _ref;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body;
+      return router.send(sender, receiver, body);
+    };
 
     return Driver;
 

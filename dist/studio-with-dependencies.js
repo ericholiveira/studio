@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, BaseClass, Q, clone, router,
+  var Actor, ArrayUtil, BaseClass, Q, clone, router,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12,6 +12,8 @@
   Q = require('q');
 
   clone = require('./util/clone');
+
+  ArrayUtil = require('./util/arrayUtil');
 
   Actor = (function(_super) {
     __extends(Actor, _super);
@@ -30,7 +32,7 @@
       }
       this.stream = router.createOrGetRoute(this.id);
       this.unsubscribe = this.stream.onValue(this._doProcess);
-      if (this.initialize) {
+      if (typeof this.initialize === "function") {
         this.initialize(options);
       }
     }
@@ -47,6 +49,9 @@
               return result.then(function(result) {
                 return callback(void 0, result);
               })["catch"](function(err) {
+                if (typeof _this.errorHandler === "function") {
+                  _this.errorHandler(err, message);
+                }
                 return callback(err || new Error('Unexpected Error'));
               });
             } else {
@@ -54,6 +59,9 @@
             }
           } catch (_error) {
             err = _error;
+            if (typeof _this.errorHandler === "function") {
+              _this.errorHandler(err, message);
+            }
             return callback(err);
           }
         };
@@ -80,6 +88,43 @@
       return router.send(this.id, receiver, message);
     };
 
+    Actor.prototype.attachRoute = function(routePattern) {
+      var allRoutes, route, _i, _j, _len, _len1, _ref, _results, _results1;
+      allRoutes = router.getAllRoutes();
+      if (routePattern instanceof RegExp) {
+        _results = [];
+        for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
+          route = allRoutes[_i];
+          if (routePattern.test(route)) {
+            _results.push(this[route] = (function(_this) {
+              return function(message) {
+                return _this.send(route, message);
+              };
+            })(this));
+          }
+        }
+        return _results;
+      } else if (ArrayUtil.isArray(routePattern)) {
+        _ref = ArrayUtil.intersection(routePattern, allRoutes);
+        _results1 = [];
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          route = _ref[_j];
+          _results1.push(this[route] = (function(_this) {
+            return function(message) {
+              return _this.send(route, message);
+            };
+          })(this));
+        }
+        return _results1;
+      } else {
+        return this[routePattern] = (function(_this) {
+          return function(message) {
+            return _this.send(allRoutes[routePattern], message);
+          };
+        })(this);
+      }
+    };
+
     return Actor;
 
   })(BaseClass);
@@ -90,7 +135,7 @@
 
 //# sourceMappingURL=..\maps\actor.js.map
 
-},{"./router":3,"./util/baseClass":5,"./util/clone":6,"q":11}],2:[function(require,module,exports){
+},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"q":12}],2:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, router,
     __hasProp = {}.hasOwnProperty,
@@ -114,16 +159,17 @@
       if (!this.parser) {
         throw new Error('You must provide a parser function');
       }
-      if (this.initialize) {
+      if (typeof this.initialize === "function") {
         this.initialize(options);
       }
-      this.send = function() {
-        var args, body, receiver, sender, _ref;
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body;
-        return router.send(sender, receiver, body);
-      };
     }
+
+    Driver.prototype.send = function() {
+      var args, body, receiver, sender, _ref;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body;
+      return router.send(sender, receiver, body);
+    };
 
     return Driver;
 
@@ -135,7 +181,7 @@
 
 //# sourceMappingURL=..\maps\driver.js.map
 
-},{"./router":3,"./util/baseClass":5,"baconjs":8}],3:[function(require,module,exports){
+},{"./router":3,"./util/baseClass":6,"baconjs":9}],3:[function(require,module,exports){
 (function() {
   var Bacon, Q, Router, Timer, _routes;
 
@@ -202,7 +248,7 @@
 
 //# sourceMappingURL=..\maps\router.js.map
 
-},{"./util/timer":7,"baconjs":8,"q":11}],4:[function(require,module,exports){
+},{"./util/timer":8,"baconjs":9,"q":12}],4:[function(require,module,exports){
 (function() {
   var oldStudio, _global;
 
@@ -232,7 +278,34 @@
 
 //# sourceMappingURL=..\maps\studio.js.map
 
-},{"./actor":1,"./driver":2,"./router":3,"baconjs":8,"q":11}],5:[function(require,module,exports){
+},{"./actor":1,"./driver":2,"./router":3,"baconjs":9,"q":12}],5:[function(require,module,exports){
+(function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  module.exports.isArray = Array.isArray || function(value) {
+    return {}.toString.call(value) === '[object Array]';
+  };
+
+  module.exports.intersection = function(a, b) {
+    var value, _i, _len, _ref, _results;
+    if (a.length > b.length) {
+      _ref = [b, a], a = _ref[0], b = _ref[1];
+    }
+    _results = [];
+    for (_i = 0, _len = a.length; _i < _len; _i++) {
+      value = a[_i];
+      if (__indexOf.call(b, value) >= 0) {
+        _results.push(value);
+      }
+    }
+    return _results;
+  };
+
+}).call(this);
+
+//# sourceMappingURL=..\..\maps\arrayUtil.js.map
+
+},{}],6:[function(require,module,exports){
 (function() {
   var BaseClass, csextends;
 
@@ -255,7 +328,7 @@
 
 //# sourceMappingURL=..\..\maps\baseClass.js.map
 
-},{"csextends":9}],6:[function(require,module,exports){
+},{"csextends":10}],7:[function(require,module,exports){
 (function() {
   var clone;
 
@@ -296,7 +369,7 @@
 
 //# sourceMappingURL=..\..\maps\clone.js.map
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function() {
   var Timer;
 
@@ -316,7 +389,7 @@
 
 //# sourceMappingURL=..\..\maps\timer.js.map
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 (function() {
   var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, DepCache, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertString, cloneArray, compositeUnsubscribe, containsDuplicateDeps, convertArgsToFunction, describe, end, eventIdCounter, findDeps, flatMap_, former, idCounter, initial, isArray, isFieldKey, isFunction, isObservable, latterF, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, next, nop, partiallyApplied, recursionDepth, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, withDescription, withMethodCallSupport, _, _ref,
@@ -3409,7 +3482,7 @@
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 // Generated by CoffeeScript 1.7.1
 (function() {
   var __hasProp = {}.hasOwnProperty,
@@ -3450,7 +3523,7 @@
 
 }).call(this);
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3538,7 +3611,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 // vim:ts=4:sts=4:sw=4:
 /*!
@@ -5446,4 +5519,4 @@ return Q;
 });
 
 }).call(this,require('_process'))
-},{"_process":10}]},{},[4]);
+},{"_process":11}]},{},[4]);
