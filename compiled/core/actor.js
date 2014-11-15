@@ -124,6 +124,17 @@
       }
     };
 
+    Actor.prototype.stop = function() {
+      this._process = this.process;
+      return this.process = function() {
+        throw new Error('Stopped');
+      };
+    };
+
+    Actor.prototype.start = function() {
+      return this.process = this._process || this.process;
+    };
+
     return Actor;
 
   })(BaseClass);

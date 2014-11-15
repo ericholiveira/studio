@@ -9,7 +9,7 @@ ArrayUtil = require('./util/arrayUtil')
 # Base class for all actors.
 class Actor extends BaseClass
 
-  # Constructs a new actor
+  # Constructs a new actor and automatically starts it
   # @param [Object] options the actor options
   # @option options [String] id actor id (should be unique), when you instantiate an actor you automatically create a stream on the router with this id
   # @option options [Function] process the process function which will be executed for every message
@@ -94,4 +94,15 @@ class Actor extends BaseClass
         @[route] = (message)=>@send(route,message)
     else
       @[routePattern] = (message)=>@send(allRoutes[routePattern],message)
+  # Stop an actor
+  # @example How to apply a filter transformation
+  #   myActor.stop();
+  stop:()->
+    @_process = @process
+    @process = ()-> throw new Error('Stopped')
+  # Start an actor (an actor is automatically started on instantiation)
+  # @example How to apply a filter transformation
+  #   myActor.stop();
+  start:()->
+    @process = @_process or @process
 module.exports = Actor
