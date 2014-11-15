@@ -97,6 +97,30 @@
       attach a named route as a function. 
     </span>
   </li>
+  <li>
+    <span class='signature'>
+      <a href='#stop-dynamic'>
+        #
+(void)
+<b>stop</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Stop an actor 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#start-dynamic'>
+        #
+(void)
+<b>start</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Start an actor (an actor is automatically started on instantiation) 
+    </span>
+  </li>
 </ul>
       <h2>
         <small>Inherited Method Summary</small>
@@ -118,7 +142,7 @@
       <br>
     </p>
     <div class='docstring'>
-  <p>Constructs a new actor</p>
+  <p>Constructs a new actor and automatically starts it</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -342,10 +366,50 @@ myActor.attachRoute(&#47;some&#47;g);</code></pre>
   </ul>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='stop-dynamic'>
+      #
+(void)
+<b>stop</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Stop an actor</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to apply a filter transformation
+    </h4>
+    <pre><code class='coffeescript'>myActor.stop();</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='start-dynamic'>
+      #
+(void)
+<b>start</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Start an actor (an actor is automatically started on instantiation)</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to apply a filter transformation
+    </h4>
+    <pre><code class='coffeescript'>myActor.stop();</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
 </div>
     </div>
     <div id='footer'>
-  November 14, 14 22:01:47 by
+  November 15, 14 12:58:33 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
