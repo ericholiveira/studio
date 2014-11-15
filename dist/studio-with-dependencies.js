@@ -30,7 +30,9 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id);
+      this.stream = router.createOrGetRoute(this.id).map(function(message) {
+        return clone(message);
+      });
       this.unsubscribe = this.stream.onValue(this._doProcess);
       if (typeof this.initialize === "function") {
         this.initialize(options);
@@ -41,8 +43,8 @@
       var __doProcess, _i, _len, _message, _results;
       __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, err, receiver, result, sender, _ref;
-          _ref = clone(message), sender = _ref.sender, body = _ref.body, receiver = _ref.receiver, callback = _ref.callback;
+          var body, callback, err, receiver, result, sender;
+          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
           try {
             result = _this.process(body, sender, receiver);
             if (result && Q.isPromiseAlike(result)) {
@@ -194,13 +196,15 @@
 
 },{"./router":3,"./util/baseClass":6,"baconjs":9}],3:[function(require,module,exports){
 (function() {
-  var Bacon, Q, Router, Timer, _routes;
+  var Bacon, Q, Router, Timer, clone, _routes;
 
   Timer = require('./util/timer');
 
   Q = require('q');
 
   Bacon = require('baconjs');
+
+  clone = require('./util/clone');
 
   _routes = {};
 
@@ -259,11 +263,11 @@
 
 //# sourceMappingURL=..\maps\router.js.map
 
-},{"./util/timer":8,"baconjs":9,"q":12}],4:[function(require,module,exports){
+},{"./util/clone":7,"./util/timer":8,"baconjs":9,"q":12}],4:[function(require,module,exports){
 (function() {
   var oldStudio, _global;
 
-  _global = (typeof window !== "undefined" && window !== null) && window || {};
+  _global = this || {};
 
   oldStudio = _global.Studio;
 
@@ -274,14 +278,12 @@
     Q: require('q'),
     Bacon: require('baconjs'),
     noConflict: function() {
-      var Studio;
-      Studio = _global.Studio;
       if (typeof oldStudio !== 'undefined') {
         _global.Studio = oldStudio;
       } else {
         delete _global.Studio;
       }
-      return Studio;
+      return this;
     }
   };
 

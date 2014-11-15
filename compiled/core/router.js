@@ -1,11 +1,13 @@
 (function() {
-  var Bacon, Q, Router, Timer, _routes;
+  var Bacon, Q, Router, Timer, clone, _routes;
 
   Timer = require('./util/timer');
 
   Q = require('q');
 
   Bacon = require('baconjs');
+
+  clone = require('./util/clone');
 
   _routes = {};
 

@@ -29,7 +29,9 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id);
+      this.stream = router.createOrGetRoute(this.id).map(function(message) {
+        return clone(message);
+      });
       this.unsubscribe = this.stream.onValue(this._doProcess);
       if (typeof this.initialize === "function") {
         this.initialize(options);
@@ -40,8 +42,8 @@
       var __doProcess, _i, _len, _message, _results;
       __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, err, receiver, result, sender, _ref;
-          _ref = clone(message), sender = _ref.sender, body = _ref.body, receiver = _ref.receiver, callback = _ref.callback;
+          var body, callback, err, receiver, result, sender;
+          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
           try {
             result = _this.process(body, sender, receiver);
             if (result && Q.isPromiseAlike(result)) {

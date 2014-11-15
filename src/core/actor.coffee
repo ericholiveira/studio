@@ -29,14 +29,14 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id)
+    @stream = router.createOrGetRoute(@id).map((message)->clone(message))
     @unsubscribe = @stream.onValue(@_doProcess)
     @initialize?(options)
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
     __doProcess=(message) =>
-      {sender,body,receiver,callback} = clone(message)
+      {sender,body,receiver,callback} = message
       try
         result=@process(body,sender,receiver)
         if result and Q.isPromiseAlike(result)

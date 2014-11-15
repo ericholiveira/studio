@@ -1,7 +1,7 @@
 (function() {
   var oldStudio, _global;
 
-  _global = (typeof window !== "undefined" && window !== null) && window || {};
+  _global = this || {};
 
   oldStudio = _global.Studio;
 
@@ -12,14 +12,12 @@
     Q: require('q'),
     Bacon: require('baconjs'),
     noConflict: function() {
-      var Studio;
-      Studio = _global.Studio;
       if (typeof oldStudio !== 'undefined') {
         _global.Studio = oldStudio;
       } else {
         delete _global.Studio;
       }
-      return Studio;
+      return this;
     }
   };
 

@@ -1,6 +1,7 @@
 Timer = require('./util/timer')
 Q = require('q')
 Bacon = require('baconjs')
+clone = require('./util/clone')
 
 _routes ={}
 # Base class for Router (is singleton, should not be reimplemented nor reinstantiated, and probably not direct accessed).
