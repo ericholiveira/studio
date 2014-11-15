@@ -3,6 +3,8 @@ router = require('./router')
 BaseClass = require('./util/baseClass')
 Q = require('q')
 clone = require('./util/clone')
+ArrayUtil = require('./util/arrayUtil')
+
 
 # Base class for all actors.
 class Actor extends BaseClass
@@ -11,6 +13,8 @@ class Actor extends BaseClass
   # @param [Object] options the actor options
   # @option options [String] id actor id (should be unique), when you instantiate an actor you automatically create a stream on the router with this id
   # @option options [Function] process the process function which will be executed for every message
+  # @option options [Function] initialize function called after actor creation
+  # @option options [Function] errorHandler function called after and error happens on this actor (tipically you want to log the error)
   # @example How to instantiate an actor (in javascript)
   #   var myActor = new Actor({
   #               id: 'myActor',
@@ -27,7 +31,7 @@ class Actor extends BaseClass
     throw new Error('You must provide a process function') if not @process
     @stream = router.createOrGetRoute(@id)
     @unsubscribe = @stream.onValue(@_doProcess)
-    @initialize(options) if @initialize
+    @initialize?(options)
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
@@ -36,10 +40,14 @@ class Actor extends BaseClass
       try
         result=@process(body,sender,receiver)
         if result and Q.isPromiseAlike(result)
-          result.then((result)->callback(undefined,result)).catch((err)->callback(err or new Error('Unexpected Error')))
+          result.then((result)->callback(undefined,result)).catch((err)=>
+            @errorHandler?(err,message)
+            callback(err or new Error('Unexpected Error'))
+          )
         else
           callback(undefined,result)
       catch err
+        @errorHandler?(err,message)
         callback(err)
     if message?.length
       __doProcess(_message) for _message in message
@@ -68,4 +76,22 @@ class Actor extends BaseClass
   #                                })
   send: (receiver,message)->
     router.send(@id,receiver,message)
+  # attach a named route as a function.
+  # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
+  # which is equivalent to this.send('someRoute',someMessage)
+  # @param [Object] routePattern it can be a string, an array of routes to be attached or a regular expression of routes
+  # @example How to apply a filter transformation
+  #   myActor.attachRoute('someRoute');
+  #   myActor.attachRoute(['someRoute1','someRoute2']);
+  #   myActor.attachRoute(/some/g);
+  attachRoute:(routePattern)->
+    allRoutes = router.getAllRoutes()
+    if routePattern instanceof RegExp
+      for route in allRoutes when routePattern.test(route)
+        @[route] = (message)=>@send(route,message)
+    else if ArrayUtil.isArray(routePattern)
+      for route in ArrayUtil.intersection(routePattern,allRoutes)
+        @[route] = (message)=>@send(route,message)
+    else
+      @[routePattern] = (message)=>@send(allRoutes[routePattern],message)
 module.exports = Actor
