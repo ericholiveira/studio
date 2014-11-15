@@ -59,14 +59,12 @@
   Change the global Studio to the previous to avoid conflicts
    *&#47;
   noConflict: function() {
-    var Studio;
-    Studio = _global.Studio;
     if (typeof oldStudio !== &#39;undefined&#39;) {
       _global.Studio = oldStudio;
     } else {
       delete _global.Studio;
     }
-    return Studio;
+    return this;
   }
 }</code></pre>
     
@@ -74,7 +72,7 @@
 </dl>
     </div>
     <div id='footer'>
-  November 15, 14 12:58:33 by
+  November 15, 14 20:05:40 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
