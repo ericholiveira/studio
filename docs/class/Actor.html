@@ -87,10 +87,10 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#attachRoute-dynamic'>
+      <a href='#mapRoute-dynamic'>
         #
 (void)
-<b>attachRoute</b><span>(routePattern)</span>
+<b>mapRoute</b><span>(routePattern)</span>
       </a>
     </span>
     <span class='desc'>
@@ -330,10 +330,10 @@ Takes a stream message and open it for the actor process function format. And cr
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='attachRoute-dynamic'>
+    <p class='signature' id='mapRoute-dynamic'>
       #
 (void)
-<b>attachRoute</b><span>(routePattern)</span>
+<b>mapRoute</b><span>(routePattern)</span>
       <br>
     </p>
     <div class='docstring'>
@@ -343,7 +343,7 @@ which is equivalent to this.send(&#39;someRoute&#39;,someMessage)</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
-      How to apply a filter transformation
+      How to map routes
     </h4>
     <pre><code class='coffeescript'>myActor.attachRoute(&#39;someRoute&#39;);
 myActor.attachRoute([&#39;someRoute1&#39;,&#39;someRoute2&#39;]);
@@ -409,7 +409,7 @@ myActor.attachRoute(&#47;some&#47;g);</code></pre>
 </div>
     </div>
     <div id='footer'>
-  November 15, 14 20:05:40 by
+  November 16, 14 18:48:18 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
