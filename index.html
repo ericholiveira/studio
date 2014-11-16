@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=640">
 
     <link rel="stylesheet" href="stylesheets/core.css" media="screen">
     <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/prism.css">
+    <link rel="stylesheet" href="stylesheets/custom.css">
 
     <script type="text/javascript" src="javascripts/modernizr.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript" src="javascripts/prism.js"></script>
     <script type="text/javascript">
       $(document).ready(function () {
         $('#main_content').headsmart()
@@ -50,7 +53,7 @@
         <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to Studio.</h3>
 
-<p>This project brings reactive programming to any javascript project. According to the <a href="http://www.reactivemanifesto.org/">reactive manifesto 2.0</a>. Reactive systems
+<p>Studio brings reactive programming to any javascript project. According to the <a href="http://www.reactivemanifesto.org/">reactive manifesto 2.0</a>. Reactive systems
 are:
 <ul>
   <li><a href="#reponsive">Responsive</a></li>
@@ -60,12 +63,35 @@ are:
 </ul>
  </p>
 
+<h3>
+<a id="code" class="anchor" href="#code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example code</h3>
+
+<div class="code-wrapper"><code class="language-javascript">
+  //Create an actor, you need to pass an id, and a process function
+  //which will be executed when a message arrives
+  var echoActor = new Studio.Actor({
+    id: 'echo',
+    process: function(message, sender) {
+      return message;
+    }
+  });
+  /*Then you can send a message, first parameter is the id of the actor
+  the second parameter is the message you want to send
+  the message can be any object
+  As you can see, the send method always returns a promise,
+  with the result of the execution of process method
+  */
+  echoActor.send('echo','Hello World').then(function(response){
+    alert(reponse);
+  });
+</code>
+  </div>
 
 <h3>
 <a id="reponsive" class="anchor" href="#reponsive" aria-hidden="true"><span class="octicon octicon-link"></span></a>Responsive</h3>
 
 <p>Studio encourages you to use actors for each "micro piece of code".
-  Don't be worry.
+  Don't worry.
   Studio actors always execute async, and always encapsulates your exceptions, promises and "regular object return" in a single promise, this way you will have a code a lot more mantainable and error prone.
   </p>
 
