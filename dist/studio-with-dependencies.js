@@ -90,41 +90,38 @@
       return router.send(this.id, receiver, message);
     };
 
-    Actor.prototype.attachRoute = function(routePattern) {
-      var allRoutes, route, _i, _j, _len, _len1, _ref, _results, _results1;
-      allRoutes = router.getAllRoutes();
+    Actor.prototype.mapRoute = function(routePattern) {
+      var allRoutes, container, route, _i, _j, _len, _len1;
+      container = {};
       if (routePattern instanceof RegExp) {
-        _results = [];
+        allRoutes = router.getAllRoutes();
         for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
           route = allRoutes[_i];
           if (routePattern.test(route)) {
-            _results.push(this[route] = (function(_this) {
+            container[route] = (function(_this) {
               return function(message) {
                 return _this.send(route, message);
               };
-            })(this));
+            })(this);
           }
         }
-        return _results;
       } else if (ArrayUtil.isArray(routePattern)) {
-        _ref = ArrayUtil.intersection(routePattern, allRoutes);
-        _results1 = [];
-        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-          route = _ref[_j];
-          _results1.push(this[route] = (function(_this) {
+        for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
+          route = routePattern[_j];
+          container[route] = (function(_this) {
             return function(message) {
               return _this.send(route, message);
             };
-          })(this));
+          })(this);
         }
-        return _results1;
       } else {
-        return this[routePattern] = (function(_this) {
+        container[routePattern] = (function(_this) {
           return function(message) {
-            return _this.send(allRoutes[routePattern], message);
+            return _this.send(routePattern, message);
           };
         })(this);
       }
+      return container;
     };
 
     Actor.prototype.stop = function() {

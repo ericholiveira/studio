@@ -80,20 +80,22 @@ class Actor extends BaseClass
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)
   # @param [Object] routePattern it can be a string, an array of routes to be attached or a regular expression of routes
-  # @example How to apply a filter transformation
+  # @example How to map routes
   #   myActor.attachRoute('someRoute');
   #   myActor.attachRoute(['someRoute1','someRoute2']);
   #   myActor.attachRoute(/some/g);
-  attachRoute:(routePattern)->
-    allRoutes = router.getAllRoutes()
+  mapRoute:(routePattern)->
+    container={}
     if routePattern instanceof RegExp
+      allRoutes = router.getAllRoutes()
       for route in allRoutes when routePattern.test(route)
-        @[route] = (message)=>@send(route,message)
+        container[route] = (message)=>@send(route,message)
     else if ArrayUtil.isArray(routePattern)
-      for route in ArrayUtil.intersection(routePattern,allRoutes)
-        @[route] = (message)=>@send(route,message)
+      for route in routePattern
+        container[route] = (message)=>@send(route,message)
     else
-      @[routePattern] = (message)=>@send(allRoutes[routePattern],message)
+      container[routePattern] = (message)=>@send(routePattern,message)
+    container
   # Stop an actor
   # @example How to apply a filter transformation
   #   myActor.stop();

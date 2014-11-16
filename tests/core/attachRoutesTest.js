@@ -29,20 +29,20 @@ describe("An actor", function() {
   });
 
   it("should be able to attach routes with array, string and regex",
-    function() {
-      expect(actor1.actor2).toBeUndefined();
-      actor1.attachRoute('actor2');
-      expect(actor1.actor2).toBeDefined();
-      expect(actor1.actor3).toBeUndefined();
-      expect(actor1.actor4).toBeUndefined();
-      actor1.attachRoute(['actor3', 'actor4']);
-      expect(actor1.actor3).toBeDefined();
-      expect(actor1.actor4).toBeDefined();
-      expect(actor1.actor1).toBeUndefined();
-      expect(actor1.actor5).toBeUndefined();
-      actor1.attachRoute(/actor[0-9]/);
-      expect(actor1.actor1).toBeDefined();
-      expect(actor1.actor5).toBeDefined();
+    function(done) {
+      var mappedRoutes = actor1.mapRoute('actor2');
+      expect(mappedRoutes.actor2).toBeDefined();
+      expect(mappedRoutes.actor3).toBeUndefined();
+      expect(mappedRoutes.actor4).toBeUndefined();
+      mappedRoutes = actor1.mapRoute(['actor3', 'actor4']);
+      expect(mappedRoutes.actor3).toBeDefined();
+      expect(mappedRoutes.actor4).toBeDefined();
+      expect(mappedRoutes.actor1).toBeUndefined();
+      expect(mappedRoutes.actor5).toBeUndefined();
+      mappedRoutes = actor1.mapRoute(/actor[0-9]/);
+      expect(mappedRoutes.actor1).toBeDefined();
+      expect(mappedRoutes.actor5).toBeDefined();
+      mappedRoutes.actor5().then(done);
     });
 
 });
