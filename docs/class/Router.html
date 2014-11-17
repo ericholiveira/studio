@@ -55,6 +55,18 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#getRoute-dynamic'>
+        #
+(void)
+<b>getRoute</b><span>(id)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Returns a route 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#send-dynamic'>
         #
 (void)
@@ -108,9 +120,42 @@
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
-      How create or get a message
+      How create or get a route
     </h4>
     <pre><code class='coffeescript'>router.createOrGetRoute(&#39;myActor&#39;)</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the route identification </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getRoute-dynamic'>
+      #
+(void)
+<b>getRoute</b><span>(id)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Returns a route</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to get a route
+    </h4>
+    <pre><code class='coffeescript'>router.getRoute(&#39;myActor&#39;)</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -206,7 +251,7 @@
 </div>
     </div>
     <div id='footer'>
-  November 16, 14 20:50:27 by
+  November 17, 14 20:36:43 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

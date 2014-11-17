@@ -150,14 +150,16 @@
     </h4>
     <pre><code class='coffeescript'>var myActor = new Actor({
             id: &#39;myActor&#39;,
-            process:function(body,sender,receiver){ console.log(body);}
+            process:function(body,sender,receiver){ console.log(body);},
+            route : &#39;myPipe&#39;
           });</code></pre>
     <h4>
       How to instantiate an actor (in Coffescript)
     </h4>
     <pre><code class='coffeescript'>myActor = new Actor({
             id: &#39;myActor&#39;,
-            process:(body,sender,receiver)-&gt; console.log(body)
+            process:(body,sender,receiver)-&gt; console.log(body),
+            route : &#39;myPipe&#39;
           })</code></pre>
   </div>
 </div>
@@ -188,7 +190,17 @@
         )
       </span>
       &mdash;
-      <span class='desc'>actor id (should be unique), when you instantiate an actor you automatically create a stream on the router with this id </span>
+      <span class='desc'>actor id (should be unique) </span>
+    </li>
+    <li>
+      <span class='name'>route</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>when you instantiate an actor you automatically create a stream on the router with this route, multiple actors can share the same route topic/queue </span>
     </li>
     <li>
       <span class='name'>process</span>
@@ -208,17 +220,7 @@
         )
       </span>
       &mdash;
-      <span class='desc'>function called after actor creation </span>
-    </li>
-    <li>
-      <span class='name'>errorHandler</span>
-      <span class='type'>
-        (
-          <tt>Function</tt>
-        )
-      </span>
-      &mdash;
-      <span class='desc'>function called after and error happens on this actor (tipically you want to log the error) </span>
+      <span class='desc'>function called after actor creation (optional) </span>
     </li>
   </ul>
 </div>
@@ -409,7 +411,7 @@ myActor.attachRoute(&#47;some&#47;g);</code></pre>
 </div>
     </div>
     <div id='footer'>
-  November 16, 14 20:50:27 by
+  November 17, 14 20:36:43 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
