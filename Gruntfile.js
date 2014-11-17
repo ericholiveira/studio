@@ -70,25 +70,28 @@ grunt.initConfig({
     },
     testCore: {
       files: {
-        'tests/target/studio-with-dependencies-with-tests.js': ['tests/core/*.js']
+        'tests/target/studio-with-dependencies-with-tests.js': [
+          'tests/core/*.js'
+        ]
       }
     }
   },
   release: {
     options: {
       bump: false,
-      npm:true,
-      npmTag:"<%= version %>"
+      npm: true,
+      npmTag: "<%= version %>"
     }
   }
 
 });
-
-grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist", "browserify:testCore",
-  "jasmine"
+grunt.registerTask("test", ["jasmine"]);
+grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist",
+  "browserify:testCore",
+  "test"
 ]);
 grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all" , "release"]);
+grunt.registerTask("prod", ["all", "release"]);

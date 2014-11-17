@@ -10,6 +10,9 @@
     "baconjs": "0.7.22",
     "q": "1.0.1"
   },
+  "scripts": {
+    "test": "grunt test"
+  },
   "devDependencies": {
     "grunt-cli": "0.1.13",
     "grunt": "0.4.x",
