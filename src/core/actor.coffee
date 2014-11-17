@@ -11,25 +11,28 @@ class Actor extends BaseClass
 
   # Constructs a new actor and automatically starts it
   # @param [Object] options the actor options
-  # @option options [String] id actor id (should be unique), when you instantiate an actor you automatically create a stream on the router with this id
+  # @option options [String] id actor id (should be unique)
+  # @option options [String] route when you instantiate an actor you automatically create a stream on the router with this route, multiple actors can share the same route topic/queue
   # @option options [Function] process the process function which will be executed for every message
-  # @option options [Function] initialize function called after actor creation
-  # @option options [Function] errorHandler function called after and error happens on this actor (tipically you want to log the error)
+  # @option options [Function] initialize function called after actor creation (optional)
   # @example How to instantiate an actor (in javascript)
   #   var myActor = new Actor({
   #               id: 'myActor',
-  #               process:function(body,sender,receiver){ console.log(body);}
+  #               process:function(body,sender,receiver){ console.log(body);},
+  #               route : 'myPipe'
   #             });
   # @example How to instantiate an actor (in Coffescript)
   #   myActor = new Actor({
   #               id: 'myActor',
-  #               process:(body,sender,receiver)-> console.log(body)
+  #               process:(body,sender,receiver)-> console.log(body),
+  #               route : 'myPipe'
   #             })
   constructor: (options) ->
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id).map((message)->clone(message))
+    throw new Error('You must provide a route') if not @route
+    @stream = router.createOrGetRoute(@route).map((message)->clone(message))
     @unsubscribe = @stream.onValue(@_doProcess)
     @initialize?(options)
   # PRIVATE METHOD SHOULD NOT BE CALLED
@@ -41,13 +44,11 @@ class Actor extends BaseClass
         result=@process(body,sender,receiver)
         if result and Q.isPromiseAlike(result)
           result.then((result)->callback(undefined,result)).catch((err)=>
-            @errorHandler?(err,message)
             callback(err or new Error('Unexpected Error'))
           )
         else
           callback(undefined,result)
       catch err
-        @errorHandler?(err,message)
         callback(err)
     if message?.length
       __doProcess(_message) for _message in message

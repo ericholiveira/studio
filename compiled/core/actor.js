@@ -29,7 +29,10 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id).map(function(message) {
+      if (!this.route) {
+        throw new Error('You must provide a route');
+      }
+      this.stream = router.createOrGetRoute(this.route).map(function(message) {
         return clone(message);
       });
       this.unsubscribe = this.stream.onValue(this._doProcess);
@@ -50,9 +53,6 @@
               return result.then(function(result) {
                 return callback(void 0, result);
               })["catch"](function(err) {
-                if (typeof _this.errorHandler === "function") {
-                  _this.errorHandler(err, message);
-                }
                 return callback(err || new Error('Unexpected Error'));
               });
             } else {
@@ -60,9 +60,6 @@
             }
           } catch (_error) {
             err = _error;
-            if (typeof _this.errorHandler === "function") {
-              _this.errorHandler(err, message);
-            }
             return callback(err);
           }
         };

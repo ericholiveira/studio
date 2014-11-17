@@ -25,6 +25,10 @@
       return _routes[id].stream;
     };
 
+    Router.prototype.getRoute = function(id) {
+      return _routes[id];
+    };
+
     Router.prototype.send = function(sender, receiver, message) {
       var defer, route, _message;
       defer = Q.defer();

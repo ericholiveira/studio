@@ -10,13 +10,18 @@ class Router
   constructor: () ->
   # Creates a route, if it already exists return this route
   # @param [String] id the route identification
-  # @example How create or get a message
+  # @example How create or get a route
   #   router.createOrGetRoute('myActor')
   createOrGetRoute: (id) ->
     if not _routes[id]
       stream = new Bacon.Bus()
       _routes[id] = {stream:stream}
     _routes[id].stream
+  # Returns a route
+  # @param [String] id the route identification
+  # @example How to get a route
+  #   router.getRoute('myActor')
+  getRoute:(id) -> _routes[id]
   # sends a message to the receivers
   # @param [String] sender the sender identification
   # @param [String] receiver the receiver route identification
