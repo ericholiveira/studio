@@ -8,6 +8,7 @@ describe("Actor class", function() {
     });
     var testActor = new TestActor({
       id: 'actor',
+      route: 'actor',
       process: function() {}
     });
     expect(testActor.send).toBeDefined();
