@@ -142,7 +142,110 @@
 
 //# sourceMappingURL=..\maps\actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"q":12}],2:[function(require,module,exports){
+},{"./router":4,"./util/arrayUtil":6,"./util/baseClass":7,"./util/clone":8,"q":13}],2:[function(require,module,exports){
+(function() {
+  var Actor, ActorFactory, InterceptorFactory, interceptors, router,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Actor = require('./actor');
+
+  router = require('./router');
+
+  interceptors = [];
+
+  ActorFactory = (function(_super) {
+    __extends(ActorFactory, _super);
+
+    function ActorFactory() {
+      return ActorFactory.__super__.constructor.apply(this, arguments);
+    }
+
+    ActorFactory.prototype.process = function(options) {
+      var process, proxy;
+      options.clazz = options.clazz || Actor;
+      process = function(body, sender, receiver) {
+        var interceptor, message, produceNext, toCallInterceptors, _i, _len;
+        for (_i = 0, _len = interceptors.length; _i < _len; _i++) {
+          interceptor = interceptors[_i];
+          if (interceptor.route[receiver]) {
+            toCallInterceptors = interceptor.interceptor;
+          }
+        }
+        message = {
+          body: body,
+          sender: sender,
+          receiver: receiver
+        };
+        produceNext = function(index, message) {
+          var nextRoute;
+          if (index === toCallInterceptors.length - 1) {
+            return function() {
+              return router.send(sender, "" + receiver + "__original", body);
+            };
+          } else {
+            nextRoute = toCallInterceptors[index + 1].route;
+            return function() {
+              message.next = produceNext(index + 1, message);
+              return router.send(sender, nextRoute, message);
+            };
+          }
+        };
+        if (toCallInterceptors.length === 0) {
+          return router.send(sender, "" + receiver + "__original", body);
+        } else {
+          message.next = produceNext(0, message);
+          return router.send(sender, toCallInterceptors[0].route, message);
+        }
+      };
+      proxy = new Actor({
+        id: id,
+        route: route,
+        process: process
+      });
+      options.id = "" + options.id + "__original";
+      options.route = "" + options.route + "__original";
+      return new clazz(options);
+    };
+
+    return ActorFactory;
+
+  })(Actor);
+
+  InterceptorFactory = (function(_super) {
+    __extends(InterceptorFactory, _super);
+
+    function InterceptorFactory() {
+      return InterceptorFactory.__super__.constructor.apply(this, arguments);
+    }
+
+    InterceptorFactory.prototype.process = function(options) {
+      return interceptors.push({
+        interceptor: options.interceptor,
+        route: this.mapRoute(options.routes)
+      });
+    };
+
+    return InterceptorFactory;
+
+  })(Actor);
+
+  module.exports = {
+    actorFactory: new ActorFactory({
+      id: '__actorFactorySingleton',
+      route: 'createActor'
+    }),
+    interceptorFactory: new InterceptorFactory({
+      id: '__interceptorFactorySingleton',
+      route: 'interceptRoute'
+    })
+  };
+
+}).call(this);
+
+//# sourceMappingURL=..\maps\actorFactory.js.map
+
+},{"./actor":1,"./router":4}],3:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, router,
     __hasProp = {}.hasOwnProperty,
@@ -188,7 +291,7 @@
 
 //# sourceMappingURL=..\maps\driver.js.map
 
-},{"./router":3,"./util/baseClass":6,"baconjs":9}],3:[function(require,module,exports){
+},{"./router":4,"./util/baseClass":7,"baconjs":10}],4:[function(require,module,exports){
 (function() {
   var Bacon, Q, Router, Timer, clone, _routes;
 
@@ -261,9 +364,11 @@
 
 //# sourceMappingURL=..\maps\router.js.map
 
-},{"./util/clone":7,"./util/timer":8,"baconjs":9,"q":12}],4:[function(require,module,exports){
+},{"./util/clone":8,"./util/timer":9,"baconjs":10,"q":13}],5:[function(require,module,exports){
 (function() {
-  var oldStudio, _global;
+  var factories, oldStudio, _global;
+
+  factories = require('./actorFactory');
 
   _global = this || {};
 
@@ -273,6 +378,8 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
+    actorFactory: factories.ActorFactory,
+    interceptorFactory: factories.InterceptorFactory,
     Q: require('q'),
     Bacon: require('baconjs'),
     noConflict: function() {
@@ -289,7 +396,7 @@
 
 //# sourceMappingURL=..\maps\studio.js.map
 
-},{"./actor":1,"./driver":2,"./router":3,"baconjs":9,"q":12}],5:[function(require,module,exports){
+},{"./actor":1,"./actorFactory":2,"./driver":3,"./router":4,"baconjs":10,"q":13}],6:[function(require,module,exports){
 (function() {
   module.exports.isArray = Array.isArray || function(value) {
     return {}.toString.call(value) === '[object Array]';
@@ -299,7 +406,7 @@
 
 //# sourceMappingURL=..\..\maps\arrayUtil.js.map
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function() {
   var BaseClass, csextends;
 
@@ -322,7 +429,7 @@
 
 //# sourceMappingURL=..\..\maps\baseClass.js.map
 
-},{"csextends":10}],7:[function(require,module,exports){
+},{"csextends":11}],8:[function(require,module,exports){
 (function() {
   var clone;
 
@@ -363,7 +470,7 @@
 
 //# sourceMappingURL=..\..\maps\clone.js.map
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function() {
   var Timer;
 
@@ -383,7 +490,7 @@
 
 //# sourceMappingURL=..\..\maps\timer.js.map
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 (function() {
   var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, DepCache, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertString, cloneArray, compositeUnsubscribe, containsDuplicateDeps, convertArgsToFunction, describe, end, eventIdCounter, findDeps, flatMap_, former, idCounter, initial, isArray, isFieldKey, isFunction, isObservable, latterF, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, next, nop, partiallyApplied, recursionDepth, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, withDescription, withMethodCallSupport, _, _ref,
@@ -3476,7 +3583,7 @@
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // Generated by CoffeeScript 1.7.1
 (function() {
   var __hasProp = {}.hasOwnProperty,
@@ -3517,7 +3624,7 @@
 
 }).call(this);
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3605,7 +3712,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (process){
 // vim:ts=4:sts=4:sw=4:
 /*!
@@ -5513,4 +5620,4 @@ return Q;
 });
 
 }).call(this,require('_process'))
-},{"_process":11}]},{},[4]);
+},{"_process":12}]},{},[5]);

@@ -1,5 +1,7 @@
 (function() {
-  var oldStudio, _global;
+  var factories, oldStudio, _global;
+
+  factories = require('./actorFactory');
 
   _global = this || {};
 
@@ -9,6 +11,8 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
+    actorFactory: factories.ActorFactory,
+    interceptorFactory: factories.InterceptorFactory,
     Q: require('q'),
     Bacon: require('baconjs'),
     noConflict: function() {

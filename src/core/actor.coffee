@@ -43,7 +43,7 @@ class Actor extends BaseClass
       try
         result=@process(body,sender,receiver)
         if result and Q.isPromiseAlike(result)
-          result.then((result)->callback(undefined,result)).catch((err)=>
+          result.then((result)->callback(undefined,result)).catch((err)->
             callback(err or new Error('Unexpected Error'))
           )
         else
