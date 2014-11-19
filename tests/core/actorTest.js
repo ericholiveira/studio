@@ -15,45 +15,38 @@ describe("An actor", function() {
     RECEIVER_OBJECT_RESULT = {};
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    route: SENDER_ID,
     process: function(message, sender) {}
   });
   var receiverUndef = new Studio.Actor({
     id: RECEIVER_UNDEF_ID,
-    route: RECEIVER_UNDEF_ID,
     process: function(message, sender) {}
   });
   var receiverBoolean = new Studio.Actor({
     id: RECEIVER_BOOLEAN_ID,
-    route: RECEIVER_BOOLEAN_ID,
     process: function(message, sender) {
       return RECEIVER_BOOLEAN_RESULT;
     }
   });
   var receiverNumber = new Studio.Actor({
     id: RECEIVER_NUMBER_ID,
-    route: RECEIVER_NUMBER_ID,
     process: function(message, sender) {
       return RECEIVER_NUMBER_RESULT;
     }
   });
   var receiverString = new Studio.Actor({
     id: RECEIVER_STRING_ID,
-    route: RECEIVER_STRING_ID,
     process: function(message, sender) {
       return RECEIVER_STRING_RESULT;
     }
   });
   var receiverDate = new Studio.Actor({
     id: RECEIVER_DATE_ID,
-    route: RECEIVER_DATE_ID,
     process: function(message, sender) {
       return RECEIVER_DATE_RESULT;
     }
   });
   var receiverObject = new Studio.Actor({
     id: RECEIVER_OBJECT_ID,
-    route: RECEIVER_OBJECT_ID,
     process: function(message, sender) {
       return RECEIVER_OBJECT_RESULT;
     }

@@ -9,12 +9,10 @@ describe("An async actor", function() {
     RECEIVER_ERROR_RESULT = 'TEST';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    route: SENDER_ID,
     process: function(message, sender) {}
   });
   var receiverOk = new Studio.Actor({
     id: RECEIVER_OK_ID,
-    route: RECEIVER_OK_ID,
     process: function(message, sender) {
       var defer = Q.defer();
       setTimeout(function() {
@@ -25,7 +23,6 @@ describe("An async actor", function() {
   });
   var receiverError = new Studio.Actor({
     id: RECEIVER_ERROR_ID,
-    route: RECEIVER_ERROR_ID,
     process: function(message, sender) {
       var defer = Q.defer();
       setTimeout(function() {

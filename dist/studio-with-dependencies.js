@@ -30,10 +30,7 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      if (!this.route) {
-        throw new Error('You must provide a route');
-      }
-      this.stream = router.createOrGetRoute(this.route).map(function(message) {
+      this.stream = router.createOrGetRoute(this.id).map(function(message) {
         return clone(message);
       });
       this.unsubscribe = this.stream.onValue(this._doProcess);
@@ -88,19 +85,21 @@
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
-      var allRoutes, container, route, _i, _j, _len, _len1;
+      var allRoutes, container, route, _i, _j, _len, _len1, _route;
       container = {};
       if (routePattern instanceof RegExp) {
         allRoutes = router.getAllRoutes();
         for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
           route = allRoutes[_i];
-          if (routePattern.test(route)) {
-            container[route] = (function(_this) {
-              return function(message) {
-                return _this.send(route, message);
-              };
-            })(this);
+          if (!(routePattern.test(route))) {
+            continue;
           }
+          _route = clone(route);
+          container[route] = (function(_this) {
+            return function(message) {
+              return _this.send(_route, message);
+            };
+          })(this);
         }
       } else if (ArrayUtil.isArray(routePattern)) {
         for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
@@ -132,6 +131,10 @@
       return this.process = this._process || this.process;
     };
 
+    Actor.prototype.toString = function() {
+      return this.id;
+    };
+
     return Actor;
 
   })(BaseClass);
@@ -140,11 +143,11 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actor.js.map
+//# sourceMappingURL=../maps/actor.js.map
 
 },{"./router":4,"./util/arrayUtil":6,"./util/baseClass":7,"./util/clone":8,"q":13}],2:[function(require,module,exports){
 (function() {
-  var Actor, ActorFactory, InterceptorFactory, interceptors, router,
+  var Actor, ActorFactory, InterceptorFactory, actors, interceptors, proxies, router,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -154,6 +157,10 @@
 
   interceptors = [];
 
+  actors = [];
+
+  proxies = [];
+
   ActorFactory = (function(_super) {
     __extends(ActorFactory, _super);
 
@@ -162,14 +169,15 @@
     }
 
     ActorFactory.prototype.process = function(options) {
-      var process, proxy;
-      options.clazz = options.clazz || Actor;
+      var actor, clazz, id, process, proxy;
+      clazz = options.clazz || Actor;
       process = function(body, sender, receiver) {
         var interceptor, message, produceNext, toCallInterceptors, _i, _len;
+        toCallInterceptors = [];
         for (_i = 0, _len = interceptors.length; _i < _len; _i++) {
           interceptor = interceptors[_i];
           if (interceptor.route[receiver]) {
-            toCallInterceptors = interceptor.interceptor;
+            toCallInterceptors.push(interceptor);
           }
         }
         message = {
@@ -184,7 +192,7 @@
               return router.send(sender, "" + receiver + "__original", body);
             };
           } else {
-            nextRoute = toCallInterceptors[index + 1].route;
+            nextRoute = toCallInterceptors[index + 1].interceptor.id;
             return function() {
               message.next = produceNext(index + 1, message);
               return router.send(sender, nextRoute, message);
@@ -195,17 +203,19 @@
           return router.send(sender, "" + receiver + "__original", body);
         } else {
           message.next = produceNext(0, message);
-          return router.send(sender, toCallInterceptors[0].route, message);
+          return router.send(sender, toCallInterceptors[0].interceptor.id, message);
         }
       };
+      id = options.id;
       proxy = new Actor({
         id: id,
-        route: route,
         process: process
       });
       options.id = "" + options.id + "__original";
-      options.route = "" + options.route + "__original";
-      return new clazz(options);
+      actor = new clazz(options);
+      proxies.push(proxy);
+      actors.push(actor);
+      return proxy;
     };
 
     return ActorFactory;
@@ -220,10 +230,14 @@
     }
 
     InterceptorFactory.prototype.process = function(options) {
-      return interceptors.push({
-        interceptor: options.interceptor,
+      var clazz, interceptor;
+      clazz = options.clazz || Actor;
+      interceptor = new clazz(options);
+      interceptors.push({
+        interceptor: interceptor,
         route: this.mapRoute(options.routes)
       });
+      return interceptor;
     };
 
     return InterceptorFactory;
@@ -232,18 +246,16 @@
 
   module.exports = {
     actorFactory: new ActorFactory({
-      id: '__actorFactorySingleton',
-      route: 'createActor'
+      id: 'createActor'
     }),
     interceptorFactory: new InterceptorFactory({
-      id: '__interceptorFactorySingleton',
-      route: 'interceptRoute'
+      id: 'addInterceptor'
     })
   };
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actorFactory.js.map
+//# sourceMappingURL=../maps/actorFactory.js.map
 
 },{"./actor":1,"./router":4}],3:[function(require,module,exports){
 (function() {
@@ -289,7 +301,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\driver.js.map
+//# sourceMappingURL=../maps/driver.js.map
 
 },{"./router":4,"./util/baseClass":7,"baconjs":10}],4:[function(require,module,exports){
 (function() {
@@ -362,7 +374,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\router.js.map
+//# sourceMappingURL=../maps/router.js.map
 
 },{"./util/clone":8,"./util/timer":9,"baconjs":10,"q":13}],5:[function(require,module,exports){
 (function() {
@@ -378,8 +390,8 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
-    actorFactory: factories.ActorFactory,
-    interceptorFactory: factories.InterceptorFactory,
+    actorFactory: factories.actorFactory,
+    interceptorFactory: factories.interceptorFactory,
     Q: require('q'),
     Bacon: require('baconjs'),
     noConflict: function() {
@@ -394,7 +406,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\studio.js.map
+//# sourceMappingURL=../maps/studio.js.map
 
 },{"./actor":1,"./actorFactory":2,"./driver":3,"./router":4,"baconjs":10,"q":13}],6:[function(require,module,exports){
 (function() {
@@ -404,7 +416,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\arrayUtil.js.map
+//# sourceMappingURL=../../maps/arrayUtil.js.map
 
 },{}],7:[function(require,module,exports){
 (function() {
@@ -427,7 +439,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\baseClass.js.map
+//# sourceMappingURL=../../maps/baseClass.js.map
 
 },{"csextends":11}],8:[function(require,module,exports){
 (function() {
@@ -468,7 +480,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\clone.js.map
+//# sourceMappingURL=../../maps/clone.js.map
 
 },{}],9:[function(require,module,exports){
 (function() {
@@ -488,7 +500,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\timer.js.map
+//# sourceMappingURL=../../maps/timer.js.map
 
 },{}],10:[function(require,module,exports){
 (function (global){

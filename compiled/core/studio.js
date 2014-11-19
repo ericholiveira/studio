@@ -11,8 +11,8 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
-    actorFactory: factories.ActorFactory,
-    interceptorFactory: factories.InterceptorFactory,
+    actorFactory: factories.actorFactory,
+    interceptorFactory: factories.interceptorFactory,
     Q: require('q'),
     Bacon: require('baconjs'),
     noConflict: function() {
@@ -27,4 +27,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\studio.js.map
+//# sourceMappingURL=../maps/studio.js.map

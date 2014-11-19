@@ -6,8 +6,8 @@ module.exports=_global.Studio={
   router:require('./router'),
   Actor :require('./actor'),
   Driver :require('./driver'),
-  actorFactory :factories.ActorFactory,
-  interceptorFactory :factories.InterceptorFactory,
+  actorFactory :factories.actorFactory,
+  interceptorFactory :factories.interceptorFactory,
   Q:require('q'),
   Bacon:require('baconjs'),
   # Change the global Studio to the previous to avoid conflicts

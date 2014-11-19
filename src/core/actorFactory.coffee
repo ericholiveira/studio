@@ -2,18 +2,21 @@ Actor = require('./actor')
 router = require('./router')
 
 interceptors=[]
+actors = []
+proxies=[]
 # Responsible for create and manage an actor lifecycle.
 class ActorFactory extends Actor
   process:(options)->
-    options.clazz = options.clazz or Actor
+    clazz = options.clazz or Actor
     process = (body,sender,receiver)->
-      toCallInterceptors = interceptor.interceptor for interceptor in interceptors when interceptor.route[receiver]
+      toCallInterceptors=[]
+      toCallInterceptors.push(interceptor) for interceptor in interceptors when interceptor.route[receiver]
       message = {body,sender,receiver}
       produceNext = (index,message)->
         if index==toCallInterceptors.length-1
           ()-> router.send(sender,"#{receiver}__original",body)
         else
-          nextRoute = toCallInterceptors[index+1].route
+          nextRoute = toCallInterceptors[index+1].interceptor.id
           ()->
             message.next = produceNext(index+1,message)
             router.send(sender,nextRoute,message)
@@ -21,25 +24,30 @@ class ActorFactory extends Actor
         router.send(sender,"#{receiver}__original",body)
       else
         message.next=produceNext(0,message)
-        router.send(sender,toCallInterceptors[0].route,message)
-    proxy = new Actor({id,route,process})
+        router.send(sender,toCallInterceptors[0].interceptor.id,message)
+    id= options.id
+    proxy = new Actor({id,process})
     options.id="#{options.id}__original"
-    options.route="#{options.route}__original"
-    new clazz(options)
+    actor = new clazz(options)
+    proxies.push(proxy)
+    actors.push(actor)
+    proxy
+
 
 class InterceptorFactory  extends Actor
   process:(options)->
+    clazz = options.clazz or Actor
+    interceptor = new clazz(options)
     interceptors.push({
-      interceptor:options.interceptor
+      interceptor:interceptor
       route:@mapRoute(options.routes)
     })
+    interceptor
 module.exports ={
   actorFactory:new ActorFactory({
-    id:'__actorFactorySingleton',
-    route:'createActor'
+    id:'createActor'
   }),
   interceptorFactory:new InterceptorFactory({
-    id:'__interceptorFactorySingleton',
-    route:'interceptRoute'
+    id:'addInterceptor'
   })
 }

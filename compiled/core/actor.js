@@ -29,10 +29,7 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      if (!this.route) {
-        throw new Error('You must provide a route');
-      }
-      this.stream = router.createOrGetRoute(this.route).map(function(message) {
+      this.stream = router.createOrGetRoute(this.id).map(function(message) {
         return clone(message);
       });
       this.unsubscribe = this.stream.onValue(this._doProcess);
@@ -87,19 +84,21 @@
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
-      var allRoutes, container, route, _i, _j, _len, _len1;
+      var allRoutes, container, route, _i, _j, _len, _len1, _route;
       container = {};
       if (routePattern instanceof RegExp) {
         allRoutes = router.getAllRoutes();
         for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
           route = allRoutes[_i];
-          if (routePattern.test(route)) {
-            container[route] = (function(_this) {
-              return function(message) {
-                return _this.send(route, message);
-              };
-            })(this);
+          if (!(routePattern.test(route))) {
+            continue;
           }
+          _route = clone(route);
+          container[route] = (function(_this) {
+            return function(message) {
+              return _this.send(_route, message);
+            };
+          })(this);
         }
       } else if (ArrayUtil.isArray(routePattern)) {
         for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
@@ -131,6 +130,10 @@
       return this.process = this._process || this.process;
     };
 
+    Actor.prototype.toString = function() {
+      return this.id;
+    };
+
     return Actor;
 
   })(BaseClass);
@@ -139,4 +142,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actor.js.map
+//# sourceMappingURL=../maps/actor.js.map

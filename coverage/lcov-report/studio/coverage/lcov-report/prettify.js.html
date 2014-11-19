@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for studio/coverage/lcov-report/prettify.js</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../../prettify.css">
+
+    <style>
+        body, html {
+            margin:0; padding: 0;
+        }
+        body {
+            font-family: Helvetica Neue, Helvetica,Arial;
+            font-size: 10pt;
+        }
+        div.header, div.footer {
+            background: #eee;
+            padding: 1em;
+        }
+        div.header {
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            border-bottom: 1px solid #666;
+            width: 100%;
+        }
+        div.footer {
+            border-top: 1px solid #666;
+        }
+        div.body {
+            margin-top: 10em;
+        }
+        div.meta {
+            font-size: 90%;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+        h1 {
+            font-size: 12pt;
+        }
+        h2 {
+            font-size: 10pt;
+        }
+        pre {
+            font-family: Consolas, Menlo, Monaco, monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 14px;
+            font-size: 14px;
+            -moz-tab-size: 2;
+            -o-tab-size:  2;
+            tab-size: 2;
+        }
+
+        div.path { font-size: 110%; }
+        div.path a:link, div.path a:visited { color: #000; }
+        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
+
+        table.coverage td {
+            margin: 0;
+            padding: 0;
+            color: #111;
+            vertical-align: top;
+        }
+        table.coverage td.line-count {
+            width: 50px;
+            text-align: right;
+            padding-right: 5px;
+        }
+        table.coverage td.line-coverage {
+            color: #777 !important;
+            text-align: right;
+            border-left: 1px solid #666;
+            border-right: 1px solid #666;
+        }
+
+        table.coverage td.text {
+        }
+
+        table.coverage td span.cline-any {
+            display: inline-block;
+            padding: 0 5px;
+            width: 40px;
+        }
+        table.coverage td span.cline-neutral {
+            background: #eee;
+        }
+        table.coverage td span.cline-yes {
+            background: #b5d592;
+            color: #999;
+        }
+        table.coverage td span.cline-no {
+            background: #fc8c84;
+        }
+
+        .cstat-yes { color: #111; }
+        .cstat-no { background: #fc8c84; color: #111; }
+        .fstat-no { background: #ffc520; color: #111 !important; }
+        .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
+        .missing-if-branch {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: black;
+            color: yellow;
+        }
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
+            color: inherit !important;
+        }
+
+        .entity, .metric { font-weight: bold; }
+        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
+        .metric small { font-size: 80%; font-weight: normal; color: #666; }
+
+        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
+        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
+        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
+        div.coverage-summary th.file { border-right: none !important; }
+        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
+        div.coverage-summary th.pct { border-right: none !important; }
+        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
+        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
+        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
+        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
+        div.coverage-summary td.pic { min-width: 120px !important;  }
+        div.coverage-summary a:link { text-decoration: none; color: #000; }
+        div.coverage-summary a:visited { text-decoration: none; color: #333; }
+        div.coverage-summary a:hover { text-decoration: underline; }
+        div.coverage-summary tfoot td { border-top: 1px solid #666; }
+
+        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
+            height: 10px;
+            width: 7px;
+            display: inline-block;
+            margin-left: 0.5em;
+        }
+        div.coverage-summary .yui3-datatable-sort-indicator {
+            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
+        }
+        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
+            background-position: 0 -20px;
+        }
+        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
+            background-position: 0 -10px;
+        }
+
+        .high { background: #b5d592 !important; }
+        .medium { background: #ffe87c !important; }
+        .low { background: #fc8c84 !important; }
+
+        span.cover-fill, span.cover-empty {
+            display:inline-block;
+            border:1px solid #444;
+            background: white;
+            height: 12px;
+        }
+        span.cover-fill {
+            background: #ccc;
+            border-right: 1px solid #444;
+        }
+        span.cover-empty {
+            background: white;
+            border-left: none;
+        }
+        span.cover-full {
+            border-right: none !important;
+        }
+        pre.prettyprint {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">studio/coverage/lcov-report/prettify.js</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">4.51% <small>(24 / 532)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">0% <small>(0 / 284)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">0% <small>(0 / 29)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">100% <small>(1 / 1)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../../index.html">All files</a> &#187; <a href="index.html">studio/coverage/lcov-report/</a> &#187; prettify.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">window.PR_SHOULD_USE_CONTINUATION=true;<span class="cstat-no" title="statement not covered" >(<span class="fstat-no" title="function not covered" >function(){<span class="cstat-no" title="statement not covered" ></span>var h=["break,continue,do,else,for,if,return,while"];<span class="cstat-no" title="statement not covered" >v</span>ar u=[h,"auto,case,char,const,default,double,enum,extern,float,goto,int,long,register,short,signed,sizeof,static,struct,switch,typedef,union,unsigned,void,volatile"];<span class="cstat-no" title="statement not covered" >v</span>ar p=[u,"catch,class,delete,false,import,new,operator,private,protected,public,this,throw,true,try,typeof"];<span class="cstat-no" title="statement not covered" >v</span>ar l=[p,"alignof,align_union,asm,axiom,bool,concept,concept_map,const_cast,constexpr,decltype,dynamic_cast,explicit,export,friend,inline,late_check,mutable,namespace,nullptr,reinterpret_cast,static_assert,static_cast,template,typeid,typename,using,virtual,where"];<span class="cstat-no" title="statement not covered" >v</span>ar x=[p,"abstract,boolean,byte,extends,final,finally,implements,import,instanceof,null,native,package,strictfp,super,synchronized,throws,transient"];<span class="cstat-no" title="statement not covered" >v</span>ar R=[x,"as,base,by,checked,decimal,delegate,descending,dynamic,event,fixed,foreach,from,group,implicit,in,interface,internal,into,is,lock,object,out,override,orderby,params,partial,readonly,ref,sbyte,sealed,stackalloc,string,select,uint,ulong,unchecked,unsafe,ushort,var"];<span class="cstat-no" title="statement not covered" >v</span>ar r="all,and,by,catch,class,else,extends,false,finally,for,if,in,is,isnt,loop,new,no,not,null,of,off,on,or,return,super,then,true,try,unless,until,when,while,yes";<span class="cstat-no" title="statement not covered" >v</span>ar w=[p,"debugger,eval,export,function,get,null,set,undefined,var,with,Infinity,NaN"];<span class="cstat-no" title="statement not covered" >v</span>ar s="caller,delete,die,do,dump,elsif,eval,exit,foreach,for,goto,if,import,last,local,my,next,no,our,print,package,redo,require,sub,undef,unless,until,use,wantarray,while,BEGIN,END";<span class="cstat-no" title="statement not covered" >v</span>ar I=[h,"and,as,assert,class,def,del,elif,except,exec,finally,from,global,import,in,is,lambda,nonlocal,not,or,pass,print,raise,try,with,yield,False,True,None"];<span class="cstat-no" title="statement not covered" >v</span>ar f=[h,"alias,and,begin,case,class,def,defined,elsif,end,ensure,false,in,module,next,nil,not,or,redo,rescue,retry,self,super,then,true,undef,unless,until,when,yield,BEGIN,END"];<span class="cstat-no" title="statement not covered" >v</span>ar H=[h,"case,done,elif,esac,eval,fi,function,in,local,set,then,until"];<span class="cstat-no" title="statement not covered" >v</span>ar A=[l,R,w,s+I,f,H];<span class="cstat-no" title="statement not covered" >v</span>ar e=/^(DIR|FILE|vector|(de|priority_)?queue|list|stack|(const_)?iterator|(multi)?(set|map)|bitset|u?(int|float)\d*)/;<span class="cstat-no" title="statement not covered" >v</span>ar C="str";<span class="cstat-no" title="statement not covered" >v</span>ar z="kwd";<span class="cstat-no" title="statement not covered" >v</span>ar j="com";<span class="cstat-no" title="statement not covered" >v</span>ar O="typ";<span class="cstat-no" title="statement not covered" >v</span>ar G="lit";<span class="cstat-no" title="statement not covered" >v</span>ar L="pun";<span class="cstat-no" title="statement not covered" >v</span>ar F="pln";<span class="cstat-no" title="statement not covered" >v</span>ar m="tag";<span class="cstat-no" title="statement not covered" >v</span>ar E="dec";<span class="cstat-no" title="statement not covered" >v</span>ar J="src";<span class="cstat-no" title="statement not covered" >v</span>ar P="atn";<span class="cstat-no" title="statement not covered" >v</span>ar n="atv";<span class="cstat-no" title="statement not covered" >v</span>ar N="nocode";<span class="cstat-no" title="statement not covered" >v</span>ar M="(?:^^\\.?|[+-]|\\!|\\!=|\\!==|\\#|\\%|\\%=|&amp;|&amp;&amp;|&amp;&amp;=|&amp;=|\\(|\\*|\\*=|\\+=|\\,|\\-=|\\-&gt;|\\/|\\/=|:|::|\\;|&lt;|&lt;&lt;|&lt;&lt;=|&lt;=|=|==|===|&gt;|&gt;=|&gt;&gt;|&gt;&gt;=|&gt;&gt;&gt;|&gt;&gt;&gt;=|\\?|\\@|\\[|\\^|\\^=|\\^\\^|\\^\\^=|\\{|\\||\\|=|\\|\\||\\|\\|=|\\~|break|case|continue|delete|do|else|finally|instanceof|return|throw|tr<span class="fstat-no" title="function not covered" >y|typeof)\\s*";f</span>unction k(Z){<span class="cstat-no" title="statement not covered" ></span>var ad=0;<span class="cstat-no" title="statement not covered" >v</span>ar S=false;<span class="cstat-no" title="statement not covered" >v</span>ar ac=false;<span class="cstat-no" title="statement not covered" >f</span>or(var V=0,U=Z.length;V&lt;U;++V){<span class="cstat-no" title="statement not covered" >var ae=Z[V];<span class="cstat-no" title="statement not covered" >i</span>f(ae.ignoreCase){<span class="cstat-no" title="statement not covered" >ac=true}</span>else{<span class="cstat-no" title="statement not covered" >if(/[a-z]/i.test(ae.source.replace(/\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[^ux]/gi,""))){<span class="cstat-no" title="statement not covered" >S=true;<span class="cstat-no" title="statement not covered" >a</span>c=false;<span class="cstat-no" title="statement not covered" >b</span>reak}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>v</span>ar Y={b:8,t:9,n:10,v<span class="fstat-no" title="function not covered" >:11,f:12,r:13};f</span>unction ab(ah){<span class="cstat-no" title="statement not covered" ></span>var ag=ah.charCodeAt(0);<span class="cstat-no" title="statement not covered" >i</span>f(ag!==92){<span class="cstat-no" title="statement not covered" >return ag}<span class="cstat-no" title="statement not covered" ></span>v</span>ar af=ah.charAt(1);<span class="cstat-no" title="statement not covered" >a</span>g=Y[af];<span class="cstat-no" title="statement not covered" >i</span>f(ag){<span class="cstat-no" title="statement not covered" >return ag}</span>else{<span class="cstat-no" title="statement not covered" >if("0"&lt;=af&amp;&amp;af&lt;="7"){<span class="cstat-no" title="statement not covered" >return parseInt(ah.substring(1),8)}</span>else{<span class="cstat-no" title="statement not covered" >if(af==="u"||af==="x"){<span class="cstat-no" title="statement not covered" >return parseInt(ah.substring(2),16)}</span>else{<span class="cstat-no" title="statement not covered" >return ah.ch<span class="fstat-no" title="function not covered" >arCodeAt(1)}</span>}</span>}</span>}</span>function T(af){<span class="cstat-no" title="statement not covered" ></span>if(af&lt;32){<span class="cstat-no" title="statement not covered" >return(af&lt;16?"\\x0":"\\x")+af.toString(16)}<span class="cstat-no" title="statement not covered" ></span>v</span>ar ag=String.fromCharCode(af);<span class="cstat-no" title="statement not covered" >i</span>f(ag==="\\"||ag==="-"||ag==="["||ag==="]"){<span class="cstat-no" title="statement not covered" >ag="\\<span class="fstat-no" title="function not covered" >"+ag}<span class="cstat-no" title="statement not covered" ></span>r</span>eturn ag}</span>function X(am){<span class="cstat-no" title="statement not covered" ></span>var aq=am.substring(1,am.length-1).match(new RegExp("\\\\u[0-9A-Fa-f]{4}|\\\\x[0-9A-Fa-f]{2}|\\\\[0-3][0-7]{0,2}|\\\\[0-7]{1,2}|\\\\[\\s\\S]|-|[^-\\\\]","g"));<span class="cstat-no" title="statement not covered" >v</span>ar ak=[];<span class="cstat-no" title="statement not covered" >v</span>ar af=[];<span class="cstat-no" title="statement not covered" >v</span>ar ao=aq[0]==="^";<span class="cstat-no" title="statement not covered" >f</span>or(var ar=ao?1:0,aj=aq.length;ar&lt;aj;++ar){<span class="cstat-no" title="statement not covered" >var ah=aq[ar];<span class="cstat-no" title="statement not covered" >i</span>f(/\\[bdsw]/i.test(ah)){<span class="cstat-no" title="statement not covered" >ak.push(ah)}</span>else{<span class="cstat-no" title="statement not covered" >var ag=ab(ah);<span class="cstat-no" title="statement not covered" >v</span>ar al;<span class="cstat-no" title="statement not covered" >i</span>f(ar+2&lt;aj&amp;&amp;"-"===aq[ar+1]){<span class="cstat-no" title="statement not covered" >al=ab(aq[ar+2]);<span class="cstat-no" title="statement not covered" >a</span>r+=2}</span>else{<span class="cstat-no" title="statement not covered" >al=ag}<span class="cstat-no" title="statement not covered" ></span>a</span>f.push([ag,al]);<span class="cstat-no" title="statement not covered" >i</span>f(!(al&lt;65||ag&gt;122)){<span class="cstat-no" title="statement not covered" >if(!(al&lt;65||ag&gt;90)){<span class="cstat-no" title="statement not covered" >af.push([Math.max(65,ag)|32,Math.min(al,90)|32])}<span class="cstat-no" title="statement not covered" ></span>i</span>f(!(al&lt;97||ag&gt;122)){<span class="cstat-no" title="statement not covered" >af.push([Math.max(97,ag)&amp;~32,Math.min(al,122)&amp;~32])}</span>}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>a</span>f.sort(<span class="fstat-no" title="function not covered" >function(av,au){<span class="cstat-no" title="statement not covered" ></span>return(av[0]-au[0])||(au[1]-av[1])}</span>);<span class="cstat-no" title="statement not covered" >v</span>ar ai=[];<span class="cstat-no" title="statement not covered" >v</span>ar ap=[NaN,NaN];<span class="cstat-no" title="statement not covered" >f</span>or(var ar=0;ar&lt;af.length;++ar){<span class="cstat-no" title="statement not covered" >var at=af[ar];<span class="cstat-no" title="statement not covered" >i</span>f(at[0]&lt;=ap[1]+1){<span class="cstat-no" title="statement not covered" >ap[1]=Math.max(ap[1],at[1])}</span>else{<span class="cstat-no" title="statement not covered" >ai.push(ap=at)}</span>}<span class="cstat-no" title="statement not covered" ></span>v</span>ar an=["["];<span class="cstat-no" title="statement not covered" >i</span>f(ao){<span class="cstat-no" title="statement not covered" >an.push("^")}<span class="cstat-no" title="statement not covered" ></span>a</span>n.push.apply(an,ak);<span class="cstat-no" title="statement not covered" >f</span>or(var ar=0;ar&lt;ai.length;++ar){<span class="cstat-no" title="statement not covered" >var at=ai[ar];<span class="cstat-no" title="statement not covered" >a</span>n.push(T(at[0]));<span class="cstat-no" title="statement not covered" >i</span>f(at[1]&gt;at[0]){<span class="cstat-no" title="statement not covered" >if(at[1]+1&gt;at[0]){<span class="cstat-no" title="statement not covered" >an.push("-")}<span class="cstat-no" title="statement not covered" ></span>a</span>n.push(T(at[1]))}</span>}<span class="cstat-no" title="statement not covered" ></span>a</span>n.push("]");<span class="cstat-no" title="statement not covered" >r</span>etu<span class="fstat-no" title="function not covered" >rn an.join("")}</span>function W(al){<span class="cstat-no" title="statement not covered" ></span>var aj=al.source.match(new RegExp("(?:\\[(?:[^\\x5C\\x5D]|\\\\[\\s\\S])*\\]|\\\\u[A-Fa-f0-9]{4}|\\\\x[A-Fa-f0-9]{2}|\\\\[0-9]+|\\\\[^ux0-9]|\\(\\?[:!=]|[\\(\\)\\^]|[^\\x5B\\x5C\\(\\)\\^]+)","g"));<span class="cstat-no" title="statement not covered" >v</span>ar ah=aj.length;<span class="cstat-no" title="statement not covered" >v</span>ar an=[];<span class="cstat-no" title="statement not covered" >f</span>or(var ak=0,am=0;ak&lt;ah;++ak){<span class="cstat-no" title="statement not covered" >var ag=aj[ak];<span class="cstat-no" title="statement not covered" >i</span>f(ag==="("){<span class="cstat-no" title="statement not covered" >++am}</span>else{<span class="cstat-no" title="statement not covered" >if("\\"===ag.charAt(0)){<span class="cstat-no" title="statement not covered" >var af=+ag.substring(1);<span class="cstat-no" title="statement not covered" >i</span>f(af&amp;&amp;af&lt;=am){<span class="cstat-no" title="statement not covered" >an[af]=-1}</span>}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>f</span>or(var ak=1;ak&lt;an.length;++ak){<span class="cstat-no" title="statement not covered" >if(-1===an[ak]){<span class="cstat-no" title="statement not covered" >an[ak]=++ad}</span>}<span class="cstat-no" title="statement not covered" ></span>f</span>or(var ak=0,am=0;ak&lt;ah;++ak){<span class="cstat-no" title="statement not covered" >var ag=aj[ak];<span class="cstat-no" title="statement not covered" >i</span>f(ag==="("){<span class="cstat-no" title="statement not covered" >++am;<span class="cstat-no" title="statement not covered" >i</span>f(an[am]===undefined){<span class="cstat-no" title="statement not covered" >aj[ak]="(?:"}</span>}</span>else{<span class="cstat-no" title="statement not covered" >if("\\"===ag.charAt(0)){<span class="cstat-no" title="statement not covered" >var af=+ag.substring(1);<span class="cstat-no" title="statement not covered" >i</span>f(af&amp;&amp;af&lt;=am){<span class="cstat-no" title="statement not covered" >aj[ak]="\\"+an[am]}</span>}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>f</span>or(var ak=0,am=0;ak&lt;ah;++ak){<span class="cstat-no" title="statement not covered" >if("^"===aj[ak]&amp;&amp;"^"!==aj[ak+1]){<span class="cstat-no" title="statement not covered" >aj[ak]=""}</span>}<span class="cstat-no" title="statement not covered" ></span>i</span>f(al.ignoreCase&amp;&amp;S){<span class="cstat-no" title="statement not covered" >for(var ak=0;ak&lt;ah;++ak){<span class="cstat-no" title="statement not covered" >var ag=aj[ak];<span class="cstat-no" title="statement not covered" >v</span>ar ai=ag.charAt(0);<span class="cstat-no" title="statement not covered" >i</span>f(ag.length&gt;=2&amp;&amp;ai==="["){<span class="cstat-no" title="statement not covered" >aj[ak]=X(ag)}</span>else{<span class="cstat-no" title="statement not covered" >if(ai!=="\\"){<span class="cstat-no" title="statement not covered" >aj[ak]=ag.replace(/[a-zA-Z]/g,<span class="fstat-no" title="function not covered" >function(ao){<span class="cstat-no" title="statement not covered" ></span>var ap=ao.charCodeAt(0);<span class="cstat-no" title="statement not covered" >r</span>eturn"["+String.fromCharCode(ap&amp;~32,ap|32)+"]"}</span>)}</span>}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>r</span>eturn aj.join("")}<span class="cstat-no" title="statement not covered" ></span>var aa=[];<span class="cstat-no" title="statement not covered" >f</span>or(var V=0,U=Z.length;V&lt;U;++V){<span class="cstat-no" title="statement not covered" >var ae=Z[V];<span class="cstat-no" title="statement not covered" >i</span>f(ae.global||ae.multiline){<span class="cstat-no" title="statement not covered" >throw new Error(""+ae)}<span class="cstat-no" title="statement not covered" ></span>a</span>a.push("(?:"+W(ae)+")")}<span class="cstat-no" title="statement not covered" ></span>r</span>eturn new RegExp(aa.join("|"<span class="fstat-no" title="function not covered" >),ac?"gi":"g")}</span>function a(V){<span class="cstat-no" title="statement not covered" ></span>var U=/(?:^|\s)nocode(?:\s|$)/;<span class="cstat-no" title="statement not covered" >v</span>ar X=[];<span class="cstat-no" title="statement not covered" >v</span>ar T=0;<span class="cstat-no" title="statement not covered" >v</span>ar Z=[];<span class="cstat-no" title="statement not covered" >v</span>ar W=0;<span class="cstat-no" title="statement not covered" >v</span>ar S;<span class="cstat-no" title="statement not covered" >i</span>f(V.currentStyle){<span class="cstat-no" title="statement not covered" >S=V.currentStyle.whiteSpace}</span>else{<span class="cstat-no" title="statement not covered" >if(window.getComputedStyle){<span class="cstat-no" title="statement not covered" >S=document.defaultView.getComputedStyle(V,null).getPropertyValue("white-space")}</span>}<span class="cstat-no" title="statement not covered" ></span>v</span>ar Y=S&amp;&amp;"pre"===S.<span class="fstat-no" title="function not covered" >substring(0,3);f</span>unction aa(ab){<span class="cstat-no" title="statement not covered" ></span>switch(ab.nodeType){case 1:<span class="cstat-no" title="statement not covered" >if(U.test(ab.className)){<span class="cstat-no" title="statement not covered" >return}<span class="cstat-no" title="statement not covered" ></span>f</span>or(var ae=ab.firstChild;ae;ae=ae.nextSibling){<span class="cstat-no" title="statement not covered" >aa(ae)}<span class="cstat-no" title="statement not covered" ></span>v</span>ar ad=ab.nodeName;<span class="cstat-no" title="statement not covered" >i</span>f("BR"===ad||"LI"===ad){<span class="cstat-no" title="statement not covered" >X[W]="\n";<span class="cstat-no" title="statement not covered" >Z</span>[W&lt;&lt;1]=T++;<span class="cstat-no" title="statement not covered" >Z</span>[(W++&lt;&lt;1)|1]=ab}<span class="cstat-no" title="statement not covered" ></span>b</span>reak;c</span>ase 3:case 4:<span class="cstat-no" title="statement not covered" >var ac=ab.nodeValue;<span class="cstat-no" title="statement not covered" >i</span>f(ac.length){<span class="cstat-no" title="statement not covered" >if(!Y){<span class="cstat-no" title="statement not covered" >ac=ac.replace(/[ \t\r\n]+/g," ")}</span>else{<span class="cstat-no" title="statement not covered" >ac=ac.replace(/\r\n?/g,"\n")}<span class="cstat-no" title="statement not covered" ></span>X</span>[W]=ac;<span class="cstat-no" title="statement not covered" >Z</span>[W&lt;&lt;1]=T;<span class="cstat-no" title="statement not covered" >T</span>+=ac.length;<span class="cstat-no" title="statement not covered" >Z</span>[(W++&lt;&lt;1)|1]=ab}<span class="cstat-no" title="statement not covered" ></span>b</span>reak}</span>}<span class="cstat-no" title="statement not covered" ></span>aa(V);<span class="cstat-no" title="statement not covered" >r</span>eturn{sourceCode:X.join("").replace(/\n$<span class="fstat-no" title="function not covered" >/,""),spans:Z}}</span>function B(S,U,W,T){<span class="cstat-no" title="statement not covered" ></span>if(!U){<span class="cstat-no" title="statement not covered" >return}<span class="cstat-no" title="statement not covered" ></span>v</span>ar V={sourceCode:U,basePos:S};<span class="cstat-no" title="statement not covered" >W</span>(V);<span class="cstat-no" title="statement not covered" >T</span>.push.apply(T,V.decoratio<span class="fstat-no" title="function not covered" >ns)}<span class="cstat-no" title="statement not covered" ></span>var v=/\S/;f</span>unction o(S){<span class="cstat-no" title="statement not covered" ></span>var V=undefined;<span class="cstat-no" title="statement not covered" >f</span>or(var U=S.firstChild;U;U=U.nextSibling){<span class="cstat-no" title="statement not covered" >var T=U.nodeType;<span class="cstat-no" title="statement not covered" >V</span>=(T===1)?(V?S:U):(T===3)?(v.test(U.nodeValue)?S:V):V}<span class="cstat-no" title="statement not covered" ></span>r</span>eturn V==<span class="fstat-no" title="function not covered" >=S?undefined:V}</span>function g(U,T){<span class="cstat-no" title="statement not covered" ></span>var S={};<span class="cstat-no" title="statement not covered" >v</span>ar V;<span class="cstat-no" title="statement not covered" >(<span class="fstat-no" title="function not covered" ></span>function(){<span class="cstat-no" title="statement not covered" ></span>var ad=U.concat(T);<span class="cstat-no" title="statement not covered" >v</span>ar ah=[];<span class="cstat-no" title="statement not covered" >v</span>ar ag={};<span class="cstat-no" title="statement not covered" >f</span>or(var ab=0,Z=ad.length;ab&lt;Z;++ab){<span class="cstat-no" title="statement not covered" >var Y=ad[ab];<span class="cstat-no" title="statement not covered" >v</span>ar ac=Y[3];<span class="cstat-no" title="statement not covered" >i</span>f(ac){<span class="cstat-no" title="statement not covered" >for(var ae=ac.length;--ae&gt;=0;){<span class="cstat-no" title="statement not covered" >S[ac.charAt(ae)]=Y}</span>}<span class="cstat-no" title="statement not covered" ></span>v</span>ar af=Y[1];<span class="cstat-no" title="statement not covered" >v</span>ar aa=""+af;<span class="cstat-no" title="statement not covered" >i</span>f(!ag.hasOwnProperty(aa)){<span class="cstat-no" title="statement not covered" >ah.push(af);<span class="cstat-no" title="statement not covered" >a</span>g[aa]=null}</span>}<span class="cstat-no" title="statement not covered" ></span>a</span>h.push(/[\0-\uffff]/);<span class="cstat-no" title="statement not covered" >V</span>=k(ah)}</span>)();<span class="cstat-no" title="statement not covered" >v</span>ar X=T.length;<span class="cstat-no" title="statement not covered" >v</span>ar W=<span class="fstat-no" title="function not covered" >function(ah){<span class="cstat-no" title="statement not covered" ></span>var Z=ah.sourceCode,Y=ah.basePos;<span class="cstat-no" title="statement not covered" >v</span>ar ad=[Y,F];<span class="cstat-no" title="statement not covered" >v</span>ar af=0;<span class="cstat-no" title="statement not covered" >v</span>ar an=Z.match(V)||[];<span class="cstat-no" title="statement not covered" >v</span>ar aj={};<span class="cstat-no" title="statement not covered" >f</span>or(var ae=0,aq=an.length;ae&lt;aq;++ae){<span class="cstat-no" title="statement not covered" >var ag=an[ae];<span class="cstat-no" title="statement not covered" >v</span>ar ap=aj[ag];<span class="cstat-no" title="statement not covered" >v</span>ar ai=void 0;<span class="cstat-no" title="statement not covered" >v</span>ar am;<span class="cstat-no" title="statement not covered" >i</span>f(typeof ap==="string"){<span class="cstat-no" title="statement not covered" >am=false}</span>else{<span class="cstat-no" title="statement not covered" >var aa=S[ag.charAt(0)];<span class="cstat-no" title="statement not covered" >i</span>f(aa){<span class="cstat-no" title="statement not covered" >ai=ag.match(aa[1]);<span class="cstat-no" title="statement not covered" >a</span>p=aa[0]}</span>else{<span class="cstat-no" title="statement not covered" >for(var ao=0;ao&lt;X;++ao){<span class="cstat-no" title="statement not covered" >aa=T[ao];<span class="cstat-no" title="statement not covered" >a</span>i=ag.match(aa[1]);<span class="cstat-no" title="statement not covered" >i</span>f(ai){<span class="cstat-no" title="statement not covered" >ap=aa[0];<span class="cstat-no" title="statement not covered" >b</span>reak}</span>}<span class="cstat-no" title="statement not covered" ></span>i</span>f(!ai){<span class="cstat-no" title="statement not covered" >ap=F}</span>}<span class="cstat-no" title="statement not covered" ></span>a</span>m=ap.length&gt;=5&amp;&amp;"lang-"===ap.substring(0,5);<span class="cstat-no" title="statement not covered" >i</span>f(am&amp;&amp;!(ai&amp;&amp;typeof ai[1]==="string")){<span class="cstat-no" title="statement not covered" >am=false;<span class="cstat-no" title="statement not covered" >a</span>p=J}<span class="cstat-no" title="statement not covered" ></span>i</span>f(!am){<span class="cstat-no" title="statement not covered" >aj[ag]=ap}</span>}<span class="cstat-no" title="statement not covered" ></span>v</span>ar ab=af;<span class="cstat-no" title="statement not covered" >a</span>f+=ag.length;<span class="cstat-no" title="statement not covered" >i</span>f(!am){<span class="cstat-no" title="statement not covered" >ad.push(Y+ab,ap)}</span>else{<span class="cstat-no" title="statement not covered" >var al=ai[1];<span class="cstat-no" title="statement not covered" >v</span>ar ak=ag.indexOf(al);<span class="cstat-no" title="statement not covered" >v</span>ar ac=ak+al.length;<span class="cstat-no" title="statement not covered" >i</span>f(ai[2]){<span class="cstat-no" title="statement not covered" >ac=ag.length-ai[2].length;<span class="cstat-no" title="statement not covered" >a</span>k=ac-al.length}<span class="cstat-no" title="statement not covered" ></span>v</span>ar ar=ap.substring(5);<span class="cstat-no" title="statement not covered" >B</span>(Y+ab,ag.substring(0,ak),W,ad);<span class="cstat-no" title="statement not covered" >B</span>(Y+ab+ak,al,q(ar,al),ad);<span class="cstat-no" title="statement not covered" >B</span>(Y+ab+ac,ag.substring(ac),W,ad)}</span>}<span class="cstat-no" title="statement not covered" ></span>a</span>h.decoration<span class="fstat-no" title="function not covered" >s=ad}</span>;<span class="cstat-no" title="statement not covered" >r</span>eturn W}</span>function i(T){<span class="cstat-no" title="statement not covered" ></span>var W=[],S=[];<span class="cstat-no" title="statement not covered" >i</span>f(T.tripleQuotedStrings){<span class="cstat-no" title="statement not covered" >W.push([C,/^(?:\'\'\'(?:[^\'\\]|\\[\s\S]|\'{1,2}(?=[^\']))*(?:\'\'\'|$)|\"\"\"(?:[^\"\\]|\\[\s\S]|\"{1,2}(?=[^\"]))*(?:\"\"\"|$)|\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$))/,null,"'\""])}</span>else{<span class="cstat-no" title="statement not covered" >if(T.multiLineStrings){<span class="cstat-no" title="statement not covered" >W.push([C,/^(?:\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$)|\`(?:[^\\\`]|\\[\s\S])*(?:\`|$))/,null,"'\"`"])}</span>else{<span class="cstat-no" title="statement not covered" >W.push([C,/^(?:\'(?:[^\\\'\r\n]|\\.)*(?:\'|$)|\"(?:[^\\\"\r\n]|\\.)*(?:\"|$))/,null,"\"'"])}</span>}<span class="cstat-no" title="statement not covered" ></span>i</span>f(T.verbatimStrings){<span class="cstat-no" title="statement not covered" >S.push([C,/^@\"(?:[^\"]|\"\")*(?:\"|$)/,null])}<span class="cstat-no" title="statement not covered" ></span>v</span>ar Y=T.hashComments;<span class="cstat-no" title="statement not covered" >i</span>f(Y){<span class="cstat-no" title="statement not covered" >if(T.cStyleComments){<span class="cstat-no" title="statement not covered" >if(Y&gt;1){<span class="cstat-no" title="statement not covered" >W.push([j,/^#(?:##(?:[^#]|#(?!##))*(?:###|$)|.*)/,null,"#"])}</span>else{<span class="cstat-no" title="statement not covered" >W.push([j,/^#(?:(?:define|elif|else|endif|error|ifdef|include|ifndef|line|pragma|undef|warning)\b|[^\r\n]*)/,null,"#"])}<span class="cstat-no" title="statement not covered" ></span>S</span>.push([C,/^&lt;(?:(?:(?:\.\.\/)*|\/?)(?:[\w-]+(?:\/[\w-]+)+)?[\w-]+\.h|[a-z]\w*)&gt;/,null])}</span>else{<span class="cstat-no" title="statement not covered" >W.push([j,/^#[^\r\n]*/,null,"#"])}</span>}<span class="cstat-no" title="statement not covered" ></span>i</span>f(T.cStyleComments){<span class="cstat-no" title="statement not covered" >S.push([j,/^\/\/[^\r\n]*/,null]);<span class="cstat-no" title="statement not covered" >S</span>.push([j,/^\/\*[\s\S]*?(?:\*\/|$)/,null])}<span class="cstat-no" title="statement not covered" ></span>i</span>f(T.regexLiterals){<span class="cstat-no" title="statement not covered" >var X=("/(?=[^/*])(?:[^/\\x5B\\x5C]|\\x5C[\\s\\S]|\\x5B(?:[^\\x5C\\x5D]|\\x5C[\\s\\S])*(?:\\x5D|$))+/");<span class="cstat-no" title="statement not covered" >S</span>.push(["lang-regex",new RegExp("^"+M+"("+X+")")])}<span class="cstat-no" title="statement not covered" ></span>v</span>ar V=T.types;<span class="cstat-no" title="statement not covered" >i</span>f(V){<span class="cstat-no" title="statement not covered" >S.push([O,V])}<span class="cstat-no" title="statement not covered" ></span>v</span>ar U=(""+T.keywords).replace(/^ | $/g,"");<span class="cstat-no" title="statement not covered" >i</span>f(U.length){<span class="cstat-no" title="statement not covered" >S.push([z,new RegExp("^(?:"+U.replace(/[\s,]+/g,"|")+")\\b"),null])}<span class="cstat-no" title="statement not covered" ></span>W</span>.push([F,/^\s+/,null," \r\n\t\xA0"]);<span class="cstat-no" title="statement not covered" >S</span>.push([G,/^@[a-z_$][a-z_$@0-9]*/i,null],[O,/^(?:[@_]?[A-Z]+[a-z][A-Za-z_$@0-9]*|\w+_t\b)/,null],[F,/^[a-z_$][a-z_$@0-9]*/i,null],[G,new RegExp("^(?:0x[a-f0-9]+|(?:\\d(?:_\\d+)*\\d*(?:\\.\\d*)?|\\.\\d\\+)(?:e[+\\-]?\\d+)?)[a-z]*","i"),null,"0123456789"],[F,/^\\[\s\S]?/,null],[L,/^.[^\s\w\.$@\'\"\`\/\#\\]*/,null]);<span class="cstat-no" title="statement not covered" >r</span>eturn g(W,S)}<span class="cstat-no" title="statement not covered" ></span>var K=i({keywords:A,hashComments:true,cStyleComments:true,multiLineStrings:true,regexL<span class="fstat-no" title="function not covered" >iterals:true});f</span>unction Q(V,ag){<span class="cstat-no" title="statement not covered" ></span>var U=/(?:^|\s)nocode(?:\s|$)/;<span class="cstat-no" title="statement not covered" >v</span>ar ab=/\r\n?|\n/;<span class="cstat-no" title="statement not covered" >v</span>ar ac=V.ownerDocument;<span class="cstat-no" title="statement not covered" >v</span>ar S;<span class="cstat-no" title="statement not covered" >i</span>f(V.currentStyle){<span class="cstat-no" title="statement not covered" >S=V.currentStyle.whiteSpace}</span>else{<span class="cstat-no" title="statement not covered" >if(window.getComputedStyle){<span class="cstat-no" title="statement not covered" >S=ac.defaultView.getComputedStyle(V,null).getPropertyValue("white-space")}</span>}<span class="cstat-no" title="statement not covered" ></span>v</span>ar Z=S&amp;&amp;"pre"===S.substring(0,3);<span class="cstat-no" title="statement not covered" >v</span>ar af=ac.createElement("LI");<span class="cstat-no" title="statement not covered" >w</span>hile(V.firstChild){<span class="cstat-no" title="statement not covered" >af.appendChild(V.firstChi<span class="fstat-no" title="function not covered" >ld)}<span class="cstat-no" title="statement not covered" ></span>v</span>ar W=[af];f</span>unction ae(al){<span class="cstat-no" title="statement not covered" ></span>switch(al.nodeType){case 1:<span class="cstat-no" title="statement not covered" >if(U.test(al.className)){<span class="cstat-no" title="statement not covered" >break}<span class="cstat-no" title="statement not covered" ></span>i</span>f("BR"===al.nodeName){<span class="cstat-no" title="statement not covered" >ad(al);<span class="cstat-no" title="statement not covered" >i</span>f(al.parentNode){<span class="cstat-no" title="statement not covered" >al.parentNode.removeChild(al)}</span>}</span>else{<span class="cstat-no" title="statement not covered" >for(var an=al.firstChild;an;an=an.nextSibling){<span class="cstat-no" title="statement not covered" >ae(an)}</span>}<span class="cstat-no" title="statement not covered" ></span>b</span>reak;c</span>ase 3:case 4:<span class="cstat-no" title="statement not covered" >if(Z){<span class="cstat-no" title="statement not covered" >var am=al.nodeValue;<span class="cstat-no" title="statement not covered" >v</span>ar aj=am.match(ab);<span class="cstat-no" title="statement not covered" >i</span>f(aj){<span class="cstat-no" title="statement not covered" >var ai=am.substring(0,aj.index);<span class="cstat-no" title="statement not covered" >a</span>l.nodeValue=ai;<span class="cstat-no" title="statement not covered" >v</span>ar ah=am.substring(aj.index+aj[0].length);<span class="cstat-no" title="statement not covered" >i</span>f(ah){<span class="cstat-no" title="statement not covered" >var ak=al.parentNode;<span class="cstat-no" title="statement not covered" >a</span>k.insertBefore(ac.createTextNode(ah),al.nextSibling)}<span class="cstat-no" title="statement not covered" ></span>a</span>d(al);<span class="cstat-no" title="statement not covered" >i</span>f(!ai){<span class="cstat-no" title="statement not covered" >al.parentNode.removeChil<span class="fstat-no" title="function not covered" >d(al)}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>b</span>reak}</span>}</span>function ad(ak){<span class="cstat-no" title="statement not covered" ></span>while(!ak.nextSibling){<span class="cstat-no" title="statement not covered" >ak=ak.parentNode;<span class="cstat-no" title="statement not covered" >i<span class="fstat-no" title="function not covered" ></span>f(!ak){<span class="cstat-no" title="statement not covered" >return}</span>}</span>f</span>unction ai(al,ar){<span class="cstat-no" title="statement not covered" ></span>var aq=ar?al.cloneNode(false):al;<span class="cstat-no" title="statement not covered" >v</span>ar ao=al.parentNode;<span class="cstat-no" title="statement not covered" >i</span>f(ao){<span class="cstat-no" title="statement not covered" >var ap=ai(ao,1);<span class="cstat-no" title="statement not covered" >v</span>ar an=al.nextSibling;<span class="cstat-no" title="statement not covered" >a</span>p.appendChild(aq);<span class="cstat-no" title="statement not covered" >f</span>or(var am=an;am;am=an){<span class="cstat-no" title="statement not covered" >an=am.nextSibling;<span class="cstat-no" title="statement not covered" >a</span>p.appendChild(am)}</span>}<span class="cstat-no" title="statement not covered" ></span>r</span>eturn aq}<span class="cstat-no" title="statement not covered" ></span>var ah=ai(ak.nextSibling,0);<span class="cstat-no" title="statement not covered" >f</span>or(var aj;(aj=ah.parentNode)&amp;&amp;aj.nodeType===1;){<span class="cstat-no" title="statement not covered" >ah=aj}<span class="cstat-no" title="statement not covered" ></span>W</span>.push(ah)}<span class="cstat-no" title="statement not covered" ></span>for(var Y=0;Y&lt;W.length;++Y){<span class="cstat-no" title="statement not covered" >ae(W[Y])}<span class="cstat-no" title="statement not covered" ></span>i</span>f(ag===(ag|0)){<span class="cstat-no" title="statement not covered" >W[0].setAttribute("value",ag)}<span class="cstat-no" title="statement not covered" ></span>v</span>ar aa=ac.createElement("OL");<span class="cstat-no" title="statement not covered" >a</span>a.className="linenums";<span class="cstat-no" title="statement not covered" >v</span>ar X=Math.max(0,((ag-1))|0)||0;<span class="cstat-no" title="statement not covered" >f</span>or(var Y=0,T=W.length;Y&lt;T;++Y){<span class="cstat-no" title="statement not covered" >af=W[Y];<span class="cstat-no" title="statement not covered" >a</span>f.className="L"+((Y+X)%10);<span class="cstat-no" title="statement not covered" >i</span>f(!af.firstChild){<span class="cstat-no" title="statement not covered" >af.appendChild(ac.createTextNode("\xA0"))}<span class="cstat-no" title="statement not covered" ></span>a</span>a.appendChild(af)}<span class="cstat-no" title="statement not covered" ></span>V</span>.a<span class="fstat-no" title="function not covered" >ppendChild(aa)}</span>function D(ac){<span class="cstat-no" title="statement not covered" ></span>var aj=/\bMSIE\b/.test(navigator.userAgent);<span class="cstat-no" title="statement not covered" >v</span>ar am=/\n/g;<span class="cstat-no" title="statement not covered" >v</span>ar al=ac.sourceCode;<span class="cstat-no" title="statement not covered" >v</span>ar an=al.length;<span class="cstat-no" title="statement not covered" >v</span>ar V=0;<span class="cstat-no" title="statement not covered" >v</span>ar aa=ac.spans;<span class="cstat-no" title="statement not covered" >v</span>ar T=aa.length;<span class="cstat-no" title="statement not covered" >v</span>ar ah=0;<span class="cstat-no" title="statement not covered" >v</span>ar X=ac.decorations;<span class="cstat-no" title="statement not covered" >v</span>ar Y=X.length;<span class="cstat-no" title="statement not covered" >v</span>ar Z=0;<span class="cstat-no" title="statement not covered" >X</span>[Y]=an;<span class="cstat-no" title="statement not covered" >v</span>ar ar,aq;<span class="cstat-no" title="statement not covered" >f</span>or(aq=ar=0;aq&lt;Y;){<span class="cstat-no" title="statement not covered" >if(X[aq]!==X[aq+2]){<span class="cstat-no" title="statement not covered" >X[ar++]=X[aq++];<span class="cstat-no" title="statement not covered" >X</span>[ar++]=X[aq++]}</span>else{<span class="cstat-no" title="statement not covered" >aq+=2}</span>}<span class="cstat-no" title="statement not covered" ></span>Y</span>=ar;<span class="cstat-no" title="statement not covered" >f</span>or(aq=ar=0;aq&lt;Y;){<span class="cstat-no" title="statement not covered" >var at=X[aq];<span class="cstat-no" title="statement not covered" >v</span>ar ab=X[aq+1];<span class="cstat-no" title="statement not covered" >v</span>ar W=aq+2;<span class="cstat-no" title="statement not covered" >w</span>hile(W+2&lt;=Y&amp;&amp;X[W+1]===ab){<span class="cstat-no" title="statement not covered" >W+=2}<span class="cstat-no" title="statement not covered" ></span>X</span>[ar++]=at;<span class="cstat-no" title="statement not covered" >X</span>[ar++]=ab;<span class="cstat-no" title="statement not covered" >a</span>q=W}<span class="cstat-no" title="statement not covered" ></span>Y</span>=X.length=ar;<span class="cstat-no" title="statement not covered" >v</span>ar ae=null;<span class="cstat-no" title="statement not covered" >w</span>hile(ah&lt;T){<span class="cstat-no" title="statement not covered" >var af=aa[ah];<span class="cstat-no" title="statement not covered" >v</span>ar S=aa[ah+2]||an;<span class="cstat-no" title="statement not covered" >v</span>ar ag=X[Z];<span class="cstat-no" title="statement not covered" >v</span>ar ap=X[Z+2]||an;<span class="cstat-no" title="statement not covered" >v</span>ar W=Math.min(S,ap);<span class="cstat-no" title="statement not covered" >v</span>ar ak=aa[ah+1];<span class="cstat-no" title="statement not covered" >v</span>ar U;<span class="cstat-no" title="statement not covered" >i</span>f(ak.nodeType!==1&amp;&amp;(U=al.substring(V,W))){<span class="cstat-no" title="statement not covered" >if(aj){<span class="cstat-no" title="statement not covered" >U=U.replace(am,"\r")}<span class="cstat-no" title="statement not covered" ></span>a</span>k.nodeValue=U;<span class="cstat-no" title="statement not covered" >v</span>ar ai=ak.ownerDocument;<span class="cstat-no" title="statement not covered" >v</span>ar ao=ai.createElement("SPAN");<span class="cstat-no" title="statement not covered" >a</span>o.className=X[Z+1];<span class="cstat-no" title="statement not covered" >v</span>ar ad=ak.parentNode;<span class="cstat-no" title="statement not covered" >a</span>d.replaceChild(ao,ak);<span class="cstat-no" title="statement not covered" >a</span>o.appendChild(ak);<span class="cstat-no" title="statement not covered" >i</span>f(V&lt;S){<span class="cstat-no" title="statement not covered" >aa[ah+1]=ak=ai.createTextNode(al.substring(W,S));<span class="cstat-no" title="statement not covered" >a</span>d.insertBefore(ak,ao.nextSibling)}</span>}<span class="cstat-no" title="statement not covered" ></span>V</span>=W;<span class="cstat-no" title="statement not covered" >i</span>f(V&gt;=S){<span class="cstat-no" title="statement not covered" >ah+=2}<span class="cstat-no" title="statement not covered" ></span>i</span>f(V&gt;=ap){<span class="cstat-no" title="statement not covered" >Z<span class="fstat-no" title="function not covered" >+=2}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>var t={};f</span>unction c(U,V){<span class="cstat-no" title="statement not covered" ></span>for(var S=V.length;--S&gt;=0;){<span class="cstat-no" title="statement not covered" >var T=V[S];<span class="cstat-no" title="statement not covered" >i</span>f(!t.hasOwnProperty(T)){<span class="cstat-no" title="statement not covered" >t[T]=U}</span>else{<span class="cstat-no" title="statement not covered" >if(window.console){<span class="cstat-no" title="statement not covered" >console.warn("cannot override language han<span class="fstat-no" title="function not covered" >dler %s",T)}</span>}</span>}</span>}</span>function q(T,S){<span class="cstat-no" title="statement not covered" ></span>if(!(T&amp;&amp;t.hasOwnProperty(T))){<span class="cstat-no" title="statement not covered" >T=/^\s*&lt;/.test(S)?"default-markup":"default-code"}<span class="cstat-no" title="statement not covered" ></span>r</span>eturn t[T]}<span class="cstat-no" title="statement not covered" ></span>c(K,["default-code"]);<span class="cstat-no" title="statement not covered" >c</span>(g([],[[F,/^[^&lt;?]+/],[E,/^&lt;!\w[^&gt;]*(?:&gt;|$)/],[j,/^&lt;\!--[\s\S]*?(?:-\-&gt;|$)/],["lang-",/^&lt;\?([\s\S]+?)(?:\?&gt;|$)/],["lang-",/^&lt;%([\s\S]+?)(?:%&gt;|$)/],[L,/^(?:&lt;[%?]|[%?]&gt;)/],["lang-",/^&lt;xmp\b[^&gt;]*&gt;([\s\S]+?)&lt;\/xmp\b[^&gt;]*&gt;/i],["lang-js",/^&lt;script\b[^&gt;]*&gt;([\s\S]*?)(&lt;\/script\b[^&gt;]*&gt;)/i],["lang-css",/^&lt;style\b[^&gt;]*&gt;([\s\S]*?)(&lt;\/style\b[^&gt;]*&gt;)/i],["lang-in.tag",/^(&lt;\/?[a-z][^&lt;&gt;]*&gt;)/i]]),["default-markup","htm","html","mxml","xhtml","xml","xsl"]);<span class="cstat-no" title="statement not covered" >c</span>(g([[F,/^[\s]+/,null," \t\r\n"],[n,/^(?:\"[^\"]*\"?|\'[^\']*\'?)/,null,"\"'"]],[[m,/^^&lt;\/?[a-z](?:[\w.:-]*\w)?|\/?&gt;$/i],[P,/^(?!style[\s=]|on)[a-z](?:[\w:-]*\w)?/i],["lang-uq.val",/^=\s*([^&gt;\'\"\s]*(?:[^&gt;\'\"\s\/]|\/(?=\s)))/],[L,/^[=&lt;&gt;\/]+/],["lang-js",/^on\w+\s*=\s*\"([^\"]+)\"/i],["lang-js",/^on\w+\s*=\s*\'([^\']+)\'/i],["lang-js",/^on\w+\s*=\s*([^\"\'&gt;\s]+)/i],["lang-css",/^style\s*=\s*\"([^\"]+)\"/i],["lang-css",/^style\s*=\s*\'([^\']+)\'/i],["lang-css",/^style\s*=\s*([^\"\'&gt;\s]+)/i]]),["in.tag"]);<span class="cstat-no" title="statement not covered" >c</span>(g([],[[n,/^[\s\S]+/]]),["uq.val"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:l,hashComments:true,cStyleComments:true,types:e}),["c","cc","cpp","cxx","cyc","m"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:"null,true,false"}),["json"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:R,hashComments:true,cStyleComments:true,verbatimStrings:true,types:e}),["cs"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:x,cStyleComments:true}),["java"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:H,hashComments:true,multiLineStrings:true}),["bsh","csh","sh"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:I,hashComments:true,multiLineStrings:true,tripleQuotedStrings:true}),["cv","py"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:s,hashComments:true,multiLineStrings:true,regexLiterals:true}),["perl","pl","pm"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:f,hashComments:true,multiLineStrings:true,regexLiterals:true}),["rb"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:w,cStyleComments:true,regexLiterals:true}),["js"]);<span class="cstat-no" title="statement not covered" >c</span>(i({keywords:r,hashComments:3,cStyleComments:true,multilineStrings:true,tripleQuotedStrings:true,regexLiterals:true}),["coffee"]);<span class="cstat-no" title="statement not covered" >c</span>(g([],[[C,/^[\s\S]+/<span class="fstat-no" title="function not covered" >]]),["regex"]);f</span>unction d(V){<span class="cstat-no" title="statement not covered" ></span>var U=V.langExtension;<span class="cstat-no" title="statement not covered" >t</span>ry{<span class="cstat-no" title="statement not covered" >var S=a(V.sourceNode);<span class="cstat-no" title="statement not covered" >v</span>ar T=S.sourceCode;<span class="cstat-no" title="statement not covered" >V</span>.sourceCode=T;<span class="cstat-no" title="statement not covered" >V</span>.spans=S.spans;<span class="cstat-no" title="statement not covered" >V</span>.basePos=0;<span class="cstat-no" title="statement not covered" >q</span>(U,T)(V);<span class="cstat-no" title="statement not covered" >D</span>(V)}</span>catch(W){<span class="cstat-no" title="statement not covered" >if("console" in window){<span class="cstat-no" title="statement not covered" >console.log(W&amp;&amp;W.stac<span class="fstat-no" title="function not covered" >k?W.stack:W)}</span>}</span>}</span>function y(W,V,U){<span class="cstat-no" title="statement not covered" ></span>var S=document.createElement("PRE");<span class="cstat-no" title="statement not covered" >S</span>.innerHTML=W;<span class="cstat-no" title="statement not covered" >i</span>f(U){<span class="cstat-no" title="statement not covered" >Q(S,U)}<span class="cstat-no" title="statement not covered" ></span>v</span>ar T={langExtension:V,numberLines:U,sourceNode:S};<span class="cstat-no" title="statement not covered" >d</span>(T);<span class="cstat-no" title="statement not covered" >r</span>etu<span class="fstat-no" title="function not covered" >rn S.innerHTML}<span class="fstat-no" title="function not covered" ></span>function b(ad){</span>function Y(af){<span class="cstat-no" title="statement not covered" ></span>return document.getElementsByTagName(af)}<span class="cstat-no" title="statement not covered" ></span>var ac=[Y("pre"),Y("code"),Y("xmp")];<span class="cstat-no" title="statement not covered" >v</span>ar T=[];<span class="cstat-no" title="statement not covered" >f</span>or(var aa=0;aa&lt;ac.length;++aa){<span class="cstat-no" title="statement not covered" >for(var Z=0,V=ac[aa].length;Z&lt;V;++Z){<span class="cstat-no" title="statement not covered" >T.push(ac[aa][Z])}</span>}<span class="cstat-no" title="statement not covered" ></span>a</span>c=null;<span class="cstat-no" title="statement not covered" >v</span>ar W=Date;<span class="cstat-no" title="statement not covered" >i</span>f(!W.now){<span class="cstat-no" title="statement not covered" >W={now:<span class="fstat-no" title="function not covered" >function(){<span class="cstat-no" title="statement not covered" ></span>return +(new Date)}</span>}}<span class="cstat-no" title="statement not covered" ></span>v</span>ar X=0;<span class="cstat-no" title="statement not covered" >v</span>ar S;<span class="cstat-no" title="statement not covered" >v</span>ar ab=/\blang(?:uage)?-([\w.]+)(?!\S)/;<span class="cstat-no" title="statement not covered" >v</span>ar ae=/\b<span class="fstat-no" title="function not covered" >prettyprint\b/;f</span>unction U(){<span class="cstat-no" title="statement not covered" ></span>var ag=(window.PR_SHOULD_USE_CONTINUATION?W.now()+250:Infinity);<span class="cstat-no" title="statement not covered" >f</span>or(;X&lt;T.length&amp;&amp;W.now()&lt;ag;X++){<span class="cstat-no" title="statement not covered" >var aj=T[X];<span class="cstat-no" title="statement not covered" >v</span>ar ai=aj.className;<span class="cstat-no" title="statement not covered" >i</span>f(ai.indexOf("prettyprint")&gt;=0){<span class="cstat-no" title="statement not covered" >var ah=ai.match(ab);<span class="cstat-no" title="statement not covered" >v</span>ar am;<span class="cstat-no" title="statement not covered" >i</span>f(!ah&amp;&amp;(am=o(aj))&amp;&amp;"CODE"===am.tagName){<span class="cstat-no" title="statement not covered" >ah=am.className.match(ab)}<span class="cstat-no" title="statement not covered" ></span>i</span>f(ah){<span class="cstat-no" title="statement not covered" >ah=ah[1]}<span class="cstat-no" title="statement not covered" ></span>v</span>ar al=false;<span class="cstat-no" title="statement not covered" >f</span>or(var ak=aj.parentNode;ak;ak=ak.parentNode){<span class="cstat-no" title="statement not covered" >if((ak.tagName==="pre"||ak.tagName==="code"||ak.tagName==="xmp")&amp;&amp;ak.className&amp;&amp;ak.className.indexOf("prettyprint")&gt;=0){<span class="cstat-no" title="statement not covered" >al=true;<span class="cstat-no" title="statement not covered" >b</span>reak}</span>}<span class="cstat-no" title="statement not covered" ></span>i</span>f(!al){<span class="cstat-no" title="statement not covered" >var af=aj.className.match(/\blinenums\b(?::(\d+))?/);<span class="cstat-no" title="statement not covered" >a</span>f=af?af[1]&amp;&amp;af[1].length?+af[1]:true:false;<span class="cstat-no" title="statement not covered" >i</span>f(af){<span class="cstat-no" title="statement not covered" >Q(aj,af)}<span class="cstat-no" title="statement not covered" ></span>S</span>={langExtension:ah,sourceNode:aj,numberLines:af};<span class="cstat-no" title="statement not covered" >d</span>(S)}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>i</span>f(X&lt;T.length){<span class="cstat-no" title="statement not covered" >setTimeout(U,250)}</span>else{<span class="cstat-no" title="statement not covered" >if(ad){<span class="cstat-no" title="statement not covered" >ad()}</span>}</span>}<span class="cstat-no" title="statement not covered" ></span>U()}<span class="cstat-no" title="statement not covered" ></span>window.prettyPrintOne=y;<span class="cstat-no" title="statement not covered" >w</span>indow.prettyPrint=b;<span class="cstat-no" title="statement not covered" >w</span>indow.PR={createSimpleLexer:g,registerLangHandler:c,sourceDecorator:i,PR_ATTRIB_NAME:P,PR_ATTRIB_VALUE:n,PR_COMMENT:j,PR_DECLARATION:E,PR_KEYWORD:z,PR_LITERAL:G,PR_NOCODE:N,PR_PLAIN:F,PR_PUNCTUATION:L,PR_SOURCE:J,PR_STRING:C,PR_TAG:m,PR_TYPE:O}}</span>)();<span class="cstat-no" title="statement not covered" >P</span>R.registerLangHandler(PR.createSimpleLexer([],[[PR.PR_DECLARATION,/^&lt;!\w[^&gt;]*(?:&gt;|$)/],[PR.PR_COMMENT,/^&lt;\!--[\s\S]*?(?:-\-&gt;|$)/],[PR.PR_PUNCTUATION,/^(?:&lt;[%?]|[%?]&gt;)/],["lang-",/^&lt;\?([\s\S]+?)(?:\?&gt;|$)/],["lang-",/^&lt;%([\s\S]+?)(?:%&gt;|$)/],["lang-",/^&lt;xmp\b[^&gt;]*&gt;([\s\S]+?)&lt;\/xmp\b[^&gt;]*&gt;/i],["lang-handlebars",/^&lt;script\b[^&gt;]*type\s*=\s*['"]?text\/x-handlebars-template['"]?\b[^&gt;]*&gt;([\s\S]*?)(&lt;\/script\b[^&gt;]*&gt;)/i],["lang-js",/^&lt;script\b[^&gt;]*&gt;([\s\S]*?)(&lt;\/script\b[^&gt;]*&gt;)/i],["lang-css",/^&lt;style\b[^&gt;]*&gt;([\s\S]*?)(&lt;\/style\b[^&gt;]*&gt;)/i],["lang-in.tag",/^(&lt;\/?[a-z][^&lt;&gt;]*&gt;)/i],[PR.PR_DECLARATION,/^{{[#^&gt;/]?\s*[\w.][^}]*}}/],[PR.PR_DECLARATION,/^{{&amp;?\s*[\w.][^}]*}}/],[PR.PR_DECLARATION,/^{{{&gt;?\s*[\w.][^}]*}}}/],[PR.PR_COMMENT,/^{{![^}]*}}/]]),["handlebars","hbs"]);<span class="cstat-no" title="statement not covered" >P</span>R.registerLangHandler(PR.createSimpleLexer([[PR.PR_PLAIN,/^[ \t\r\n\f]+/,null," \t\r\n\f"]],[[PR.PR_STRING,/^\"(?:[^\n\r\f\\\"]|\\(?:\r\n?|\n|\f)|\\[\s\S])*\"/,null],[PR.PR_STRING,/^\'(?:[^\n\r\f\\\']|\\(?:\r\n?|\n|\f)|\\[\s\S])*\'/,null],["lang-css-str",/^url\(([^\)\"\']*)\)/i],[PR.PR_KEYWORD,/^(?:url|rgb|\!important|@import|@page|@media|@charset|inherit)(?=[^\-\w]|$)/i,null],["lang-css-kw",/^(-?(?:[_a-z]|(?:\\[0-9a-f]+ ?))(?:[_a-z0-9\-]|\\(?:\\[0-9a-f]+ ?))*)\s*:/i],[PR.PR_COMMENT,/^\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\//],[PR.PR_COMMENT,/^(?:&lt;!--|--&gt;)/],[PR.PR_LITERAL,/^(?:\d+|\d*\.\d+)(?:%|[a-z]+)?/i],[PR.PR_LITERAL,/^#(?:[0-9a-f]{3}){1,2}/i],[PR.PR_PLAIN,/^-?(?:[_a-z]|(?:\\[\da-f]+ ?))(?:[_a-z\d\-]|\\(?:\\[\da-f]+ ?))*/i],[PR.PR_PUNCTUATION,/^[^\s\w\'\"]+/]]),["css"]);<span class="cstat-no" title="statement not covered" >P</span>R.registerLangHandler(PR.createSimpleLexer([],[[PR.PR_KEYWORD,/^-?(?:[_a-z]|(?:\\[\da-f]+ ?))(?:[_a-z\d\-]|\\(?:\\[\da-f]+ ?))*/i]]),["css-kw"]);<span class="cstat-no" title="statement not covered" >P</span>R.registerLangHandler(PR.createSimpleLexer([],[[PR.PR_STRING,/^[^\)\"\']+/]]),["css-str"]);</span>
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Nov 18 2014 14:27:31 GMT-0200 (BRST)</div>
+</div>
+
+<script src="../../../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script>
+
+    YUI().use('datatable', function (Y) {
+
+        var formatters = {
+          pct: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              try {
+                  return o.value.toFixed(2) + '%';
+              } catch (ex) { return o.value + '%'; }
+          },
+          html: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.record.get(o.column.key + '_html');
+          }
+        },
+          defaultFormatter = function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.value;
+          };
+
+        function getColumns(theadNode) {
+            var colNodes = theadNode.all('tr th'),
+                cols = [],
+                col;
+            colNodes.each(function (colNode) {
+                col = {
+                    key: colNode.getAttribute('data-col'),
+                    label: colNode.get('innerHTML') || ' ',
+                    sortable: !colNode.getAttribute('data-nosort'),
+                    className: colNode.getAttribute('class'),
+                    type: colNode.getAttribute('data-type'),
+                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
+                };
+                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
+                cols.push(col);
+            });
+            return cols;
+        }
+
+        function getRowData(trNode, cols) {
+            var tdNodes = trNode.all('td'),
+                    i,
+                    row = { classes: {} },
+                    node,
+                    name;
+            for (i = 0; i < cols.length; i += 1) {
+                name = cols[i].key;
+                node = tdNodes.item(i);
+                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
+                row[name + '_html'] = node.get('innerHTML');
+                row.classes[name] = node.getAttribute('class');
+                //Y.log('Name: ' + name + '; Value: ' + row[name]);
+                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
+            }
+            //Y.log(row);
+            return row;
+        }
+
+        function getData(tbodyNode, cols) {
+            var data = [];
+            tbodyNode.all('tr').each(function (trNode) {
+                data.push(getRowData(trNode, cols));
+            });
+            return data;
+        }
+
+        function replaceTable(node) {
+            if (!node) { return; }
+            var cols = getColumns(node.one('thead')),
+                data = getData(node.one('tbody'), cols),
+                table,
+                parent = node.get('parentNode');
+
+            table = new Y.DataTable({
+                columns: cols,
+                data: data,
+                sortBy: 'file'
+            });
+            parent.set('innerHTML', '');
+            table.render(parent);
+        }
+
+        Y.on('domready', function () {
+            replaceTable(Y.one('div.coverage-summary table'));
+            if (typeof prettyPrint === 'function') {
+                prettyPrint();
+            }
+        });
+    });
+</script>
+</body>
+</html>

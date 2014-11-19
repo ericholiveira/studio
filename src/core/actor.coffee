@@ -11,28 +11,24 @@ class Actor extends BaseClass
 
   # Constructs a new actor and automatically starts it
   # @param [Object] options the actor options
-  # @option options [String] id actor id (should be unique)
-  # @option options [String] route when you instantiate an actor you automatically create a stream on the router with this route, multiple actors can share the same route topic/queue
+  # @option options [String] id actor id (should be unique) when you instantiate an actor you automatically create a stream on the router with this id
   # @option options [Function] process the process function which will be executed for every message
   # @option options [Function] initialize function called after actor creation (optional)
   # @example How to instantiate an actor (in javascript)
   #   var myActor = new Actor({
   #               id: 'myActor',
-  #               process:function(body,sender,receiver){ console.log(body);},
-  #               route : 'myPipe'
+  #               process:function(body,sender,receiver){ console.log(body);}
   #             });
   # @example How to instantiate an actor (in Coffescript)
   #   myActor = new Actor({
   #               id: 'myActor',
-  #               process:(body,sender,receiver)-> console.log(body),
-  #               route : 'myPipe'
+  #               process:(body,sender,receiver)-> console.log(body)
   #             })
   constructor: (options) ->
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    throw new Error('You must provide a route') if not @route
-    @stream = router.createOrGetRoute(@route).map((message)->clone(message))
+    @stream = router.createOrGetRoute(@id).map((message)->clone(message))
     @unsubscribe = @stream.onValue(@_doProcess)
     @initialize?(options)
   # PRIVATE METHOD SHOULD NOT BE CALLED
@@ -90,7 +86,9 @@ class Actor extends BaseClass
     if routePattern instanceof RegExp
       allRoutes = router.getAllRoutes()
       for route in allRoutes when routePattern.test(route)
-        container[route] = (message)=>@send(route,message)
+        _route =clone(route)
+        container[route] = (message)=>
+          @send(_route,message)
     else if ArrayUtil.isArray(routePattern)
       for route in routePattern
         container[route] = (message)=>@send(route,message)
@@ -108,4 +106,6 @@ class Actor extends BaseClass
   #   myActor.stop();
   start:()->
     @process = @_process or @process
+  toString:()->
+    @id
 module.exports = Actor

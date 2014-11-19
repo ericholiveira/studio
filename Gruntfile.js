@@ -8,6 +8,8 @@ grunt.loadNpmTasks('grunt-codo');
 grunt.loadNpmTasks('grunt-contrib-jasmine');
 grunt.loadNpmTasks('grunt-browserify');
 grunt.loadNpmTasks('grunt-release');
+grunt.loadNpmTasks('grunt-jasmine-node');
+grunt.loadNpmTasks('grunt-jasmine-node-coverage');
 
 grunt.initConfig({
   coffeelint: {
@@ -82,16 +84,26 @@ grunt.initConfig({
       npm: true,
       npmTag: "<%= version %>"
     }
+  },
+  jasmine_node: {
+    options: {
+      coverage: {
+        excludes: ['docs/**/*.js','coverage/**/*.js','compiled/core/util/clone.js']
+      },
+      forceExit: true,
+      match: '.',
+      matchall: true,
+      extensions: 'js',
+      specNameMatcher: 'Test'
+    },
+    all: ['tests/']
   }
 
 });
 grunt.registerTask("test", ["jasmine"]);
-grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist",
-  "browserify:testCore",
-  "test"
-]);
+grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist", "browserify:testCore","test"]);
 grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all", "release"]);
+grunt.registerTask("prod", ["all", "browserify:dist","jasmine_node","release"]);

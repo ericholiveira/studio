@@ -5,12 +5,10 @@ describe("An actor process function", function() {
     RECEIVER_ID = 'receiver_this';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    route: SENDER_ID,
     process: function(message, sender) {}
   });
   var receiver = new Studio.Actor({
     id: RECEIVER_ID,
-    route: RECEIVER_ID,
     process: function(message, sender) {
       return this;
     }

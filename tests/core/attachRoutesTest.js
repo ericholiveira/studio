@@ -9,45 +9,40 @@ describe("An actor", function() {
 
   var actor1 = new Studio.Actor({
     id: ACTOR_1,
-    route: ACTOR_1,
     process: function(message, sender) {}
   });
   var actor2 = new Studio.Actor({
     id: ACTOR_2,
-    route: ACTOR_2,
     process: function(message, sender) {}
   });
   var actor3 = new Studio.Actor({
     id: ACTOR_3,
-    route: ACTOR_3,
     process: function(message, sender) {}
   });
   var actor4 = new Studio.Actor({
     id: ACTOR_4,
-    route: ACTOR_4,
     process: function(message, sender) {}
   });
   var actor5 = new Studio.Actor({
     id: ACTOR_5,
-    route: ACTOR_5,
     process: function(message, sender) {}
   });
 
   it("should be able to attach routes with array, string and regex",
     function(done) {
-      var mappedRoutes = actor1.mapRoute('actor2');
+      var mappedRoutes = actor1.mapRoute(ACTOR_2);
       expect(mappedRoutes.actor2).toBeDefined();
       expect(mappedRoutes.actor3).toBeUndefined();
       expect(mappedRoutes.actor4).toBeUndefined();
-      mappedRoutes = actor1.mapRoute(['actor3', 'actor4']);
+      mappedRoutes = actor1.mapRoute([ACTOR_3, ACTOR_4]);
       expect(mappedRoutes.actor3).toBeDefined();
       expect(mappedRoutes.actor4).toBeDefined();
       expect(mappedRoutes.actor1).toBeUndefined();
       expect(mappedRoutes.actor5).toBeUndefined();
-      mappedRoutes = actor1.mapRoute(/actor[0-9]/);
+      mappedRoutes = actor1.mapRoute(/actor[0-9]/g);
       expect(mappedRoutes.actor1).toBeDefined();
       expect(mappedRoutes.actor5).toBeDefined();
-      mappedRoutes.actor5().then(done);
+      mappedRoutes.actor5({}).then(done);
     });
 
 });
