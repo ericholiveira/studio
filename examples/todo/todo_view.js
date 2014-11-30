@@ -18,6 +18,7 @@ var toDoInsertView = new Studio.Actor({
     $('#todo_' + todo.id + ' label').dblclick(function() {
       toggleViewEdit(todo.id);
     });
+    return todo;
   }
 });
 var todoHookersView = new Studio.Actor({

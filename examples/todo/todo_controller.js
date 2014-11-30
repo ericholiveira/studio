@@ -5,12 +5,12 @@ var toDoInsertController = new Studio.Actor({
   process: function(item) {
     var that = this;
     this.send('toDoInsertDao', item).then(function(insertedItem) {
-      that.send('toDoInsertView', insertedItem).then(function() {
-        that.send('updateTodoCountView');
-        that.send('todoHookersView', insertedItem.id);
-      });
       that.send('footerController');
-    });
+      return that.send('toDoInsertView', insertedItem);
+    }).then(function(insertedItem) {
+      that.send('updateTodoCountView');
+      that.send('todoHookersView', insertedItem.id);
+    });;
   }
 });
 //Deletion

@@ -42,23 +42,15 @@
       var __doProcess, _i, _len, _message, _results;
       __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, err, receiver, result, sender;
+          var body, callback, receiver, sender;
           sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
-          try {
-            result = _this.process(body, sender, receiver);
-            if (result && Q.isPromiseAlike(result)) {
-              return result.then(function(result) {
-                return callback(void 0, result);
-              })["catch"](function(err) {
-                return callback(err || new Error('Unexpected Error'));
-              });
-            } else {
-              return callback(void 0, result);
-            }
-          } catch (_error) {
-            err = _error;
-            return callback(err);
-          }
+          return Q.fcall(function() {
+            return _this.process(body, sender, receiver);
+          }).then(function(result) {
+            return callback(void 0, result);
+          })["catch"](function(err) {
+            return callback(err || new Error('Unexpected Error'));
+          });
         };
       })(this);
       if (message != null ? message.length : void 0) {
@@ -142,4 +134,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map

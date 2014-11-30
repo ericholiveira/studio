@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "arrayUtil.js",
-  "sourceRoot": "../../../src/core/util/",
+  "sourceRoot": "..\\..\\..\\src\\core\\util\\",
   "sources": [
     "arrayUtil.coffee"
   ],

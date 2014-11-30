@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "studio.js",
-  "sourceRoot": "../../src/core/",
+  "sourceRoot": "..\\..\\src\\core\\",
   "sources": [
     "studio.coffee"
   ],

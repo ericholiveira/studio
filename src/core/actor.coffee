@@ -36,16 +36,9 @@ class Actor extends BaseClass
   _doProcess:(message) =>
     __doProcess=(message) =>
       {sender,body,receiver,callback} = message
-      try
-        result=@process(body,sender,receiver)
-        if result and Q.isPromiseAlike(result)
-          result.then((result)->callback(undefined,result)).catch((err)->
-            callback(err or new Error('Unexpected Error'))
-          )
-        else
-          callback(undefined,result)
-      catch err
-        callback(err)
+      Q.fcall(()=>@process(body,sender,receiver)).then((result)->callback(undefined,result)).catch((err)->
+        callback(err or new Error('Unexpected Error'))
+      )
     if message?.length
       __doProcess(_message) for _message in message
     else
