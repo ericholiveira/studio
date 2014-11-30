@@ -139,13 +139,15 @@
 
 },{"./router":4,"./util/arrayUtil":6,"./util/baseClass":7,"./util/clone":8,"q":13}],2:[function(require,module,exports){
 (function() {
-  var Actor, ActorFactory, InterceptorFactory, actors, interceptors, proxies, router,
+  var Actor, ActorFactory, InterceptorFactory, Q, actors, interceptors, proxies, router,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Actor = require('./actor');
 
   router = require('./router');
+
+  Q = require('q');
 
   interceptors = [];
 
@@ -161,8 +163,8 @@
     }
 
     ActorFactory.prototype.process = function(options) {
-      var actor, clazz, id, process, proxy;
-      clazz = options.clazz || Actor;
+      var process, proxy;
+      options._innerProcess = options.process;
       process = function(body, sender, receiver) {
         var interceptor, message, produceNext, toCallInterceptors, _i, _len;
         toCallInterceptors = [];
@@ -177,36 +179,37 @@
           sender: sender,
           receiver: receiver
         };
-        produceNext = function(index, message) {
-          var nextRoute;
-          if (index === toCallInterceptors.length - 1) {
-            return function() {
-              return router.send(sender, "" + receiver + "__original", body);
-            };
-          } else {
-            nextRoute = toCallInterceptors[index + 1].interceptor.id;
-            return function() {
-              message.next = produceNext(index + 1, message);
-              return router.send(sender, nextRoute, message);
-            };
-          }
-        };
+        produceNext = (function(_this) {
+          return function(index, message) {
+            var nextRoute;
+            if (index === toCallInterceptors.length - 1) {
+              return function() {
+                return Q.fcall(function() {
+                  return _this._innerProcess(body, sender, receiver);
+                });
+              };
+            } else {
+              nextRoute = toCallInterceptors[index + 1].interceptor.id;
+              return function() {
+                message.next = produceNext(index + 1, message);
+                return router.send(sender, nextRoute, message);
+              };
+            }
+          };
+        })(this);
         if (toCallInterceptors.length === 0) {
-          return router.send(sender, "" + receiver + "__original", body);
+          return Q.fcall((function(_this) {
+            return function() {
+              return _this._innerProcess(body, sender, receiver);
+            };
+          })(this));
         } else {
           message.next = produceNext(0, message);
           return router.send(sender, toCallInterceptors[0].interceptor.id, message);
         }
       };
-      id = options.id;
-      proxy = new Actor({
-        id: id,
-        process: process
-      });
-      options.id = "" + options.id + "__original";
-      actor = new clazz(options);
-      proxies.push(proxy);
-      actors.push(actor);
+      options.process = process;
+      proxy = new Actor(options);
       return proxy;
     };
 
@@ -229,6 +232,7 @@
         interceptor: interceptor,
         route: this.mapRoute(options.routes)
       });
+      console.log(interceptors);
       return interceptor;
     };
 
@@ -249,7 +253,7 @@
 
 //# sourceMappingURL=..\maps\actorFactory.js.map
 
-},{"./actor":1,"./router":4}],3:[function(require,module,exports){
+},{"./actor":1,"./router":4,"q":13}],3:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, router,
     __hasProp = {}.hasOwnProperty,

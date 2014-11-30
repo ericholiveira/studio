@@ -1,5 +1,6 @@
 Actor = require('./actor')
 router = require('./router')
+Q = require('q')
 
 interceptors=[]
 actors = []
@@ -7,30 +8,26 @@ proxies=[]
 # Responsible for create and manage an actor lifecycle.
 class ActorFactory extends Actor
   process:(options)->
-    clazz = options.clazz or Actor
+    options._innerProcess = options.process
     process = (body,sender,receiver)->
       toCallInterceptors=[]
       toCallInterceptors.push(interceptor) for interceptor in interceptors when interceptor.route[receiver]
       message = {body,sender,receiver}
-      produceNext = (index,message)->
+      produceNext = (index,message)=>
         if index==toCallInterceptors.length-1
-          ()-> router.send(sender,"#{receiver}__original",body)
+          ()=> Q.fcall(()=>@_innerProcess(body,sender,receiver))
         else
           nextRoute = toCallInterceptors[index+1].interceptor.id
           ()->
             message.next = produceNext(index+1,message)
             router.send(sender,nextRoute,message)
       if toCallInterceptors.length==0
-        router.send(sender,"#{receiver}__original",body)
+        Q.fcall(()=>@_innerProcess(body,sender,receiver))
       else
         message.next=produceNext(0,message)
         router.send(sender,toCallInterceptors[0].interceptor.id,message)
-    id= options.id
-    proxy = new Actor({id,process})
-    options.id="#{options.id}__original"
-    actor = new clazz(options)
-    proxies.push(proxy)
-    actors.push(actor)
+    options.process = process
+    proxy = new Actor(options)
     proxy
 
 
@@ -42,6 +39,7 @@ class InterceptorFactory  extends Actor
       interceptor:interceptor
       route:@mapRoute(options.routes)
     })
+    console.log(interceptors)
     interceptor
 module.exports ={
   actorFactory:new ActorFactory({
