@@ -77,39 +77,53 @@
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
-      var allRoutes, container, route, _i, _j, _len, _len1, _route;
+      var allRoutes, container, route, that, _i, _j, _len, _len1, _mapRouteWithProxy, _route;
+      that = this;
       container = {};
-      if (routePattern instanceof RegExp) {
-        allRoutes = router.getAllRoutes();
-        for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
-          route = allRoutes[_i];
-          if (!(routePattern.test(route))) {
-            continue;
+      _mapRouteWithProxy = function() {
+        return Proxy.create({
+          get: function(target, name) {
+            return function(message) {
+              return that.send(name, message);
+            };
           }
-          _route = clone(route);
-          container[route] = (function(_this) {
-            return function(message) {
-              return _this.send(_route, message);
-            };
-          })(this);
-        }
-      } else if (ArrayUtil.isArray(routePattern)) {
-        for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
-          route = routePattern[_j];
-          container[route] = (function(_this) {
-            return function(message) {
-              return _this.send(route, message);
-            };
-          })(this);
-        }
+        });
+      };
+      if ((typeof Proxy !== "undefined" && Proxy !== null) && typeof Proxy.create === 'function') {
+        return _mapRouteWithProxy();
       } else {
-        container[routePattern] = (function(_this) {
-          return function(message) {
-            return _this.send(routePattern, message);
-          };
-        })(this);
+        if (routePattern instanceof RegExp) {
+          allRoutes = router.getAllRoutes();
+          for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
+            route = allRoutes[_i];
+            if (!(routePattern.test(route))) {
+              continue;
+            }
+            _route = clone(route);
+            container[route] = (function(_this) {
+              return function(message) {
+                return _this.send(_route, message);
+              };
+            })(this);
+          }
+        } else if (ArrayUtil.isArray(routePattern)) {
+          for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
+            route = routePattern[_j];
+            container[route] = (function(_this) {
+              return function(message) {
+                return _this.send(route, message);
+              };
+            })(this);
+          }
+        } else {
+          container[routePattern] = (function(_this) {
+            return function(message) {
+              return _this.send(routePattern, message);
+            };
+          })(this);
+        }
+        return container;
       }
-      return container;
     };
 
     Actor.prototype.stop = function() {

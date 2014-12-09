@@ -16,7 +16,6 @@ describe("An actor factory", function() {
       return true;
     }
   });
-
   it("should be able to create an actor", function(done) {
     Studio.Q.all([senderPromise, receiverPromise]).then(function(
       response) {

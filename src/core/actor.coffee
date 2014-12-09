@@ -69,25 +69,34 @@ class Actor extends BaseClass
   # attach a named route as a function.
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)
+  # if the platform already had implemented Proxy, it return a proxy for all routes
   # @param [Object] routePattern it can be a string, an array of routes to be attached or a regular expression of routes
   # @example How to map routes
   #   myActor.attachRoute('someRoute');
   #   myActor.attachRoute(['someRoute1','someRoute2']);
   #   myActor.attachRoute(/some/g);
   mapRoute:(routePattern)->
+    that = @
     container={}
-    if routePattern instanceof RegExp
-      allRoutes = router.getAllRoutes()
-      for route in allRoutes when routePattern.test(route)
-        _route =clone(route)
-        container[route] = (message)=>
-          @send(_route,message)
-    else if ArrayUtil.isArray(routePattern)
-      for route in routePattern
-        container[route] = (message)=>@send(route,message)
+    _mapRouteWithProxy = ()->
+      return Proxy.create({
+        get:(target,name)->(message)->that.send(name,message)
+        })
+    if Proxy? and typeof Proxy.create =='function'
+      _mapRouteWithProxy()
     else
-      container[routePattern] = (message)=>@send(routePattern,message)
-    container
+      if routePattern instanceof RegExp
+        allRoutes = router.getAllRoutes()
+        for route in allRoutes when routePattern.test(route)
+          _route =clone(route)
+          container[route] = (message)=>
+            @send(_route,message)
+      else if ArrayUtil.isArray(routePattern)
+        for route in routePattern
+          container[route] = (message)=>@send(route,message)
+      else
+        container[routePattern] = (message)=>@send(routePattern,message)
+      container
   # Stop an actor
   # @example How to apply a filter transformation
   #   myActor.stop();
