@@ -70,11 +70,13 @@ class Actor extends BaseClass
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)
   # if the platform already had implemented Proxy, it return a proxy for all routes
-  # @param [Object] routePattern it can be a string, an array of routes to be attached or a regular expression of routes
+  # @param [Object] routePattern optional , it can be a string, an array of routes to be attached or a regular expression of routes
+  # with no arguments mapRoute returns all routes
   # @example How to map routes
-  #   myActor.attachRoute('someRoute');
-  #   myActor.attachRoute(['someRoute1','someRoute2']);
-  #   myActor.attachRoute(/some/g);
+  #   myActor.mapRoute('someRoute');
+  #   myActor.mapRoute(['someRoute1','someRoute2']);
+  #   myActor.mapRoute(/some/g);
+  #   myActor.mapRoute();
   mapRoute:(routePattern)->
     that = @
     container={}
@@ -85,7 +87,13 @@ class Actor extends BaseClass
     if Proxy? and typeof Proxy.create =='function'
       _mapRouteWithProxy()
     else
-      if routePattern instanceof RegExp
+      if not routePattern?
+        allRoutes = router.getAllRoutes()
+        for route in allRoutes
+          _route =clone(route)
+          container[route] = (message)=>
+            @send(_route,message)
+      else if routePattern instanceof RegExp
         allRoutes = router.getAllRoutes()
         for route in allRoutes when routePattern.test(route)
           _route =clone(route)
@@ -98,14 +106,14 @@ class Actor extends BaseClass
         container[routePattern] = (message)=>@send(routePattern,message)
       container
   # Stop an actor
-  # @example How to apply a filter transformation
+  # @example How to stop an actor
   #   myActor.stop();
   stop:()->
     @_process = @process
     @process = ()-> throw new Error('Stopped')
   # Start an actor (an actor is automatically started on instantiation)
-  # @example How to apply a filter transformation
-  #   myActor.stop();
+  # @example How to start an actor
+  #   myActor.start();
   start:()->
     @process = @_process or @process
   toString:()->
