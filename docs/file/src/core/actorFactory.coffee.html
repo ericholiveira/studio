@@ -23,13 +23,13 @@
     &raquo;
     <span class='title'>core</span>
     &raquo;
-    <span class='title'>actor.coffee</span>
+    <span class='title'>actorFactory.coffee</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         File:
-        actor.coffee
+        actorFactory.coffee
       </h1>
       <table class='box'>
         <tr>
@@ -41,20 +41,54 @@
             Classes:
           </td>
           <td>
-            <a href='../../../class/Actor.html'>
-              Actor
+            <a href='../../../class/ActorFactory.html'>
+              ActorFactory
+            </a>
+            <a href='../../../class/InterceptorFactory.html'>
+              InterceptorFactory
             </a>
           </td>
         </tr>
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
+  <dt id='interceptors-variable'>
+    interceptors
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
+  <dt id='actors-variable'>
+    actors
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
+  <dt id='proxies-variable'>
+    proxies
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
   <dt id='module.exports-variable'>
     module.exports
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>Actor</code></pre>
+    <pre><code class='coffeescript'>{
+  actorFactory: new ActorFactory({
+    id: &#39;createActor&#39;
+  }),
+  interceptorFactory: new InterceptorFactory({
+    id: &#39;addInterceptor&#39;
+  })
+}</code></pre>
     
   </dd>
 </dl>

@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src\core\actor.coffee</td>
+          <td>src&#47;core&#47;actor.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -45,6 +45,11 @@
 </div>
 <div class='tags'>
 </div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+        <a href='../class/ActorFactory.html'>ActorFactory</a>
+        <a href='../class/InterceptorFactory.html'>InterceptorFactory</a>
+      </p>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -121,6 +126,17 @@
       Start an actor (an actor is automatically started on instantiation) 
     </span>
   </li>
+  <li>
+    <span class='signature'>
+      <a href='#toString-dynamic'>
+        #
+(void)
+<b>toString</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
 </ul>
       <h2>
         <small>Inherited Method Summary</small>
@@ -150,16 +166,14 @@
     </h4>
     <pre><code class='coffeescript'>var myActor = new Actor({
             id: &#39;myActor&#39;,
-            process:function(body,sender,receiver){ console.log(body);},
-            route : &#39;myPipe&#39;
+            process:function(body,sender,receiver){ console.log(body);}
           });</code></pre>
     <h4>
       How to instantiate an actor (in Coffescript)
     </h4>
     <pre><code class='coffeescript'>myActor = new Actor({
             id: &#39;myActor&#39;,
-            process:(body,sender,receiver)-&gt; console.log(body),
-            route : &#39;myPipe&#39;
+            process:(body,sender,receiver)-&gt; console.log(body)
           })</code></pre>
   </div>
 </div>
@@ -190,17 +204,7 @@
         )
       </span>
       &mdash;
-      <span class='desc'>actor id (should be unique) </span>
-    </li>
-    <li>
-      <span class='name'>route</span>
-      <span class='type'>
-        (
-          <tt>String</tt>
-        )
-      </span>
-      &mdash;
-      <span class='desc'>when you instantiate an actor you automatically create a stream on the router with this route, multiple actors can share the same route topic/queue </span>
+      <span class='desc'>actor id (should be unique) when you instantiate an actor you automatically create a stream on the router with this id </span>
     </li>
     <li>
       <span class='name'>process</span>
@@ -341,15 +345,18 @@ Takes a stream message and open it for the actor process function format. And cr
     <div class='docstring'>
   <p>attach a named route as a function.
 So if you use this.attachRoute(&#39;someRoute&#39;), you can use this.someRoute(someMessage)
-which is equivalent to this.send(&#39;someRoute&#39;,someMessage)</p>
+which is equivalent to this.send(&#39;someRoute&#39;,someMessage)
+if the platform already had implemented Proxy, it return a proxy for all routes
+with no arguments mapRoute returns all routes</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       How to map routes
     </h4>
-    <pre><code class='coffeescript'>myActor.attachRoute(&#39;someRoute&#39;);
-myActor.attachRoute([&#39;someRoute1&#39;,&#39;someRoute2&#39;]);
-myActor.attachRoute(&#47;some&#47;g);</code></pre>
+    <pre><code class='coffeescript'>myActor.mapRoute(&#39;someRoute&#39;);
+myActor.mapRoute([&#39;someRoute1&#39;,&#39;someRoute2&#39;]);
+myActor.mapRoute(&#47;some&#47;g);
+myActor.mapRoute();</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -363,7 +370,7 @@ myActor.attachRoute(&#47;some&#47;g);</code></pre>
         )
       </span>
       &mdash;
-      <span class='desc'>it can be a string, an array of routes to be attached or a regular expression of routes </span>
+      <span class='desc'>optional , it can be a string, an array of routes to be attached or a regular expression of routes </span>
     </li>
   </ul>
 </div>
@@ -380,7 +387,7 @@ myActor.attachRoute(&#47;some&#47;g);</code></pre>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
-      How to apply a filter transformation
+      How to stop an actor
     </h4>
     <pre><code class='coffeescript'>myActor.stop();</code></pre>
   </div>
@@ -400,18 +407,27 @@ myActor.attachRoute(&#47;some&#47;g);</code></pre>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
-      How to apply a filter transformation
+      How to start an actor
     </h4>
-    <pre><code class='coffeescript'>myActor.stop();</code></pre>
+    <pre><code class='coffeescript'>myActor.start();</code></pre>
   </div>
 </div>
 <div class='tags'>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='toString-dynamic'>
+      #
+(void)
+<b>toString</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
 </div>
     </div>
     <div id='footer'>
-  November 17, 14 20:36:43 by
+  December 19, 14 17:10:42 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
