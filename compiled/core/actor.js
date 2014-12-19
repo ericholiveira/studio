@@ -76,7 +76,7 @@
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
-      var allRoutes, container, route, that, _i, _j, _len, _len1, _mapRouteWithProxy, _route;
+      var allRoutes, container, route, that, _i, _j, _k, _len, _len1, _len2, _mapRouteWithProxy, _route;
       that = this;
       container = {};
       _mapRouteWithProxy = function() {
@@ -91,10 +91,21 @@
       if ((typeof Proxy !== "undefined" && Proxy !== null) && typeof Proxy.create === 'function') {
         return _mapRouteWithProxy();
       } else {
-        if (routePattern instanceof RegExp) {
+        if (routePattern == null) {
           allRoutes = router.getAllRoutes();
           for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
             route = allRoutes[_i];
+            _route = clone(route);
+            container[route] = (function(_this) {
+              return function(message) {
+                return _this.send(_route, message);
+              };
+            })(this);
+          }
+        } else if (routePattern instanceof RegExp) {
+          allRoutes = router.getAllRoutes();
+          for (_j = 0, _len1 = allRoutes.length; _j < _len1; _j++) {
+            route = allRoutes[_j];
             if (!(routePattern.test(route))) {
               continue;
             }
@@ -106,8 +117,8 @@
             })(this);
           }
         } else if (ArrayUtil.isArray(routePattern)) {
-          for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
-            route = routePattern[_j];
+          for (_k = 0, _len2 = routePattern.length; _k < _len2; _k++) {
+            route = routePattern[_k];
             container[route] = (function(_this) {
               return function(message) {
                 return _this.send(route, message);
@@ -148,4 +159,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actor.js.map
+//# sourceMappingURL=../maps/actor.js.map

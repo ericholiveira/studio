@@ -92,7 +92,6 @@
         interceptor: interceptor,
         route: this.mapRoute(options.routes)
       });
-      console.log(interceptors);
       return interceptor;
     };
 
@@ -111,4 +110,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actorFactory.js.map
+//# sourceMappingURL=../maps/actorFactory.js.map

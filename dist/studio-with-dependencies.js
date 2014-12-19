@@ -77,7 +77,7 @@
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
-      var allRoutes, container, route, that, _i, _j, _len, _len1, _mapRouteWithProxy, _route;
+      var allRoutes, container, route, that, _i, _j, _k, _len, _len1, _len2, _mapRouteWithProxy, _route;
       that = this;
       container = {};
       _mapRouteWithProxy = function() {
@@ -92,10 +92,21 @@
       if ((typeof Proxy !== "undefined" && Proxy !== null) && typeof Proxy.create === 'function') {
         return _mapRouteWithProxy();
       } else {
-        if (routePattern instanceof RegExp) {
+        if (routePattern == null) {
           allRoutes = router.getAllRoutes();
           for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
             route = allRoutes[_i];
+            _route = clone(route);
+            container[route] = (function(_this) {
+              return function(message) {
+                return _this.send(_route, message);
+              };
+            })(this);
+          }
+        } else if (routePattern instanceof RegExp) {
+          allRoutes = router.getAllRoutes();
+          for (_j = 0, _len1 = allRoutes.length; _j < _len1; _j++) {
+            route = allRoutes[_j];
             if (!(routePattern.test(route))) {
               continue;
             }
@@ -107,8 +118,8 @@
             })(this);
           }
         } else if (ArrayUtil.isArray(routePattern)) {
-          for (_j = 0, _len1 = routePattern.length; _j < _len1; _j++) {
-            route = routePattern[_j];
+          for (_k = 0, _len2 = routePattern.length; _k < _len2; _k++) {
+            route = routePattern[_k];
             container[route] = (function(_this) {
               return function(message) {
                 return _this.send(route, message);
@@ -149,7 +160,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actor.js.map
+//# sourceMappingURL=../maps/actor.js.map
 
 },{"./router":4,"./util/arrayUtil":6,"./util/baseClass":7,"./util/clone":8,"q":13}],2:[function(require,module,exports){
 (function() {
@@ -246,7 +257,6 @@
         interceptor: interceptor,
         route: this.mapRoute(options.routes)
       });
-      console.log(interceptors);
       return interceptor;
     };
 
@@ -265,7 +275,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actorFactory.js.map
+//# sourceMappingURL=../maps/actorFactory.js.map
 
 },{"./actor":1,"./router":4,"q":13}],3:[function(require,module,exports){
 (function() {
@@ -311,7 +321,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\driver.js.map
+//# sourceMappingURL=../maps/driver.js.map
 
 },{"./router":4,"./util/baseClass":7,"baconjs":10}],4:[function(require,module,exports){
 (function() {
@@ -384,7 +394,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\router.js.map
+//# sourceMappingURL=../maps/router.js.map
 
 },{"./util/clone":8,"./util/timer":9,"baconjs":10,"q":13}],5:[function(require,module,exports){
 (function() {
@@ -416,7 +426,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\studio.js.map
+//# sourceMappingURL=../maps/studio.js.map
 
 },{"./actor":1,"./actorFactory":2,"./driver":3,"./router":4,"baconjs":10,"q":13}],6:[function(require,module,exports){
 (function() {
@@ -426,7 +436,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\arrayUtil.js.map
+//# sourceMappingURL=../../maps/arrayUtil.js.map
 
 },{}],7:[function(require,module,exports){
 (function() {
@@ -449,7 +459,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\baseClass.js.map
+//# sourceMappingURL=../../maps/baseClass.js.map
 
 },{"csextends":11}],8:[function(require,module,exports){
 (function() {
@@ -490,7 +500,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\clone.js.map
+//# sourceMappingURL=../../maps/clone.js.map
 
 },{}],9:[function(require,module,exports){
 (function() {
@@ -510,7 +520,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\timer.js.map
+//# sourceMappingURL=../../maps/timer.js.map
 
 },{}],10:[function(require,module,exports){
 (function (global){
