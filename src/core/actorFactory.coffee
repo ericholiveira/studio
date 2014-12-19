@@ -39,7 +39,6 @@ class InterceptorFactory  extends Actor
       interceptor:interceptor
       route:@mapRoute(options.routes)
     })
-    console.log(interceptors)
     interceptor
 module.exports ={
   actorFactory:new ActorFactory({
