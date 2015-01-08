@@ -42,10 +42,10 @@
       var __doProcess, _i, _len, _message, _results;
       __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, receiver, sender;
-          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
+          var body, callback, headers, receiver, sender;
+          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
           return Q.fcall(function() {
-            return _this.process(body, sender, receiver);
+            return _this.process(body, headers, sender, receiver);
           }).then(function(result) {
             return callback(void 0, result);
           })["catch"](function(err) {
@@ -71,8 +71,11 @@
       return this.unsubscribe = this.stream.onValue(this._doProcess);
     };
 
-    Actor.prototype.send = function(receiver, message) {
-      return router.send(this.id, receiver, message);
+    Actor.prototype.send = function(receiver, message, headers) {
+      if (headers == null) {
+        headers = {};
+      }
+      return router.send(this.id, receiver, message, headers);
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
@@ -159,4 +162,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map

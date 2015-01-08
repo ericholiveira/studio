@@ -17,7 +17,7 @@ class Actor extends BaseClass
   # @example How to instantiate an actor (in javascript)
   #   var myActor = new Actor({
   #               id: 'myActor',
-  #               process:function(body,sender,receiver){ console.log(body);}
+  #               process:function(body,headers,sender,receiver){ console.log(body);}
   #             });
   # @example How to instantiate an actor (in Coffescript)
   #   myActor = new Actor({
@@ -35,8 +35,8 @@ class Actor extends BaseClass
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
     __doProcess=(message) =>
-      {sender,body,receiver,callback} = message
-      Q.fcall(()=>@process(body,sender,receiver)).then((result)->callback(undefined,result)).catch((err)->
+      {sender,body,receiver,callback,headers} = message
+      Q.fcall(()=>@process(body,headers,sender,receiver)).then((result)->callback(undefined,result)).catch((err)->
         callback(err or new Error('Unexpected Error'))
       )
     if message?.length
@@ -56,6 +56,7 @@ class Actor extends BaseClass
   # Sends message to an actor
   # @param [String] receiver the receiver id
   # @param [Object] message the content of the message (it could be any js object)
+  # @option [Object] headers headers for the message (optional)
   # @example How to send a string message
   #   myActor.send('otherActor', 'myMessage')
   # @example How to send an object message
@@ -64,8 +65,8 @@ class Actor extends BaseClass
   #                                    count:1
   #                                  }
   #                                })
-  send: (receiver,message)->
-    router.send(@id,receiver,message)
+  send: (receiver,message,headers={})->
+    router.send(@id,receiver,message,headers)
   # attach a named route as a function.
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)

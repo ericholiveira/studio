@@ -34,13 +34,14 @@ class Router
   #                                    count:1
   #                                  }
   #                                })
-  send: (sender,receiver,message)->
+  send: (sender,receiver,message,headers={})->
     defer = Q.defer()
     route = _routes[receiver]
     _message = {
       sender:sender
       receiver:receiver
       body:message
+      headers:headers
       callback:(err,result)-> if err then defer.reject(err) else defer.resolve(result)
       }
     Timer.enqueue(()->

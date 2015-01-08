@@ -43,10 +43,10 @@
       var __doProcess, _i, _len, _message, _results;
       __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, receiver, sender;
-          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback;
+          var body, callback, headers, receiver, sender;
+          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
           return Q.fcall(function() {
-            return _this.process(body, sender, receiver);
+            return _this.process(body, headers, sender, receiver);
           }).then(function(result) {
             return callback(void 0, result);
           })["catch"](function(err) {
@@ -72,8 +72,11 @@
       return this.unsubscribe = this.stream.onValue(this._doProcess);
     };
 
-    Actor.prototype.send = function(receiver, message) {
-      return router.send(this.id, receiver, message);
+    Actor.prototype.send = function(receiver, message, headers) {
+      if (headers == null) {
+        headers = {};
+      }
+      return router.send(this.id, receiver, message, headers);
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
@@ -160,7 +163,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actor.js.map
+//# sourceMappingURL=..\maps\actor.js.map
 
 },{"./router":4,"./util/arrayUtil":6,"./util/baseClass":7,"./util/clone":8,"q":13}],2:[function(require,module,exports){
 (function() {
@@ -275,7 +278,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/actorFactory.js.map
+//# sourceMappingURL=..\maps\actorFactory.js.map
 
 },{"./actor":1,"./router":4,"q":13}],3:[function(require,module,exports){
 (function() {
@@ -321,7 +324,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/driver.js.map
+//# sourceMappingURL=..\maps\driver.js.map
 
 },{"./router":4,"./util/baseClass":7,"baconjs":10}],4:[function(require,module,exports){
 (function() {
@@ -355,14 +358,18 @@
       return _routes[id];
     };
 
-    Router.prototype.send = function(sender, receiver, message) {
+    Router.prototype.send = function(sender, receiver, message, headers) {
       var defer, route, _message;
+      if (headers == null) {
+        headers = {};
+      }
       defer = Q.defer();
       route = _routes[receiver];
       _message = {
         sender: sender,
         receiver: receiver,
         body: message,
+        headers: headers,
         callback: function(err, result) {
           if (err) {
             return defer.reject(err);
@@ -394,7 +401,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/router.js.map
+//# sourceMappingURL=..\maps\router.js.map
 
 },{"./util/clone":8,"./util/timer":9,"baconjs":10,"q":13}],5:[function(require,module,exports){
 (function() {
@@ -426,7 +433,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/studio.js.map
+//# sourceMappingURL=..\maps\studio.js.map
 
 },{"./actor":1,"./actorFactory":2,"./driver":3,"./router":4,"baconjs":10,"q":13}],6:[function(require,module,exports){
 (function() {
@@ -436,7 +443,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/arrayUtil.js.map
+//# sourceMappingURL=..\..\maps\arrayUtil.js.map
 
 },{}],7:[function(require,module,exports){
 (function() {
@@ -459,7 +466,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/baseClass.js.map
+//# sourceMappingURL=..\..\maps\baseClass.js.map
 
 },{"csextends":11}],8:[function(require,module,exports){
 (function() {
@@ -500,7 +507,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/clone.js.map
+//# sourceMappingURL=..\..\maps\clone.js.map
 
 },{}],9:[function(require,module,exports){
 (function() {
@@ -520,7 +527,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=../../maps/timer.js.map
+//# sourceMappingURL=..\..\maps\timer.js.map
 
 },{}],10:[function(require,module,exports){
 (function (global){

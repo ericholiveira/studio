@@ -29,14 +29,18 @@
       return _routes[id];
     };
 
-    Router.prototype.send = function(sender, receiver, message) {
+    Router.prototype.send = function(sender, receiver, message, headers) {
       var defer, route, _message;
+      if (headers == null) {
+        headers = {};
+      }
       defer = Q.defer();
       route = _routes[receiver];
       _message = {
         sender: sender,
         receiver: receiver,
         body: message,
+        headers: headers,
         callback: function(err, result) {
           if (err) {
             return defer.reject(err);
@@ -68,4 +72,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=../maps/router.js.map
+//# sourceMappingURL=..\maps\router.js.map
