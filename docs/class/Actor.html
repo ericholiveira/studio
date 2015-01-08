@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src&#47;core&#47;actor.coffee</td>
+          <td>src\core\actor.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -83,11 +83,12 @@
       <a href='#send-dynamic'>
         #
 (void)
-<b>send</b><span>(receiver, message)</span>
+<b>send</b><span>(receiver, message, headers = {})</span>
       </a>
     </span>
     <span class='desc'>
-      Sends message to an actor 
+      Sends message to an actor @option [Object] headers headers for the message (optional)
+
     </span>
   </li>
   <li>
@@ -166,7 +167,7 @@
     </h4>
     <pre><code class='coffeescript'>var myActor = new Actor({
             id: &#39;myActor&#39;,
-            process:function(body,sender,receiver){ console.log(body);}
+            process:function(body,headers,sender,receiver){ console.log(body);}
           });</code></pre>
     <h4>
       How to instantiate an actor (in Coffescript)
@@ -288,11 +289,12 @@ Takes a stream message and open it for the actor process function format. And cr
     <p class='signature' id='send-dynamic'>
       #
 (void)
-<b>send</b><span>(receiver, message)</span>
+<b>send</b><span>(receiver, message, headers = {})</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Sends message to an actor</p>
+  <p>Sends message to an actor
+@option [Object] headers headers for the message (optional)</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -427,7 +429,7 @@ myActor.mapRoute();</code></pre>
 </div>
     </div>
     <div id='footer'>
-  December 19, 14 17:10:42 by
+  January 08, 15 21:16:09 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
