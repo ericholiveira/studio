@@ -6,11 +6,11 @@ describe("On error an actor", function() {
     RECEIVER_ERROR_MESSAGE = 'TEST';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    process: function(message, sender) {}
+    process: function(message, headers) {}
   });
   var receiver = new Studio.Actor({
     id: RECEIVER_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       throw new Error(RECEIVER_ERROR_MESSAGE);
     }
   });

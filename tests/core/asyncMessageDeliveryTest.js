@@ -6,17 +6,17 @@ describe("A message", function() {
     RECEIVER_ID_ERROR = 'receiver_always_async_error';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    process: function(message, sender) {}
+    process: function(message, headers) {}
   });
   var receiver = new Studio.Actor({
     id: RECEIVER_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return message;
     }
   });
   var receiverError = new Studio.Actor({
     id: RECEIVER_ID_ERROR,
-    process: function(message, sender) {
+    process: function(message, headers) {
       throw new Error();
     }
   });

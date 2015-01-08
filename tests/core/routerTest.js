@@ -9,7 +9,7 @@ describe("A router", function() {
   });
   var receiver = new Studio.Actor({
     id: RECEIVER_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return this;
     }
   });

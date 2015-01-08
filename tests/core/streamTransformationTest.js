@@ -5,11 +5,11 @@ describe("A Stream", function() {
     RECEIVER_ID = 'receiver_transformation_group';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    process: function(message, sender) {}
+    process: function(message, headers) {}
   });
   var receiver = new Studio.Actor({
     id: RECEIVER_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return message;
     }
   });

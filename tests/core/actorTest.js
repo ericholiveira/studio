@@ -13,42 +13,49 @@ describe("An actor", function() {
     RECEIVER_DATE_RESULT = new Date(),
     RECEIVER_OBJECT_ID = 'object',
     RECEIVER_OBJECT_RESULT = {};
+  RECEIVER_OBJECT_WITH_HEADER_ID = 'objectWithHeader';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    process: function(message, sender) {}
+    process: function(message, headers) {}
   });
   var receiverUndef = new Studio.Actor({
     id: RECEIVER_UNDEF_ID,
-    process: function(message, sender) {}
+    process: function(message, headers) {}
   });
   var receiverBoolean = new Studio.Actor({
     id: RECEIVER_BOOLEAN_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return RECEIVER_BOOLEAN_RESULT;
     }
   });
   var receiverNumber = new Studio.Actor({
     id: RECEIVER_NUMBER_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return RECEIVER_NUMBER_RESULT;
     }
   });
   var receiverString = new Studio.Actor({
     id: RECEIVER_STRING_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return RECEIVER_STRING_RESULT;
     }
   });
   var receiverDate = new Studio.Actor({
     id: RECEIVER_DATE_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return RECEIVER_DATE_RESULT;
     }
   });
   var receiverObject = new Studio.Actor({
     id: RECEIVER_OBJECT_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       return RECEIVER_OBJECT_RESULT;
+    }
+  });
+  var receiverObjectWithHeader = new Studio.Actor({
+    id: RECEIVER_OBJECT_WITH_HEADER_ID,
+    process: function(message, headers) {
+      return headers;
     }
   });
   it("should receive a message", function(done) {
@@ -86,5 +93,17 @@ describe("An actor", function() {
       expect(result).toBe(RECEIVER_OBJECT_RESULT);
       done();
     });
+  });
+  it("should be able to receive headers", function(done) {
+    var headers = {
+      header: 1
+    };
+    sender.send(RECEIVER_OBJECT_WITH_HEADER_ID, 'hello', headers,
+      sender).then(
+      function(result) {
+        expect(result.header).toBe(headers.header);
+        expect(sender).toBe(sender);
+        done();
+      });
   });
 });

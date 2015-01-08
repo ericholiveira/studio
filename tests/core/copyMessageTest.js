@@ -5,11 +5,11 @@ describe("A message", function() {
     RECEIVER_ID = 'receiver_message';
   var sender = new Studio.Actor({
     id: SENDER_ID,
-    process: function(message, sender) {}
+    process: function(message, headers) {}
   });
   var receiver = new Studio.Actor({
     id: RECEIVER_ID,
-    process: function(message, sender) {
+    process: function(message, headers) {
       message.hello = 'copy';
       message.inner.content = 'new';
       delete message.toDelete;
