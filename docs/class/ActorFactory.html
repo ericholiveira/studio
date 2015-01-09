@@ -56,6 +56,7 @@
       </a>
     </span>
     <span class='desc'>
+      Creates a new Actor 
     </span>
   </li>
 </ul>
@@ -84,12 +85,65 @@
 <b>process</b><span>(options)</span>
       <br>
     </p>
-    
+    <div class='docstring'>
+  <p>Creates a new Actor</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the actor options </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>actor id (should be unique) when you instantiate an actor you automatically create a stream on the router with this id </span>
+    </li>
+    <li>
+      <span class='name'>process</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the process function which will be executed for every message </span>
+    </li>
+    <li>
+      <span class='name'>initialize</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>function called after actor creation (optional) </span>
+    </li>
+  </ul>
+</div>
   </div>
 </div>
     </div>
     <div id='footer'>
-  January 08, 15 21:16:09 by
+  January 08, 15 22:47:16 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

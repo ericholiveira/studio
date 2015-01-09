@@ -310,10 +310,10 @@
     }
 
     Driver.prototype.send = function() {
-      var args, body, receiver, sender, _ref;
+      var args, body, headers, receiver, sender, _ref;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body;
-      return router.send(sender, receiver, body);
+      _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body, headers = _ref.headers;
+      return router.send(sender, receiver, body, headers);
     };
 
     return Driver;

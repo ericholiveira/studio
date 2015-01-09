@@ -7,6 +7,11 @@ actors = []
 proxies=[]
 # Responsible for create and manage an actor lifecycle.
 class ActorFactory extends Actor
+  #Creates a new Actor
+  # @param [Object] options the actor options
+  # @option options [String] id actor id (should be unique) when you instantiate an actor you automatically create a stream on the router with this id
+  # @option options [Function] process the process function which will be executed for every message
+  # @option options [Function] initialize function called after actor creation (optional)
   process:(options)->
     options._innerProcess = options.process
     process = (body,sender,receiver)->
@@ -30,8 +35,14 @@ class ActorFactory extends Actor
     proxy = new Actor(options)
     proxy
 
-
+#Responsible for intercept actor calls
 class InterceptorFactory  extends Actor
+  #Creates a new interceptor
+  # @param [Object] options the actor options
+  # @option options [String] id actor id (should be unique) when you instantiate an actor you automatically create a stream on the router with this id
+  # @option options [Function] process the process function which will be executed for every message
+  # @option options [Class] clazz Actor class (optional)
+  # @option options [Function] initialize function called after actor creation (optional)
   process:(options)->
     clazz = options.clazz or Actor
     interceptor = new clazz(options)

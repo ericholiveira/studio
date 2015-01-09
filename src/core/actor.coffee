@@ -56,7 +56,7 @@ class Actor extends BaseClass
   # Sends message to an actor
   # @param [String] receiver the receiver id
   # @param [Object] message the content of the message (it could be any js object)
-  # @option [Object] headers headers for the message (optional)
+  # @param [Object] headers headers for the message (optional)
   # @example How to send a string message
   #   myActor.send('otherActor', 'myMessage')
   # @example How to send an object message
@@ -117,6 +117,7 @@ class Actor extends BaseClass
   #   myActor.start();
   start:()->
     @process = @_process or @process
+  # Returns the actor id
   toString:()->
     @id
 module.exports = Actor

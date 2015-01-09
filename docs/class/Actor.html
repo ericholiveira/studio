@@ -87,8 +87,7 @@
       </a>
     </span>
     <span class='desc'>
-      Sends message to an actor @option [Object] headers headers for the message (optional)
-
+      Sends message to an actor 
     </span>
   </li>
   <li>
@@ -136,6 +135,7 @@
       </a>
     </span>
     <span class='desc'>
+      Returns the actor id 
     </span>
   </li>
 </ul>
@@ -293,8 +293,7 @@ Takes a stream message and open it for the actor process function format. And cr
       <br>
     </p>
     <div class='docstring'>
-  <p>Sends message to an actor
-@option [Object] headers headers for the message (optional)</p>
+  <p>Sends message to an actor</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -333,6 +332,16 @@ Takes a stream message and open it for the actor process function format. And cr
       </span>
       &mdash;
       <span class='desc'>the content of the message (it could be any js object) </span>
+    </li>
+    <li>
+      <span class='name'>headers</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>headers for the message (optional) </span>
     </li>
   </ul>
 </div>
@@ -424,12 +433,16 @@ myActor.mapRoute();</code></pre>
 <b>toString</b><span>()</span>
       <br>
     </p>
-    
+    <div class='docstring'>
+  <p>Returns the actor id</p>
+</div>
+<div class='tags'>
+</div>
   </div>
 </div>
     </div>
     <div id='footer'>
-  January 08, 15 21:16:09 by
+  January 08, 15 22:47:16 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

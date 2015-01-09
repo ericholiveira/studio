@@ -26,6 +26,7 @@ class Router
   # @param [String] sender the sender identification
   # @param [String] receiver the receiver route identification
   # @param [Object] message the message to be delivered
+  # @param [Object] headers headers for the message (optional)
   # @example How to send a string(or any primitive) message
   #   router.send('mySenderActor','myReceiverActor', 'HELLO WORLD')
   # @example How to send an object message
