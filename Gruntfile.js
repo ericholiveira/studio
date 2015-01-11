@@ -80,7 +80,7 @@ grunt.initConfig({
   },
   release: {
     options: {
-      bump: false,
+      bump: true,
       npm: true,
       npmTag: "<%= version %>"
     }
@@ -88,7 +88,9 @@ grunt.initConfig({
   jasmine_node: {
     options: {
       coverage: {
-        excludes: ['docs/**/*.js','coverage/**/*.js','compiled/core/util/clone.js']
+        excludes: ['docs/**/*.js', 'coverage/**/*.js',
+          'compiled/core/util/clone.js'
+        ]
       },
       forceExit: true,
       match: '.',
@@ -101,9 +103,11 @@ grunt.initConfig({
 
 });
 grunt.registerTask("test", ["jasmine"]);
-grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist", "browserify:testCore","test"]);
+grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist",
+  "browserify:testCore", "test"
+]);
 grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all", "browserify:dist","jasmine_node","release"]);
+grunt.registerTask("prod", ["all", "browserify:dist", "jasmine_node", "release"]);
