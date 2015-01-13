@@ -3,11 +3,11 @@ Studio = require('../../compiled/core/studio');
 describe("A router", function() {
   var SENDER_ID = 'sender_test_router',
     RECEIVER_ID = 'receiver_test_router';
-  var sender = new Studio.Actor({
+  new Studio.Actor({
     id: SENDER_ID,
     process: function(message, sender) {}
   });
-  var receiver = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_ID,
     process: function(message, headers) {
       return this;

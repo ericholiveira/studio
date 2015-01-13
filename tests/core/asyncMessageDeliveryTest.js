@@ -8,13 +8,13 @@ describe("A message", function() {
     id: SENDER_ID,
     process: function(message, headers) {}
   });
-  var receiver = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_ID,
     process: function(message, headers) {
       return message;
     }
   });
-  var receiverError = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_ID_ERROR,
     process: function(message, headers) {
       throw new Error();

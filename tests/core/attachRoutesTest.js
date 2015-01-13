@@ -11,19 +11,19 @@ describe("An actor", function() {
     id: ACTOR_1,
     process: function(message, headers) {}
   });
-  var actor2 = new Studio.Actor({
+  new Studio.Actor({
     id: ACTOR_2,
     process: function(message, headers) {}
   });
-  var actor3 = new Studio.Actor({
+  new Studio.Actor({
     id: ACTOR_3,
     process: function(message, headers) {}
   });
-  var actor4 = new Studio.Actor({
+  new Studio.Actor({
     id: ACTOR_4,
     process: function(message, headers) {}
   });
-  var actor5 = new Studio.Actor({
+  new Studio.Actor({
     id: ACTOR_5,
     process: function(message, headers) {}
   });

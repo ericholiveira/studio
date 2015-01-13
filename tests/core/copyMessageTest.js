@@ -7,7 +7,7 @@ describe("A message", function() {
     id: SENDER_ID,
     process: function(message, headers) {}
   });
-  var receiver = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_ID,
     process: function(message, headers) {
       message.hello = 'copy';

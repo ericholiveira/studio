@@ -12,47 +12,47 @@ describe("An actor", function() {
     RECEIVER_DATE_ID = 'date',
     RECEIVER_DATE_RESULT = new Date(),
     RECEIVER_OBJECT_ID = 'object',
-    RECEIVER_OBJECT_RESULT = {};
-  RECEIVER_OBJECT_WITH_HEADER_ID = 'objectWithHeader';
+    RECEIVER_OBJECT_RESULT = {},
+    RECEIVER_OBJECT_WITH_HEADER_ID = 'objectWithHeader';
   var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function(message, headers) {}
   });
-  var receiverUndef = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_UNDEF_ID,
     process: function(message, headers) {}
   });
-  var receiverBoolean = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_BOOLEAN_ID,
     process: function(message, headers) {
       return RECEIVER_BOOLEAN_RESULT;
     }
   });
-  var receiverNumber = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_NUMBER_ID,
     process: function(message, headers) {
       return RECEIVER_NUMBER_RESULT;
     }
   });
-  var receiverString = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_STRING_ID,
     process: function(message, headers) {
       return RECEIVER_STRING_RESULT;
     }
   });
-  var receiverDate = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_DATE_ID,
     process: function(message, headers) {
       return RECEIVER_DATE_RESULT;
     }
   });
-  var receiverObject = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_OBJECT_ID,
     process: function(message, headers) {
       return RECEIVER_OBJECT_RESULT;
     }
   });
-  var receiverObjectWithHeader = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_OBJECT_WITH_HEADER_ID,
     process: function(message, headers) {
       return headers;

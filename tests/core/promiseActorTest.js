@@ -11,7 +11,7 @@ describe("An async actor", function() {
     id: SENDER_ID,
     process: function(message, headers) {}
   });
-  var receiverOk = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_OK_ID,
     process: function(message, headers) {
       var defer = Q.defer();
@@ -21,7 +21,7 @@ describe("An async actor", function() {
       return defer.promise;
     }
   });
-  var receiverError = new Studio.Actor({
+  new Studio.Actor({
     id: RECEIVER_ERROR_ID,
     process: function(message, headers) {
       var defer = Q.defer();
