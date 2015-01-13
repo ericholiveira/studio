@@ -3,3 +3,4 @@ target/
 tests/target/
 .grunt/
 _SpecRunner.html
+docs/
