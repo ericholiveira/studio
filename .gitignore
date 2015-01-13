@@ -4,3 +4,6 @@ tests/target/
 .grunt/
 _SpecRunner.html
 docs/
+compiled/
+bin/
+coverage/
