@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "actor.js",
-  "sourceRoot": "../../src/core/",
+  "sourceRoot": "..\\..\\src\\core\\",
   "sources": [
     "actor.coffee"
   ],
