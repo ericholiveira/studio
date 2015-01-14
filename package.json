@@ -8,7 +8,8 @@
   "main": "./compiled/core/studio.js",
   "dependencies": {
     "baconjs": "0.7.22",
-    "q": "1.0.1"
+    "q": "1.0.1",
+    "csextends": "1.0.3"
   },
   "scripts": {
     "test": "grunt all"
