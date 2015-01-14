@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "timer.js",
+  "sourceRoot": "..\\..\\..\\src\\core\\util\\",
+  "sources": [
+    "timer.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA;AAAA,MAAA,KAAA;;AAAA,EAAA,KAAA,GAAQ;AAAA,IAGN,OAAA,EAAQ,SAAC,QAAD,GAAA;AACN,MAAA,IAAG,2FAAH;eACE,QAAQ,CAAC,QAAT,CAAkB,QAAlB,EADF;OAAA,MAAA;eAGE,UAAA,CAAW,QAAX,EAAoB,CAApB,EAHF;OADM;IAAA,CAHF;GAAR,CAAA;;AAAA,EASA,MAAM,CAAC,OAAP,GAAiB,KATjB,CAAA;AAAA"
+}
