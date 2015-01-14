@@ -167,7 +167,7 @@
 
 },{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"q":12}],2:[function(require,module,exports){
 (function() {
-  var Bacon, BaseClass, Driver, router,
+  var Bacon, BaseClass, Driver, Q, router,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
@@ -177,6 +177,8 @@
   router = require('./router');
 
   BaseClass = require('./util/baseClass');
+
+  Q = require('q');
 
   Driver = (function(_super) {
     __extends(Driver, _super);
@@ -195,10 +197,17 @@
     }
 
     Driver.prototype.send = function() {
-      var args, body, headers, receiver, sender, _ref;
+      var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      _ref = this.parser.apply(this, args), sender = _ref.sender, receiver = _ref.receiver, body = _ref.body, headers = _ref.headers;
-      return router.send(sender, receiver, body, headers);
+      return Q.fcall((function(_this) {
+        return function() {
+          return _this.parser.apply(_this, args);
+        };
+      })(this)).then(function(result) {
+        var body, headers, receiver, sender;
+        sender = result.sender, receiver = result.receiver, body = result.body, headers = result.headers;
+        return router.send(sender, receiver, body, headers);
+      });
     };
 
     return Driver;
@@ -211,7 +220,7 @@
 
 //# sourceMappingURL=..\maps\driver.js.map
 
-},{"./router":3,"./util/baseClass":6,"baconjs":9}],3:[function(require,module,exports){
+},{"./router":3,"./util/baseClass":6,"baconjs":9,"q":12}],3:[function(require,module,exports){
 (function() {
   var Bacon, Q, Router, Timer, clone, _routes;
 

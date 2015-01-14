@@ -1,6 +1,7 @@
 Bacon = require('baconjs')
 router = require('./router')
 BaseClass = require('./util/baseClass')
+Q = require('q');
 
 # Base class for all drivers.
 class Driver extends BaseClass
@@ -15,7 +16,10 @@ class Driver extends BaseClass
   # Takes the arguments (i.e request,response on http requests or other arguments for different communication protocols / framework), parses it, and then sends the message to the right actor
   # @param [Arguments] args the arguments to build the message
   send: (args...)->
-    {sender,receiver,body,headers} = @parser(args...)
-    router.send(sender,receiver,body,headers)
+    Q.fcall(()=>@parser(args...)).then((result)->
+      {sender,receiver,body,headers}=result
+      router.send(sender,receiver,body,headers)
+    )
+
 
 module.exports = Driver
