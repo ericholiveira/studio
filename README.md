@@ -1,4 +1,10 @@
-Currently in development
+Studio.js
+========
+
+<img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
+
+A small actors lib for JavaScript.
+
 
 [![Build Status](https://travis-ci.org/onstagejs/studio.svg?branch=master)](https://travis-ci.org/onstagejs/studio)
 [![Dependency Status](https://david-dm.org/onstagejs/studio.svg)](https://david-dm.org/onstagejs/studio)
@@ -9,3 +15,5 @@ Currently in development
 
 [![NPM](https://nodei.co/npm/studio.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/studio/)
 
+Table of contents
+========
