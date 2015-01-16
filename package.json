@@ -3,7 +3,28 @@
   "version": "0.0.17",
   "author": {
     "name": "Erich Oliveira",
-    "url": "https://github.com/ericholiveira"
+    "url": "http://ericholiveira.com"
+  },
+  "keywords": [
+    "frp",
+    "functional",
+    "reactive",
+    "programming",
+    "actor",
+    "actors",
+    "async",
+    "akka",
+    "micro-services",
+    "micro-service",
+    "micro",
+    "service"
+  ],
+  "licenses": [
+    "MIT"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/onstagejs/studio.git"
   },
   "main": "./compiled/core/studio.js",
   "dependencies": {
