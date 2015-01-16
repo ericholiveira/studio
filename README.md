@@ -3,7 +3,7 @@ Studio.js
 
 <img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
-A small actors lib for JavaScript.
+A actors model framework for JavaScript.
 
 
 [![Build Status](https://travis-ci.org/onstagejs/studio.svg?branch=master)](https://travis-ci.org/onstagejs/studio)
