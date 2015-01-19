@@ -45,9 +45,12 @@ class Router
       headers:headers
       callback:(err,result)-> if err then defer.reject(err) else defer.resolve(result)
       }
-    Timer.enqueue(()->
-      route.stream.push(_message)
-    )
+    if route?
+      Timer.enqueue(()->
+        route.stream.push(_message)
+      )
+    else
+      defer.reject(new Error("The route #{receiver} doesn't exists"))
     defer.promise
   # Retrieves all defined routes for this router
   getAllRoutes:()->
