@@ -49,9 +49,13 @@
           }
         }
       };
-      Timer.enqueue(function() {
-        return route.stream.push(_message);
-      });
+      if (route != null) {
+        Timer.enqueue(function() {
+          return route.stream.push(_message);
+        });
+      } else {
+        defer.reject(new Error("The route " + receiver + " doesn't exists"));
+      }
       return defer.promise;
     };
 
@@ -72,4 +76,4 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\router.js.map
+//# sourceMappingURL=../maps/router.js.map
