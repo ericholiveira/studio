@@ -26,3 +26,54 @@ I would love to receive feedback.Let me know if you've used it. What worked and 
 
 Table of contents
 ========
+
+- [Install](#install)
+- [Intro](#intro)
+- [API](#api)
+- [Examples](#examples)
+- [Pro tips](#pro-tips)
+- [Dependencies](#dependencies)
+- [Build](#build)
+- [Test](#test)
+
+Install
+========
+
+To install execute:
+
+    npm install studio
+
+Intro
+========
+
+API
+========
+
+Examples
+========
+
+Pro tips
+========
+
+Dependencies
+========
+Studio depends on:
+- [baconjs](https://github.com/baconjs/bacon.js) for stream manipulation
+- [Q](https://github.com/kriskowal/q) for a+ promises usage
+- [csextends](https://github.com/bevry/csextends) to make coffee classes extensible via javascript
+
+Build
+========
+
+To build the project you have to run:
+
+    grunt
+
+This is going to generate js files (and source-maps) on "compiled" folder and a browserified version of Studio on "dist" folder
+
+Test
+========
+
+Run test with:
+
+    npm test
