@@ -15,7 +15,7 @@ I would love to receive feedback.Let me know if you've used it. What worked and 
 
 
 [![Build Status](https://travis-ci.org/onstagejs/studio.svg?branch=master)](https://travis-ci.org/onstagejs/studio)
-[![npm version](https://badge.fury.io/js/studio.png)](http://badge.fury.io/js/studio)
+[![npm version](https://badge.fury.io/js/studio.svg)](http://badge.fury.io/js/studio)
 [![Dependency Status](https://david-dm.org/onstagejs/studio.svg)](https://david-dm.org/onstagejs/studio)
 [![devDependency Status](https://david-dm.org/onstagejs/studio/dev-status.svg)](https://david-dm.org/onstagejs/studio#info=devDependencies)
 [![Codacy Badge](https://www.codacy.com/project/badge/befaf49356ff402a830c45ee0f0ce1a0)](https://www.codacy.com/public/ericholiveira10/studio)
