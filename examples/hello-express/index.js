@@ -21,6 +21,7 @@ var driver = new Studio.Driver({
 var hello = new Studio.Actor({
 	id: 'helloActor',
 	process: function (body, headers, sender, receiver) {
+		console.log('Received message to actor = ' + hello.id);
 		return 'Hello World!!!';
 	}
 });
