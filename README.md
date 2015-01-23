@@ -46,8 +46,25 @@ To install execute:
 Intro
 ========
 
+We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actor model](http://en.wikipedia.org/wiki/Actor_model). I present you (Studio)(https://github.com/onstagejs/studio)
+
+Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.
+
+First of all, almost everything in a Studio-based application is an [Actor](http://onstagejs.com/studio/docs/class/Actor.html).
+
+So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can't mess with the objects of another actor) increasing your code security, use [baconjs](https://github.com/baconjs/bacon.js) streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and [Q](https://github.com/kriskowal/q) A+ promises to help you with the callback hell.
+
+The other important class on Studio is the [Driver](http://onstagejs.com/studio/docs/class/Driver.html.
+
+A driver takes your endpoint input and parses it in a message for a certain actor.
+
+And this is it... this is all you need to create [reactive](http://reactivemanifesto.org) applications.
+
+
 API
 ========
+
+The API documentation can be accessed on [Docs](http://onstagejs.com/studio/docs/)
 
 Examples
 ========
