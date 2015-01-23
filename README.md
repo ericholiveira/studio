@@ -69,6 +69,60 @@ The API documentation can be accessed on [Docs](http://onstagejs.com/studio/docs
 Examples
 ========
 
+Follow the link to see all available (examples)[https://github.com/onstagejs/studio/tree/master/examples]
+
+Studio works with any web framework anf i'll create at least a "Hello World" application for the most used.
+
+Here i`m going to put just a basic hello world with express, on (examples)[https://github.com/onstagejs/studio/tree/master/examples] folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
+Hello World with Express (using express 4.11.1):
+```
+var express = require('express');
+var Studio = require('studio'); //require Studio namespace
+var app = express(); // create an express app
+//The first thing we have to do is create a driver to listen to the request
+var driver = new Studio.Driver({
+/* 
+Driver and Actor can receive an initialize function on constructor, this function is going to be executed on object creation 
+*/
+	initialize: function () {
+        //Make express listen to '/' route	
+		app.get('/', function (request, response) {
+		    /* 
+		        we call the 'send' method of the driver passing express arguments, Studio calls the 'parser' 
+		        function of this driver to build a message and then deliver this message to an actor, the send method ALWAYS returns a promise, so we call the 'then' method of this promise to take the actors response
+		    */
+			driver.send(request, response).then(function (helloMessage) {
+				response.send(helloMessage);
+			});
+		});
+	},
+	/* 
+	All drivers needs a parser function which takes any object and transforms into an object with the fields 'sender', 'receiver', 'body', 'headers'
+	*/
+	parser: function (request, response) {
+	//Since we don't need any request info we just fill the receiver's id
+		return {
+			sender: null,
+			receiver: 'helloActor', // receiver identifier
+			body: null,
+			headers: null
+		};
+	}
+});
+//Create an actor
+var hello = new Studio.Actor({
+	id: 'helloActor', // All Actors needs an identifier
+	/*
+	    All actors also needs a process function, this function is going to be executed when a message arrives
+	    this function can return any object or a promise, returning a object is going to automatically fulfill the sender promise. You can also throw an exception if any error occurs, and then the sender promise is going to be rejected
+	*/
+	process: function (body, headers, sender, receiver) {
+		return 'Hello World!!!';
+	}
+});
+app.listen(3000);// Listen on port 3000
+```
+
 Pro tips
 ========
 
