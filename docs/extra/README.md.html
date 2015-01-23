@@ -34,13 +34,38 @@
         </p>
       </nav>
       <div id='filecontents'>
-        <p>Currently in development
+        <h1 id="studio-js">Studio.js</h1><p><img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" /></p><p>Micro-services using actors model framework for JavaScript.</p><p>Studio is a lightweight framework for node (it also runs on major browsers, but the priority is node projects) developed to make easy to create reactive applications according to <a href="http://www.reactivemanifesto.org/">reactive manifesto</a> principles. It uses an actor model (freely inspired by akka actors) implemented using <a href="https://github.com/baconjs/bacon.js">baconjs</a> for reactive programming and <a href="https://github.com/kriskowal/q">Q</a> a+ promises to solve the callback hell problem.</p><p>The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i&#39;ll keep a concise api, so other developers can create (and share) plugins for the framework.</p><p>Studio isn&#39;t only a library, it&#39;s a framework. It&#39;s really important to learn how to program and not only what each method can do.</p><p>I would love to receive feedback.Let me know if you&#39;ve used it. What worked and what is wrong. Contribute and spread the word.</p><p><a href="https://travis-ci.org/onstagejs/studio"><img src="https://travis-ci.org/onstagejs/studio.svg?branch=master" alt="Build Status"></a>
+<a href="http://badge.fury.io/js/studio"><img src="https://badge.fury.io/js/studio.svg" alt="npm version"></a>
 <a href="https://david-dm.org/onstagejs/studio"><img src="https://david-dm.org/onstagejs/studio.svg" alt="Dependency Status"></a>
-<a href="https://david-dm.org/onstagejs/studio#info=devDependencies"><img src="https://david-dm.org/onstagejs/studio/dev-status.svg" alt="devDependency Status"></a></p>
+<a href="https://david-dm.org/onstagejs/studio#info=devDependencies"><img src="https://david-dm.org/onstagejs/studio/dev-status.svg" alt="devDependency Status"></a>
+<a href="https://www.codacy.com/public/ericholiveira10/studio"><img src="https://www.codacy.com/project/badge/befaf49356ff402a830c45ee0f0ce1a0" alt="Codacy Badge"></a>
+<a href="http://issuestats.com/github/onstagejs/studio"><img src="http://issuestats.com/github/onstagejs/studio/badge/issue?style=flat" alt="Issue Stats"></a>
+<a href="http://issuestats.com/github/onstagejs/studio"><img src="http://issuestats.com/github/onstagejs/studio/badge/pr?style=flat" alt="Issue Stats"></a></p><p><a href="https://nodei.co/npm/studio/"><img src="https://nodei.co/npm/studio.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p><h1 id="table-of-contents">Table of contents</h1>
+<ul>
+<li><a href="#install">Install</a></li>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#api">API</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#pro-tips">Pro tips</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#build">Build</a></li>
+<li><a href="#test">Test</a></li>
+</ul>
+<h1 id="install">Install</h1><p>To install execute:</p><pre><code>npm install studio
+</code></pre><h1 id="intro">Intro</h1><p>We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a <a href="http://martinfowler.com/articles/microservices.html">micro-services</a> framework for nodejs using and architecture freely inspired on <a href="http://en.wikipedia.org/wiki/Actor_model">actor model</a>. I present you (Studio)(<a href="https://github.com/onstagejs/studio">https://github.com/onstagejs/studio</a>)</p><p>Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.</p><p>First of all, almost everything in a Studio-based application is an <a href="http://onstagejs.com/studio/docs/class/Actor.html">Actor</a>.</p><p>So if you&#39;re used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can&#39;t mess with the objects of another actor) increasing your code security, use <a href="https://github.com/baconjs/bacon.js">baconjs</a> streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and <a href="https://github.com/kriskowal/q">Q</a> A+ promises to help you with the callback hell.</p><p>The other important class on Studio is the [Driver](<a href="http://onstagejs.com/studio/docs/class/Driver.html">http://onstagejs.com/studio/docs/class/Driver.html</a>.</p><p>A driver takes your endpoint input and parses it in a message for a certain actor.</p><p>And this is it... this is all you need to create <a href="http://reactivemanifesto.org">reactive</a> applications.</p><h1 id="api">API</h1><p>The API documentation can be accessed on <a href="http://onstagejs.com/studio/docs/">Docs</a></p><h1 id="examples">Examples</h1>
+<h1 id="pro-tips">Pro tips</h1>
+<h1 id="dependencies">Dependencies</h1><p>Studio depends on:</p><ul>
+<li><a href="https://github.com/baconjs/bacon.js">baconjs</a> for stream manipulation</li>
+<li><a href="https://github.com/kriskowal/q">Q</a> for a+ promises usage</li>
+<li><a href="https://github.com/bevry/csextends">csextends</a> to make coffee classes extensible via javascript</li>
+</ul>
+<h1 id="build">Build</h1><p>To build the project you have to run:</p><pre><code>grunt
+</code></pre><p>This is going to generate js files (and source-maps) on &quot;compiled&quot; folder and a browserified version of Studio on &quot;dist&quot; folder</p><h1 id="test">Test</h1><p>Run test with:</p><pre><code>npm test
+</code></pre>
       </div>
     </div>
     <div id='footer'>
-  January 08, 15 22:47:16 by
+  January 22, 15 22:41:05 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
