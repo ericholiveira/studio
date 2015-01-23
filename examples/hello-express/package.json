@@ -1,0 +1,11 @@
+{
+	"name": "hello-express",
+	"version": "1.0.0",
+	"description": "Hello World Application using Express and Studio",
+	"main": "index.js",
+	"dependencies": {
+		"express": "4.11.1"
+	},
+	"author": "Erich Oliveira",
+	"license": "MIT"
+}

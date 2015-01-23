@@ -9,5 +9,6 @@ coverage/
 dist/
 src/
 tests/
+examples/
 .travis.yml
 .gitignore
