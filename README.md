@@ -75,7 +75,7 @@ Studio works with any web framework anf i'll create at least a "Hello World" app
 
 Here i`m going to put just a basic hello world with express, on [examples](https://github.com/onstagejs/studio/tree/master/examples) folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
 Hello World with Express (using express 4.11.1):
-```
+```js
 var express = require('express');
 var Studio = require('studio'); //require Studio namespace
 var app = express(); // create an express app
