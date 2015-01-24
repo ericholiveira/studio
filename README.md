@@ -130,8 +130,16 @@ var hello = new Studio.Actor({
 app.listen(3000);// Listen on port 3000
 ```
 
+On examples folder you can learn how to deal with errors, how to buffer or filter messages and much more.
+
 Pro tips
 ========
+
+- The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this [blog](https://blog.domenic.me/youre-missing-the-point-of-promises/) have a incredible explanation of what A+ promises means and it saves you from callback hell
+- Studio uses [Baconjs](https://github.com/baconjs/bacon.js) streams to deliver messages, so use it, to filter , map and apply different transformations to your messages. Baconjs is a powerful tool to keep your code clean, you use it to keep your validations and non-functional requisites away from your actor process function. This way your actor will be more easy to read, mantainable and testable.
+- All your actor must be [indempotent](http://en.wikipedia.org/wiki/Idempotence) , Studio helps you to achieve this delivering to each actor a copy of the original message. Stop keep states on your code.
+- When dealing with stream transformation of an actor keep in mind you're dealing with (a copy of) raw message, the ray message have sender, receiver,body,headers and callback attributes, if you decide to filter a message you need to call the callback function manually to give to the blocked sender a response, the same applies for buffer.
+
 
 Dependencies
 ========
