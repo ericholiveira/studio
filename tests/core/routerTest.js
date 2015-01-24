@@ -26,7 +26,7 @@ describe("A router", function () {
 	it("should return a failed promise when route don't exist", function (done) {
 		Studio.router.send('test', '___NON___MAPPED___ROUTE___', {}).catch(
 			function () {
-				expect(true);
+				expect(true).toBe(true);
 				done();
 			});
 	});
