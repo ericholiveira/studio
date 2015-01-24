@@ -32,7 +32,7 @@ grunt.initConfig({
     }
   },
   jshint: {
-    all: ['src/**/*.js', '*.js', 'tests/core/*.js']
+    all: ['src/**/*.js', '*.js', 'tests/core/*.js', 'examples/**/*.js']
   },
   coffee: {
     multiple: {
