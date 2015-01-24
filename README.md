@@ -124,6 +124,11 @@ var hello = new Studio.Actor({
 	    and then the sender promise is going to be rejected
 	*/
 	process: function (body, headers, sender, receiver) {
+	/*An actor can communicate to others using the 'send' method as 
+		this.send('otherActor',{foo:'bar'});
+	The 'send' message of an actor also returns a promise, so you can return it or use 
+	then/catch to deal with the message
+	*/
 		return 'Hello World!!!';
 	}
 });
