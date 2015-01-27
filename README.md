@@ -1,6 +1,8 @@
 Studio.js
 ========
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onstagejs/studio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 <img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
 Micro-services using actors model framework for JavaScript.
