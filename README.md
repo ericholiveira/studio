@@ -1,8 +1,6 @@
 Studio.js
 ========
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onstagejs/studio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 <img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
 Micro-services using actors model framework for JavaScript.
@@ -23,6 +21,7 @@ I would love to receive feedback.Let me know if you've used it. What worked and 
 [![Codacy Badge](https://www.codacy.com/project/badge/befaf49356ff402a830c45ee0f0ce1a0)](https://www.codacy.com/public/ericholiveira10/studio)
 [![Issue Stats](http://issuestats.com/github/onstagejs/studio/badge/issue?style=flat)](http://issuestats.com/github/onstagejs/studio)
 [![Issue Stats](http://issuestats.com/github/onstagejs/studio/badge/pr?style=flat)](http://issuestats.com/github/onstagejs/studio)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onstagejs/studio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![NPM](https://nodei.co/npm/studio.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/studio/)
 
