@@ -56,6 +56,7 @@
     "grunt-browserify": "3.1.0",
     "grunt-release": "0.7.0",
     "grunt-jasmine-node": "0.2.1",
+    "grunt-exec": "0.4.6",
     "grunt-jasmine-node-coverage": "0.2.0"
   }
 }

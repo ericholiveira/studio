@@ -10,6 +10,7 @@ grunt.loadNpmTasks('grunt-browserify');
 grunt.loadNpmTasks('grunt-release');
 grunt.loadNpmTasks('grunt-jasmine-node');
 grunt.loadNpmTasks('grunt-jasmine-node-coverage');
+grunt.loadNpmTasks('grunt-exec');
 
 grunt.initConfig({
   coffeelint: {
@@ -99,6 +100,11 @@ grunt.initConfig({
       specNameMatcher: 'Test'
     },
     all: ['tests/']
+  },
+  exec: {
+    express: 'node examples/hello-express/index.js',
+    hapi: 'node examples/hello-hapi/index.js',
+    restify: 'node examples/hello-restify/index.js'
   }
 
 });
@@ -111,3 +117,7 @@ grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
 grunt.registerTask("prod", ["all", "browserify:dist", "jasmine_node", "release"]);
+
+grunt.registerTask("example:express", 'exec:express');
+grunt.registerTask("example:hapi", 'exec:hapi');
+grunt.registerTask("example:restify", 'exec:restify');
