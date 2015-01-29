@@ -25,7 +25,7 @@ var driver = new Studio.Driver({
     the parser function could also return a promise
     */
     return {
-      sender: 'expressDriver',
+      sender: 'hapiDriver',
       receiver: 'helloActor',
       body: null,
       headers: null
