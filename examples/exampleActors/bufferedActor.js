@@ -19,6 +19,6 @@ bufferedActor.addTransformation(function(stream) {
      never fail the promise.
      So here, we call message.callback with the success string as second parameter
     */
-    message.callback(null, 'Enqueued')
+    message.callback(null, 'Enqueued');
   }).bufferWithCount(5);
 });
