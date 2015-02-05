@@ -88,11 +88,6 @@ grunt.initConfig({
   },
   jasmine_node: {
     options: {
-      coverage: {
-        excludes: ['docs/**/*.js', 'coverage/**/*.js',
-          'compiled/core/util/clone.js'
-        ]
-      },
       forceExit: true,
       match: '.',
       matchall: true,
