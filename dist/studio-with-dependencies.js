@@ -48,9 +48,12 @@
           return Q.fcall(function() {
             return _this.process(body, headers, sender, receiver);
           }).then(function(result) {
-            return callback(void 0, result);
+            callback(void 0, result);
+            return result;
           })["catch"](function(err) {
-            return callback(err || new Error('Unexpected Error'));
+            err = err || new Error('Unexpected Error');
+            callback(err || new Error('Unexpected Error'));
+            throw err;
           });
         };
       })(this);

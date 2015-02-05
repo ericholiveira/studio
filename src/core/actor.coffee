@@ -36,8 +36,13 @@ class Actor extends BaseClass
   _doProcess:(message) =>
     __doProcess=(message) =>
       {sender,body,receiver,callback,headers} = message
-      Q.fcall(()=>@process(body,headers,sender,receiver)).then((result)->callback(undefined,result)).catch((err)->
+      Q.fcall(()=>@process(body,headers,sender,receiver)).then((result)->
+        callback(undefined,result)
+        result
+      ).catch((err)->
+        err = err or new Error('Unexpected Error')
         callback(err or new Error('Unexpected Error'))
+        throw err
       )
     if message?.length
       __doProcess(_message) for _message in message
