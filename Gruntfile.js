@@ -86,16 +86,6 @@ grunt.initConfig({
       npmTag: "<%= version %>"
     }
   },
-  jasmine_node: {
-    options: {
-      forceExit: true,
-      match: '.',
-      matchall: true,
-      extensions: 'js',
-      specNameMatcher: 'Test'
-    },
-    all: ['tests/']
-  },
   exec: {
     express: 'node examples/hello-express/index.js',
     hapi: 'node examples/hello-hapi/index.js',
@@ -111,7 +101,7 @@ grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
 grunt.registerTask("default", ["all", "watch"]);
 grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all", "browserify:dist", "jasmine_node", "release"]);
+grunt.registerTask("prod", ["all", "browserify:dist", "release"]);
 
 grunt.registerTask("example:express", 'exec:express');
 grunt.registerTask("example:hapi", 'exec:hapi');
