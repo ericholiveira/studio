@@ -1,5 +1,5 @@
 (function() {
-  var Bacon, BaseClass, Driver, Q, router,
+  var Bacon, BaseClass, Driver, Promise, router,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
@@ -10,7 +10,7 @@
 
   BaseClass = require('./util/baseClass');
 
-  Q = require('q');
+  Promise = require('bluebird');
 
   Driver = (function(_super) {
     __extends(Driver, _super);
@@ -31,7 +31,7 @@
     Driver.prototype.send = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return Q.fcall((function(_this) {
+      return Promise.attempt((function(_this) {
         return function() {
           return _this.parser.apply(_this, args);
         };

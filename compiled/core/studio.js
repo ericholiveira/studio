@@ -9,7 +9,7 @@
     router: require('./router'),
     Actor: require('./actor'),
     Driver: require('./driver'),
-    Q: require('q'),
+    Promise: require('bluebird'),
     Bacon: require('baconjs'),
     noConflict: function() {
       if (typeof oldStudio !== 'undefined') {

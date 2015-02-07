@@ -15,7 +15,7 @@ describe("On error an actor", function() {
     }
   });
   it("should call catch function of promise with an error", function(done) {
-    sender.send(RECEIVER_ID, 'hello').fail(function(error) {
+    sender.send(RECEIVER_ID, 'hello').catch(function(error) {
       expect(error).toBeDefined();
       expect(error.message).toBe(RECEIVER_ERROR_MESSAGE);
       done();

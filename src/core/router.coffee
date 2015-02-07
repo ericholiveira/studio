@@ -1,5 +1,5 @@
 Timer = require('./util/timer')
-Q = require('q')
+Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
 
@@ -36,22 +36,22 @@ class Router
   #                                  }
   #                                })
   send: (sender,receiver,message,headers={})->
-    defer = Q.defer()
-    route = _routes[receiver]
-    _message = {
-      sender:sender
-      receiver:receiver
-      body:message
-      headers:headers
-      callback:(err,result)-> if err then defer.reject(err) else defer.resolve(result)
-      }
-    if route?
-      Timer.enqueue(()->
-        route.stream.push(_message)
+    new Promise((resolve,reject)->
+      route = _routes[receiver]
+      _message = {
+        sender:sender
+        receiver:receiver
+        body:message
+        headers:headers
+        callback:(err,result)-> if err then reject(err) else resolve(result)
+        }
+      if route?
+        Timer.enqueue(()->
+          route.stream.push(_message)
+        )
+      else
+        reject(new Error("The route #{receiver} doesn't exists"))
       )
-    else
-      defer.reject(new Error("The route #{receiver} doesn't exists"))
-    defer.promise
   # Retrieves all defined routes for this router
   getAllRoutes:()->
     route for route of _routes

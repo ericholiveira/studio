@@ -5,7 +5,7 @@ module.exports=_global.Studio={
   router:require('./router'),
   Actor :require('./actor'),
   Driver :require('./driver'),
-  Q:require('q'),
+  Promise:require('bluebird'),
   Bacon:require('baconjs'),
   # Change the global Studio to the previous to avoid conflicts
   noConflict:()->

@@ -1,9 +1,9 @@
 (function() {
-  var Bacon, Q, Router, Timer, clone, _routes;
+  var Bacon, Promise, Router, Timer, clone, _routes;
 
   Timer = require('./util/timer');
 
-  Q = require('q');
+  Promise = require('bluebird');
 
   Bacon = require('baconjs');
 
@@ -30,33 +30,33 @@
     };
 
     Router.prototype.send = function(sender, receiver, message, headers) {
-      var defer, route, _message;
       if (headers == null) {
         headers = {};
       }
-      defer = Q.defer();
-      route = _routes[receiver];
-      _message = {
-        sender: sender,
-        receiver: receiver,
-        body: message,
-        headers: headers,
-        callback: function(err, result) {
-          if (err) {
-            return defer.reject(err);
-          } else {
-            return defer.resolve(result);
+      return new Promise(function(resolve, reject) {
+        var route, _message;
+        route = _routes[receiver];
+        _message = {
+          sender: sender,
+          receiver: receiver,
+          body: message,
+          headers: headers,
+          callback: function(err, result) {
+            if (err) {
+              return reject(err);
+            } else {
+              return resolve(result);
+            }
           }
+        };
+        if (route != null) {
+          return Timer.enqueue(function() {
+            return route.stream.push(_message);
+          });
+        } else {
+          return reject(new Error("The route " + receiver + " doesn't exists"));
         }
-      };
-      if (route != null) {
-        Timer.enqueue(function() {
-          return route.stream.push(_message);
-        });
-      } else {
-        defer.reject(new Error("The route " + receiver + " doesn't exists"));
-      }
-      return defer.promise;
+      });
     };
 
     Router.prototype.getAllRoutes = function() {

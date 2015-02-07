@@ -1,5 +1,5 @@
 Studio = require('../../compiled/core/studio');
-Q = require('q');
+var BBPromise = require('bluebird');
 
 describe("An async actor", function() {
   var SENDER_ID = 'sender',
@@ -14,21 +14,21 @@ describe("An async actor", function() {
   new Studio.Actor({
     id: RECEIVER_OK_ID,
     process: function(message, headers) {
-      var defer = Q.defer();
-      setTimeout(function() {
-        defer.resolve(RECEIVER_OK_RESULT);
-      }, 0);
-      return defer.promise;
+      return new BBPromise(function(resolve,reject){
+        setTimeout(function() {
+          resolve(RECEIVER_OK_RESULT);
+        }, 0);
+      });
     }
   });
   new Studio.Actor({
     id: RECEIVER_ERROR_ID,
     process: function(message, headers) {
-      var defer = Q.defer();
-      setTimeout(function() {
-        defer.reject(RECEIVER_ERROR_RESULT);
-      }, 0);
-      return defer.promise;
+      return new BBPromise(function(resolve,reject){
+        setTimeout(function() {
+          reject(RECEIVER_ERROR_RESULT);
+        }, 0);
+      });
     }
   });
   it("should be able to return a promise with success", function(done) {
@@ -38,7 +38,7 @@ describe("An async actor", function() {
     });
   });
   it("should be able to return a promise with error", function(done) {
-    sender.send(RECEIVER_ERROR_ID, 'hello').fail(function(result) {
+    sender.send(RECEIVER_ERROR_ID, 'hello').catch(function(result) {
       expect(result).toBe(RECEIVER_ERROR_RESULT);
       done();
     });

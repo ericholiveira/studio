@@ -1,4 +1,5 @@
 Studio = require('../../compiled/core/studio');
+var BBPromise = require('bluebird');
 
 describe("A Stream", function() {
   var SENDER_ID = 'sender_transformation',
@@ -36,7 +37,7 @@ describe("A Stream", function() {
         return acc;
       });
     });
-    Studio.Q.all(sender.send(RECEIVER_ID, 1), sender.send(RECEIVER_ID,
+    BBPromise.all(sender.send(RECEIVER_ID, 1), sender.send(RECEIVER_ID,
       2), sender.send(RECEIVER_ID, 3)).then(function(result) {
       expect(result[0]).toBe(1);
       expect(result[1]).toBe(2);

@@ -1,4 +1,5 @@
 Studio = require('../../compiled/core/studio');
+var BBPromise = require('bluebird');
 
 describe("A driver", function() {
   var RECEIVER_ID = 'receiver_driver';
@@ -14,16 +15,16 @@ describe("A driver", function() {
   });
   var driverAsync = new Studio.Driver({
     parser: function() {
-      var defer = Studio.Q.defer();
-      window.setTimeout(function() {
-        defer.resolve({
-          sender: 'driverAsync',
-          receiver: RECEIVER_ID,
-          body: 'body',
-          headers: null
-        });
-      }, 0);
-      return defer.promise;
+      return new BBPromise(function(resolve,reject){
+        window.setTimeout(function() {
+          resolve({
+            sender: 'driverAsync',
+            receiver: RECEIVER_ID,
+            body: 'body',
+            headers: null
+          });
+        }, 0);
+      });
     }
   });
   var receiver = new Studio.Actor({

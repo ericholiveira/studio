@@ -1,5 +1,5 @@
 (function() {
-  var Actor, ArrayUtil, BaseClass, Q, clone, router,
+  var Actor, ArrayUtil, BaseClass, Promise, clone, router,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8,7 +8,7 @@
 
   BaseClass = require('./util/baseClass');
 
-  Q = require('q');
+  Promise = require('bluebird');
 
   clone = require('./util/clone');
 
@@ -32,7 +32,11 @@
       this.stream = router.createOrGetRoute(this.id).map(function(message) {
         return clone(message);
       });
-      this.unsubscribe = this.stream.onValue(this._doProcess);
+      this.unsubscribe = this.stream.onValue((function(_this) {
+        return function(message) {
+          return _this._doProcess(message)["catch"](function() {});
+        };
+      })(this));
       if (typeof this.initialize === "function") {
         this.initialize(options);
       }
@@ -44,7 +48,7 @@
         return function(message) {
           var body, callback, headers, receiver, sender;
           sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
-          return Q.fcall(function() {
+          return Promise.attempt(function() {
             return _this.process(body, headers, sender, receiver);
           }).then(function(result) {
             callback(void 0, result);

@@ -30,7 +30,7 @@
   "main": "./compiled/core/studio.js",
   "dependencies": {
     "baconjs": "0.7.22",
-    "q": "1.0.1",
+    "bluebird": "2.9.6",
     "csextends": "1.0.3"
   },
   "scripts": {

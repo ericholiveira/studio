@@ -30,7 +30,7 @@ describe("A message", function() {
   });
   it("should always be delivered async in fail", function(done) {
     var i = 0;
-    sender.send(RECEIVER_ID_ERROR, 'message').fail(function(error) {
+    sender.send(RECEIVER_ID_ERROR, 'message').catch(function(error) {
       expect(i).toBe(1);
       done();
     });

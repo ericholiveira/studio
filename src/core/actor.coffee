@@ -1,7 +1,7 @@
 
 router = require('./router')
 BaseClass = require('./util/baseClass')
-Q = require('q')
+Promise = require('bluebird')
 clone = require('./util/clone')
 ArrayUtil = require('./util/arrayUtil')
 
@@ -29,14 +29,14 @@ class Actor extends BaseClass
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
     @stream = router.createOrGetRoute(@id).map((message)->clone(message))
-    @unsubscribe = @stream.onValue(@_doProcess)
+    @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
     @initialize?(options)
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
     __doProcess=(message) =>
       {sender,body,receiver,callback,headers} = message
-      Q.fcall(()=>@process(body,headers,sender,receiver)).then((result)->
+      Promise.attempt(()=>@process(body,headers,sender,receiver)).then((result)->
         callback(undefined,result)
         result
       ).catch((err)->
