@@ -49,8 +49,19 @@
         return function(message) {
           var body, callback, headers, receiver, sender;
           sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
-          return Promise.attempt(function() {
-            return _this.process(body, headers, sender, receiver);
+          return new Promise(function(resolve, reject) {
+            var err, result;
+            try {
+              result = _this.process(body, headers, sender, receiver);
+              if (result instanceof Promise) {
+                return result.then(resolve)["catch"](reject);
+              } else {
+                return resolve(result);
+              }
+            } catch (_error) {
+              err = _error;
+              return reject(err);
+            }
           }).then(function(result) {
             callback(void 0, result);
             return result;
@@ -170,7 +181,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\actor.js.map
+//# sourceMappingURL=../maps/actor.js.map
 
 },{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"bluebird":10}],2:[function(require,module,exports){
 (function() {
@@ -206,9 +217,20 @@
     Driver.prototype.send = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return Promise.attempt((function(_this) {
-        return function() {
-          return _this.parser.apply(_this, args);
+      return new Promise((function(_this) {
+        return function(resolve, reject) {
+          var err, result;
+          try {
+            result = _this.parser.apply(_this, args);
+            if (result instanceof Promise) {
+              return result.then(resolve)["catch"](reject);
+            } else {
+              return resolve(result);
+            }
+          } catch (_error) {
+            err = _error;
+            return reject(err);
+          }
         };
       })(this)).then(function(result) {
         var body, headers, receiver, sender;
@@ -225,7 +247,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\driver.js.map
+//# sourceMappingURL=../maps/driver.js.map
 
 },{"./router":3,"./util/baseClass":6,"baconjs":9,"bluebird":10}],3:[function(require,module,exports){
 (function() {
@@ -306,7 +328,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\router.js.map
+//# sourceMappingURL=../maps/router.js.map
 
 },{"./util/clone":7,"./util/timer":8,"baconjs":9,"bluebird":10}],4:[function(require,module,exports){
 (function() {
@@ -334,7 +356,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\maps\studio.js.map
+//# sourceMappingURL=../maps/studio.js.map
 
 },{"./actor":1,"./driver":2,"./router":3,"baconjs":9,"bluebird":10}],5:[function(require,module,exports){
 (function() {
@@ -344,7 +366,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\arrayUtil.js.map
+//# sourceMappingURL=../../maps/arrayUtil.js.map
 
 },{}],6:[function(require,module,exports){
 (function() {
@@ -367,7 +389,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\baseClass.js.map
+//# sourceMappingURL=../../maps/baseClass.js.map
 
 },{"csextends":11}],7:[function(require,module,exports){
 (function() {
@@ -408,7 +430,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\clone.js.map
+//# sourceMappingURL=../../maps/clone.js.map
 
 },{}],8:[function(require,module,exports){
 (function() {
@@ -428,7 +450,7 @@
 
 }).call(this);
 
-//# sourceMappingURL=..\..\maps\timer.js.map
+//# sourceMappingURL=../../maps/timer.js.map
 
 },{}],9:[function(require,module,exports){
 (function (global){

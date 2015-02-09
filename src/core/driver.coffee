@@ -16,10 +16,18 @@ class Driver extends BaseClass
   # Takes the arguments (i.e request,response on http requests or other arguments for different communication protocols / framework), parses it, and then sends the message to the right actor
   # @param [Arguments] args the arguments to build the message
   send: (args...)->
-    Promise.attempt(()=>@parser(args...)).then((result)->
+    new Promise((resolve,reject)=>
+      try
+        result = @parser(args...)
+        if result instanceof Promise
+          result.then(resolve).catch(reject)
+        else
+          resolve(result)
+      catch err
+        reject(err)
+    ).then((result)->
       {sender,receiver,body,headers}=result
       router.send(sender,receiver,body,headers)
     )
-
 
 module.exports = Driver
