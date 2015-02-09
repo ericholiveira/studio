@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, BaseClass, Promise, clone, router,
+  var Actor, ArrayUtil, Bacon, BaseClass, Promise, clone, router,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -10,6 +10,8 @@
   BaseClass = require('./util/baseClass');
 
   Promise = require('bluebird');
+
+  Bacon = require('baconjs');
 
   clone = require('./util/clone');
 
@@ -30,8 +32,15 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id).map(function(message) {
-        return clone(message);
+      this.stream = router.createOrGetRoute(this.id).flatMap(function(message) {
+        var err;
+        try {
+          return clone(message);
+        } catch (_error) {
+          err = _error;
+          message.callback(err);
+          return Bacon.never();
+        }
       });
       this.unsubscribe = this.stream.onValue((function(_this) {
         return function(message) {
@@ -183,7 +192,7 @@
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"bluebird":10}],2:[function(require,module,exports){
+},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"baconjs":9,"bluebird":10}],2:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, Promise, router,
     __hasProp = {}.hasOwnProperty,

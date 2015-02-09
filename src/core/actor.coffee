@@ -2,6 +2,7 @@
 router = require('./router')
 BaseClass = require('./util/baseClass')
 Promise = require('bluebird')
+Bacon = require('baconjs')
 clone = require('./util/clone')
 ArrayUtil = require('./util/arrayUtil')
 
@@ -28,11 +29,12 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id).map((message)->
+    @stream = router.createOrGetRoute(@id).flatMap((message)->
       try
         clone(message)
       catch err
         message.callback(err)
+        Bacon.never()
     )
     @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
     @initialize?(options)
