@@ -87,7 +87,7 @@ class Actor extends BaseClass
   #                                  }
   #                                })
   send: (receiver,message,headers={})->
-    router.send(@id,receiver,message,headers)
+    router.send(@id,receiver,message,headers).bind(@)
   # attach a named route as a function.
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)

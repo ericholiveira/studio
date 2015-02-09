@@ -103,7 +103,7 @@
       if (headers == null) {
         headers = {};
       }
-      return router.send(this.id, receiver, message, headers);
+      return router.send(this.id, receiver, message, headers).bind(this);
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
@@ -241,10 +241,10 @@
             return reject(err);
           }
         };
-      })(this)).then(function(result) {
+      })(this)).bind(this).then(function(result) {
         var body, headers, receiver, sender;
         sender = result.sender, receiver = result.receiver, body = result.body, headers = result.headers;
-        return router.send(sender, receiver, body, headers);
+        return router.send(sender, receiver, body, headers).bind(this);
       });
     };
 

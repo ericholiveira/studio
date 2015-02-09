@@ -25,9 +25,9 @@ class Driver extends BaseClass
           resolve(result)
       catch err
         reject(err)
-    ).then((result)->
+    ).bind(@).then((result)->
       {sender,receiver,body,headers}=result
-      router.send(sender,receiver,body,headers)
+      router.send(sender,receiver,body,headers).bind(@)
     )
 
 module.exports = Driver
