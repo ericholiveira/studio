@@ -88,6 +88,19 @@ class Actor extends BaseClass
   #                                })
   send: (receiver,message,headers={})->
     router.send(@id,receiver,message,headers).bind(@)
+  # Returns a function with receiver and headers binded
+  # @param [String] receiver the receiver id
+  # @param [Object] headers headers for the message (optional)
+  # @example How to send a string message using bindSend
+  #   myActor.bindSend('otherActor')('myMessage')
+  # @example How to send an object (with headers) message using bind
+  #   myActor.bindSend('otherActor',{userId:1} )({hello:'hello',
+  #                                  obj:{
+  #                                    count:1
+  #                                  }
+  #                                })
+  bindSend:(receiver,headers)->
+    (message,_headers)=>@send(receiver,message,headers or _headers)
   # attach a named route as a function.
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)

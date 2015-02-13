@@ -106,6 +106,14 @@
       return router.send(this.id, receiver, message, headers).bind(this);
     };
 
+    Actor.prototype.bindSend = function(receiver, headers) {
+      return (function(_this) {
+        return function(message, _headers) {
+          return _this.send(receiver, message, headers || _headers);
+        };
+      })(this);
+    };
+
     Actor.prototype.mapRoute = function(routePattern) {
       var allRoutes, container, route, that, _i, _j, _k, _len, _len1, _len2, _mapRouteWithProxy, _route;
       that = this;
