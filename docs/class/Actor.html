@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src\core\actor.coffee</td>
+          <td>src&#47;core&#47;actor.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -83,6 +83,18 @@
     </span>
     <span class='desc'>
       Sends message to an actor 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#bindSend-dynamic'>
+        #
+(void)
+<b>bindSend</b><span>(receiver, headers)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Returns a function with receiver and headers binded 
     </span>
   </li>
   <li>
@@ -342,6 +354,57 @@ Takes a stream message and open it for the actor process function format. And cr
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='bindSend-dynamic'>
+      #
+(void)
+<b>bindSend</b><span>(receiver, headers)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Returns a function with receiver and headers binded</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to send a string message using bindSend
+    </h4>
+    <pre><code class='coffeescript'>myActor.bindSend(&#39;otherActor&#39;)(&#39;myMessage&#39;)</code></pre>
+    <h4>
+      How to send an object (with headers) message using bind
+    </h4>
+    <pre><code class='coffeescript'>myActor.bindSend(&#39;otherActor&#39;,{userId:1} )({hello:&#39;hello&#39;,
+                               obj:{
+                                 count:1
+                               }
+                             })</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>receiver</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the receiver id </span>
+    </li>
+    <li>
+      <span class='name'>headers</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>headers for the message (optional) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='mapRoute-dynamic'>
       #
 (void)
@@ -437,7 +500,7 @@ myActor.mapRoute();</code></pre>
 </div>
     </div>
     <div id='footer'>
-  January 22, 15 22:41:05 by
+  February 13, 15 21:59:48 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

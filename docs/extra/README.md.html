@@ -34,13 +34,14 @@
         </p>
       </nav>
       <div id='filecontents'>
-        <h1 id="studio-js">Studio.js</h1><p><img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" /></p><p>Micro-services using actors model framework for JavaScript.</p><p>Studio is a lightweight framework for node (it also runs on major browsers, but the priority is node projects) developed to make easy to create reactive applications according to <a href="http://www.reactivemanifesto.org/">reactive manifesto</a> principles. It uses an actor model (freely inspired by akka actors) implemented using <a href="https://github.com/baconjs/bacon.js">baconjs</a> for reactive programming and <a href="https://github.com/kriskowal/q">Q</a> a+ promises to solve the callback hell problem.</p><p>The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i&#39;ll keep a concise api, so other developers can create (and share) plugins for the framework.</p><p>Studio isn&#39;t only a library, it&#39;s a framework. It&#39;s really important to learn how to program and not only what each method can do.</p><p>I would love to receive feedback.Let me know if you&#39;ve used it. What worked and what is wrong. Contribute and spread the word.</p><p><a href="https://travis-ci.org/onstagejs/studio"><img src="https://travis-ci.org/onstagejs/studio.svg?branch=master" alt="Build Status"></a>
+        <h1 id="studio-js">Studio.js</h1><p><img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" /></p><p>Micro-services using actors model framework for JavaScript.</p><p>Studio is a lightweight framework for node (it also runs on major browsers, but the priority is node projects) developed to make easy to create reactive applications according to <a href="http://www.reactivemanifesto.org/">reactive manifesto</a> principles. It uses an actor model (freely inspired by akka actors) implemented using <a href="https://github.com/baconjs/bacon.js">baconjs</a> for reactive programming and <a href="https://github.com/petkaantonov/bluebird">bluebird</a> a+ promises to solve the callback hell problem.</p><p>The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i&#39;ll keep a concise api, so other developers can create (and share) plugins for the framework.</p><p>Studio isn&#39;t only a library, it&#39;s a framework. It&#39;s really important to learn how to program and not only what each method can do.</p><p>I would love to receive feedback.Let me know if you&#39;ve used it. What worked and what is wrong. Contribute and spread the word.</p><p><a href="https://travis-ci.org/onstagejs/studio"><img src="https://travis-ci.org/onstagejs/studio.svg?branch=master" alt="Build Status"></a>
 <a href="http://badge.fury.io/js/studio"><img src="https://badge.fury.io/js/studio.svg" alt="npm version"></a>
 <a href="https://david-dm.org/onstagejs/studio"><img src="https://david-dm.org/onstagejs/studio.svg" alt="Dependency Status"></a>
 <a href="https://david-dm.org/onstagejs/studio#info=devDependencies"><img src="https://david-dm.org/onstagejs/studio/dev-status.svg" alt="devDependency Status"></a>
 <a href="https://www.codacy.com/public/ericholiveira10/studio"><img src="https://www.codacy.com/project/badge/befaf49356ff402a830c45ee0f0ce1a0" alt="Codacy Badge"></a>
 <a href="http://issuestats.com/github/onstagejs/studio"><img src="http://issuestats.com/github/onstagejs/studio/badge/issue?style=flat" alt="Issue Stats"></a>
-<a href="http://issuestats.com/github/onstagejs/studio"><img src="http://issuestats.com/github/onstagejs/studio/badge/pr?style=flat" alt="Issue Stats"></a></p><p><a href="https://nodei.co/npm/studio/"><img src="https://nodei.co/npm/studio.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p><h1 id="table-of-contents">Table of contents</h1>
+<a href="http://issuestats.com/github/onstagejs/studio"><img src="http://issuestats.com/github/onstagejs/studio/badge/pr?style=flat" alt="Issue Stats"></a>
+<a href="https://gitter.im/onstagejs/studio?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p><p><a href="https://nodei.co/npm/studio/"><img src="https://nodei.co/npm/studio.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p><h1 id="table-of-contents">Table of contents</h1>
 <ul>
 <li><a href="#install">Install</a></li>
 <li><a href="#intro">Intro</a></li>
@@ -50,22 +51,98 @@
 <li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#build">Build</a></li>
 <li><a href="#test">Test</a></li>
+<li><a href="#license">License</a></li>
 </ul>
 <h1 id="install">Install</h1><p>To install execute:</p><pre><code>npm install studio
-</code></pre><h1 id="intro">Intro</h1><p>We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a <a href="http://martinfowler.com/articles/microservices.html">micro-services</a> framework for nodejs using and architecture freely inspired on <a href="http://en.wikipedia.org/wiki/Actor_model">actor model</a>. I present you (Studio)(<a href="https://github.com/onstagejs/studio">https://github.com/onstagejs/studio</a>)</p><p>Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.</p><p>First of all, almost everything in a Studio-based application is an <a href="http://onstagejs.com/studio/docs/class/Actor.html">Actor</a>.</p><p>So if you&#39;re used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can&#39;t mess with the objects of another actor) increasing your code security, use <a href="https://github.com/baconjs/bacon.js">baconjs</a> streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and <a href="https://github.com/kriskowal/q">Q</a> A+ promises to help you with the callback hell.</p><p>The other important class on Studio is the [Driver](<a href="http://onstagejs.com/studio/docs/class/Driver.html">http://onstagejs.com/studio/docs/class/Driver.html</a>.</p><p>A driver takes your endpoint input and parses it in a message for a certain actor.</p><p>And this is it... this is all you need to create <a href="http://reactivemanifesto.org">reactive</a> applications.</p><h1 id="api">API</h1><p>The API documentation can be accessed on <a href="http://onstagejs.com/studio/docs/">Docs</a></p><h1 id="examples">Examples</h1>
-<h1 id="pro-tips">Pro tips</h1>
+</code></pre><h1 id="intro">Intro</h1><p>We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a <a href="http://martinfowler.com/articles/microservices.html">micro-services</a> framework for nodejs using and architecture freely inspired on <a href="http://en.wikipedia.org/wiki/Actor_model">actor model</a>. I present you <a href="https://github.com/onstagejs/studio">Studio</a></p><p>Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.</p><p>First of all, almost everything in a Studio-based application is an <a href="http://onstagejs.com/studio/docs/class/Actor.html">Actor</a>.</p><p>So if you&#39;re used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can&#39;t mess with the objects of another actor) increasing your code security, use <a href="https://github.com/baconjs/bacon.js">baconjs</a> streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and <a href="https://github.com/petkaantonov/bluebird">bluebird</a> A+ promises to help you with the callback hell.</p><p>The other important class on Studio is the <a href="http://onstagejs.com/studio/docs/class/Driver.html">Driver</a>.</p><p>A driver takes your endpoint input and parses it in a message for a certain actor.</p><p>And this is it... this is all you need to create <a href="http://reactivemanifesto.org">reactive</a> applications.</p><h1 id="api">API</h1><p>The API documentation can be accessed on <a href="http://onstagejs.com/studio/docs/">Docs</a></p><h1 id="examples">Examples</h1><p>Follow the link to see all available <a href="https://github.com/onstagejs/studio/tree/master/examples">examples</a></p><p>Studio works with any web framework anf i&#39;ll create at least a &quot;Hello World&quot; application for the most used.</p><p>Here i`m going to put just a basic hello world with express, on <a href="https://github.com/onstagejs/studio/tree/master/examples">examples</a> folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
+Hello World with Express (using express 4.11.1):</p><pre><code class="lang-js">var express = require(&#39;express&#39;);
+var Studio = require(&#39;studio&#39;); //require Studio namespace
+var app = express(); // create an express app
+//The first thing we have to do is create a driver to listen to the request
+var driver = new Studio.Driver({
+/*
+Driver and Actor can receive an initialize function on constructor,
+this function is going to be executed on object creation
+*/
+    initialize: function () {
+        //Make express listen to &#39;/&#39; route
+        app.get(&#39;/&#39;, function (request, response) {
+            /*
+                we call the &#39;send&#39; method of the driver passing express arguments,
+                Studio calls the &#39;parser&#39; function of this driver to build a message and then deliver
+                this message to an actor, the send method ALWAYS returns a promise, so we call the
+                &#39;then&#39; method of this promise to take the actors response
+            */
+            driver.send(request, response).then(function (helloMessage) {
+                response.send(helloMessage);
+            });
+        });
+    },
+    /*
+    All drivers needs a parser function which takes any object and transforms
+    into an object with the fields &#39;sender&#39;, &#39;receiver&#39;, &#39;body&#39;, &#39;headers&#39;
+    */
+    parser: function (request, response) {
+    //Since we don&#39;t need any request info we just fill the receiver&#39;s id
+        return {
+            sender: null,
+            receiver: &#39;helloActor&#39;, // receiver identifier
+            body: null,
+            headers: null
+        };
+    }
+});
+//Create an actor
+var hello = new Studio.Actor({
+    id: &#39;helloActor&#39;, // All Actors needs an identifier
+    /*
+        All actors also needs a process function, this function is going to be executed
+        when a message arrives this function can return any object or a promise,
+        returning a object is going to automatically fulfill the sender promise.
+        You can also throw an exception if any error occurs,
+        and then the sender promise is going to be rejected
+    */
+    process: function (body, headers, sender, receiver) {
+    /*An actor can communicate to others using the &#39;send&#39; method as
+        this.send(&#39;otherActor&#39;,{foo:&#39;bar&#39;});
+    The &#39;send&#39; message of an actor also returns a promise, so you can return it or use
+    then/catch to deal with the message
+    */
+        return &#39;Hello World!!!&#39;;
+    }
+});
+app.listen(3000);// Listen on port 3000
+</code></pre><p>On examples folder you can learn how to deal with errors, how to buffer or filter messages and much more.</p><h1 id="pro-tips">Pro tips</h1>
+<ul>
+<li>The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this <a href="https://blog.domenic.me/youre-missing-the-point-of-promises/">blog</a> have a incredible explanation of what A+ promises means and it saves you from callback hell</li>
+<li>Studio uses <a href="https://github.com/baconjs/bacon.js">Baconjs</a> streams to deliver messages, so use it, to filter , map and apply different transformations to your messages. Baconjs is a powerful tool to keep your code clean, you use it to keep your validations and non-functional requisites away from your actor process function. This way your actor will be more easy to read, mantainable and testable.</li>
+<li>All your actor must be <a href="http://en.wikipedia.org/wiki/Idempotence">indempotent</a> , Studio helps you to achieve this delivering to each actor a copy of the original message. Stop keep states on your code.</li>
+<li>When dealing with stream transformation of an actor keep in mind you&#39;re dealing with (a copy of) raw message, the ray message have sender, receiver,body,headers and callback attributes, if you decide to filter a message you need to call the callback function manually to give to the blocked sender a response, the same applies for buffer.</li>
+</ul>
 <h1 id="dependencies">Dependencies</h1><p>Studio depends on:</p><ul>
 <li><a href="https://github.com/baconjs/bacon.js">baconjs</a> for stream manipulation</li>
-<li><a href="https://github.com/kriskowal/q">Q</a> for a+ promises usage</li>
+<li><a href="https://github.com/petkaantonov/bluebird">bluebird</a> for a+ promises usage</li>
 <li><a href="https://github.com/bevry/csextends">csextends</a> to make coffee classes extensible via javascript</li>
 </ul>
 <h1 id="build">Build</h1><p>To build the project you have to run:</p><pre><code>grunt
 </code></pre><p>This is going to generate js files (and source-maps) on &quot;compiled&quot; folder and a browserified version of Studio on &quot;dist&quot; folder</p><h1 id="test">Test</h1><p>Run test with:</p><pre><code>npm test
-</code></pre>
+</code></pre><h1 id="license">License</h1><p>The MIT License (MIT)</p><p>Copyright (c) 2015 Erich Oliveira <a href="http://ericholiveira.com">ericholiveira.com</a></p><p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p><p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p><p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
       </div>
     </div>
     <div id='footer'>
-  January 22, 15 22:41:05 by
+  February 13, 15 21:59:48 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
