@@ -1,6 +1,6 @@
 {
   "name": "studio",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "Reactive programming framework using actors",
   "author": {
     "name": "Erich Oliveira",
