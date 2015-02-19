@@ -100,7 +100,9 @@ class Actor extends BaseClass
   #                                  }
   #                                })
   bindSend:(receiver,headers)->
-    (message,_headers)=>@send(receiver,message,headers or _headers)
+    sendMessage = (message,_headers)=>@send(receiver,message,headers or _headers)
+    sendMessage.withHeader = (header)=> @bindSend(receiver,header)
+    sendMessage
   # attach a named route as a function.
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)
@@ -125,20 +127,16 @@ class Actor extends BaseClass
       if not routePattern?
         allRoutes = router.getAllRoutes()
         for route in allRoutes
-          _route =clone(route)
-          container[route] = (message)=>
-            @send(_route,message)
+          container[route] = @bindSend(route)
       else if routePattern instanceof RegExp
         allRoutes = router.getAllRoutes()
         for route in allRoutes when routePattern.test(route)
-          _route =clone(route)
-          container[route] = (message)=>
-            @send(_route,message)
+          container[route] = @bindSend(route)
       else if ArrayUtil.isArray(routePattern)
         for route in routePattern
-          container[route] = (message)=>@send(route,message)
+          container[route] = @bindSend(route)
       else
-        container[routePattern] = (message)=>@send(routePattern,message)
+        container[routePattern] = @bindSend(routePattern)
       container
   # Stop an actor
   # @example How to stop an actor

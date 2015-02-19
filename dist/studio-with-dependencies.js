@@ -107,15 +107,22 @@
     };
 
     Actor.prototype.bindSend = function(receiver, headers) {
-      return (function(_this) {
+      var sendMessage;
+      sendMessage = (function(_this) {
         return function(message, _headers) {
           return _this.send(receiver, message, headers || _headers);
         };
       })(this);
+      sendMessage.withHeader = (function(_this) {
+        return function(header) {
+          return _this.bindSend(receiver, header);
+        };
+      })(this);
+      return sendMessage;
     };
 
     Actor.prototype.mapRoute = function(routePattern) {
-      var allRoutes, container, route, that, _i, _j, _k, _len, _len1, _len2, _mapRouteWithProxy, _route;
+      var allRoutes, container, route, that, _i, _j, _k, _len, _len1, _len2, _mapRouteWithProxy;
       that = this;
       container = {};
       _mapRouteWithProxy = function() {
@@ -134,42 +141,23 @@
           allRoutes = router.getAllRoutes();
           for (_i = 0, _len = allRoutes.length; _i < _len; _i++) {
             route = allRoutes[_i];
-            _route = clone(route);
-            container[route] = (function(_this) {
-              return function(message) {
-                return _this.send(_route, message);
-              };
-            })(this);
+            container[route] = this.bindSend(route);
           }
         } else if (routePattern instanceof RegExp) {
           allRoutes = router.getAllRoutes();
           for (_j = 0, _len1 = allRoutes.length; _j < _len1; _j++) {
             route = allRoutes[_j];
-            if (!(routePattern.test(route))) {
-              continue;
+            if (routePattern.test(route)) {
+              container[route] = this.bindSend(route);
             }
-            _route = clone(route);
-            container[route] = (function(_this) {
-              return function(message) {
-                return _this.send(_route, message);
-              };
-            })(this);
           }
         } else if (ArrayUtil.isArray(routePattern)) {
           for (_k = 0, _len2 = routePattern.length; _k < _len2; _k++) {
             route = routePattern[_k];
-            container[route] = (function(_this) {
-              return function(message) {
-                return _this.send(route, message);
-              };
-            })(this);
+            container[route] = this.bindSend(route);
           }
         } else {
-          container[routePattern] = (function(_this) {
-            return function(message) {
-              return _this.send(routePattern, message);
-            };
-          })(this);
+          container[routePattern] = this.bindSend(routePattern);
         }
         return container;
       }

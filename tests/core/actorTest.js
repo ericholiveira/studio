@@ -122,5 +122,15 @@ describe("An actor", function() {
         done();
       });
   });
-
+  it("should be able to change binded header", function(done) {
+    var headers = {
+      header: 1
+    };
+    sender.bindSend(RECEIVER_OBJECT_WITH_HEADER_ID).withHeader(headers)('hello',{}).then(
+      function(result) {
+        expect(result.header).toBe(headers.header);
+        expect(sender).toBe(sender);
+        done();
+      });
+  });
 });
