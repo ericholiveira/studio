@@ -178,6 +178,8 @@
       return this.id;
     };
 
+    Actor.prototype.initialize = function() {};
+
     return Actor;
 
   })(BaseClass);
@@ -243,6 +245,8 @@
         return router.send(sender, receiver, body, headers).bind(this);
       });
     };
+
+    Driver.prototype.initialize = function() {};
 
     return Driver;
 

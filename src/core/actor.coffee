@@ -152,4 +152,6 @@ class Actor extends BaseClass
   # Returns the actor id
   toString:()->
     @id
+  # Empty initializer
+  initialize:()->
 module.exports = Actor

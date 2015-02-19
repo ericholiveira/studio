@@ -29,5 +29,6 @@ class Driver extends BaseClass
       {sender,receiver,body,headers}=result
       router.send(sender,receiver,body,headers).bind(@)
     )
-
+  # Empty initializer
+  initialize:()->
 module.exports = Driver
