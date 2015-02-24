@@ -12,6 +12,7 @@ describe("An actor filter", function() {
     RECEIVER_ID_PROMISE_FALSE = 'receiver_filter_PROMISE_FALSE',
     RECEIVER_ID_PROMISE_REJECT = 'receiver_filter_PROMISE_REJECT';
   var message = 'Hello';
+  var filteredMessageProcessedInAnyUnexpectedActor = false;
   var sender = new Studio.Actor({
     id: SENDER_ID,
     process: function(message, headers) {}
@@ -37,6 +38,7 @@ describe("An actor filter", function() {
   new Studio.Actor({
     id: RECEIVER_ID_FALSE,
     process: function(message, headers) {
+      filteredMessageProcessedInAnyUnexpectedActor=true;
       return message;
     },
     filter:function(){
@@ -46,6 +48,7 @@ describe("An actor filter", function() {
   new Studio.Actor({
     id: RECEIVER_ID_FALSY,
     process: function(message, headers) {
+      filteredMessageProcessedInAnyUnexpectedActor=true;
       return message;
     },
     filter:function(){
@@ -55,6 +58,7 @@ describe("An actor filter", function() {
   new Studio.Actor({
     id: RECEIVER_ID_EXCEPTION,
     process: function(message, headers) {
+      filteredMessageProcessedInAnyUnexpectedActor=true;
       return message;
     },
     filter:function(){
@@ -77,6 +81,7 @@ describe("An actor filter", function() {
   new Studio.Actor({
     id: RECEIVER_ID_PROMISE_FALSE,
     process: function(message, headers) {
+      filteredMessageProcessedInAnyUnexpectedActor=true;
       return message;
     },
     filter:function(){
@@ -90,6 +95,7 @@ describe("An actor filter", function() {
   new Studio.Actor({
     id: RECEIVER_ID_PROMISE_REJECT,
     process: function(message, headers) {
+      filteredMessageProcessedInAnyUnexpectedActor=true;
       return message;
     },
     filter:function(){
@@ -114,18 +120,21 @@ describe("An actor filter", function() {
   });
   it("should reject all messages when returns false", function(done) {
     sender.send(RECEIVER_ID_FALSE, message).catch(function(error) {
+      expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
       expect(error instanceof Error).toBe(true);
       done();
     });
   });
   it("should reject all messages when returns falsy value", function(done) {
     sender.send(RECEIVER_ID_FALSY, message).catch(function(error) {
+      expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
       expect(error instanceof Error).toBe(true);
       done();
     });
   });
   it("should reject all messages when throws exception", function(done) {
     sender.send(RECEIVER_ID_EXCEPTION, message).catch(function(error) {
+      expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
       expect(error instanceof Error).toBe(true);
       done();
     });
@@ -138,12 +147,14 @@ describe("An actor filter", function() {
   });
   it("should reject all messages when returns promise resolved with falsy value", function(done) {
     sender.send(RECEIVER_ID_PROMISE_FALSE, message).catch(function(error) {
+      expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
       expect(error instanceof Error).toBe(true);
       done();
     });
   });
   it("should reject all messages when returns promise rejected with any value", function(done) {
     sender.send(RECEIVER_ID_PROMISE_REJECT, message).catch(function(error) {
+      expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
       expect(error instanceof Error).toBe(true);
       done();
     });

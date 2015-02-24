@@ -34,41 +34,35 @@
       }
       this.stream = router.createOrGetRoute(this.id).flatMap((function(_this) {
         return function(message) {
-          var body, callback, clonedMessage, err, headers, receiver, sender;
+          var body, callback, clonedMessage, err, headers, receiver, result, sender;
           try {
             clonedMessage = clone(message);
             if (typeof _this.filter === 'function') {
               sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
-              return Bacon.fromPromise(new Promise(function(resolve, reject) {
-                var err, result;
-                try {
-                  result = _this.filter(body, headers, sender, receiver);
-                  if (result instanceof Promise) {
-                    return result.then(resolve)["catch"](reject);
+              result = _this.filter(body, headers, sender, receiver);
+              if (result instanceof Promise) {
+                return Bacon.fromPromise(result.then(function(result) {
+                  if (result) {
+                    return clonedMessage;
                   } else {
-                    return resolve(result);
-                  }
-                } catch (_error) {
-                  err = _error;
-                  return reject(err);
-                }
-              }).then(function(result) {
-                if (result) {
-                  return clonedMessage;
-                } else {
-                  message.callback((function() {
                     throw new Error('Filtered message');
-                  })());
+                  }
+                })["catch"](function(error) {
+                  message.callback(error);
                   return false;
+                })).filter(function(message) {
+                  return message !== false;
+                });
+              } else {
+                if (result) {
+                  return Bacon.once(clonedMessage);
+                } else {
+                  message.callback(new Error('Filtered message'));
+                  return Bacon.never();
                 }
-              })["catch"](function(err) {
-                message.callback(err);
-                return false;
-              })).filter(function(message) {
-                return message !== false;
-              });
+              }
             } else {
-              return clonedMessage;
+              return Bacon.once(clonedMessage);
             }
           } catch (_error) {
             err = _error;
