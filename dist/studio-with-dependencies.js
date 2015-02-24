@@ -32,16 +32,49 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id).flatMap(function(message) {
-        var err;
-        try {
-          return clone(message);
-        } catch (_error) {
-          err = _error;
-          message.callback(err);
-          return Bacon.never();
-        }
-      });
+      this.stream = router.createOrGetRoute(this.id).flatMap((function(_this) {
+        return function(message) {
+          var body, callback, clonedMessage, err, headers, receiver, sender;
+          try {
+            clonedMessage = clone(message);
+            if (typeof _this.filter === 'function') {
+              sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
+              return Bacon.fromPromise(new Promise(function(resolve, reject) {
+                var err, result;
+                try {
+                  result = _this.filter(body, headers, sender, receiver);
+                  if (result instanceof Promise) {
+                    return result.then(resolve)["catch"](reject);
+                  } else {
+                    return resolve(result);
+                  }
+                } catch (_error) {
+                  err = _error;
+                  return reject(err);
+                }
+              }).then(function(result) {
+                if (result) {
+                  return clonedMessage;
+                } else {
+                  message.callback((function() {
+                    throw new Error('Filtered message');
+                  })());
+                  return Bacon.never();
+                }
+              })["catch"](function(err) {
+                message.callback(err);
+                return Bacon.never();
+              }));
+            } else {
+              return clonedMessage;
+            }
+          } catch (_error) {
+            err = _error;
+            message.callback(err);
+            return Bacon.never();
+          }
+        };
+      })(this));
       this.unsubscribe = this.stream.onValue((function(_this) {
         return function(message) {
           return _this._doProcess(message)["catch"](function() {});
