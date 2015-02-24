@@ -48,11 +48,11 @@ class Actor extends BaseClass
               clonedMessage
             else
               message.callback(throw new Error('Filtered message'))
-              Bacon.never()
+              false
           ).catch((err)->
             message.callback(err)
-            Bacon.never()
-          ))
+            false
+          )).filter((message)->message!=false)
         else
           clonedMessage
       catch err
