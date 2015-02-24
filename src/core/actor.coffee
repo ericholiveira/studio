@@ -29,9 +29,32 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id).flatMap((message)->
+    @stream = router.createOrGetRoute(@id).flatMap((message)=>
       try
-        clone(message)
+        clonedMessage = clone(message)
+        if typeof @filter == 'function'
+          {sender,body,receiver,callback,headers} = clonedMessage
+          Bacon.fromPromise(new Promise((resolve,reject)=>
+            try
+              result = @filter(body,headers,sender,receiver)
+              if result instanceof Promise
+                result.then(resolve).catch(reject)
+              else
+                resolve(result)
+            catch err
+              reject(err)
+          ).then((result)->
+            if result
+              clonedMessage
+            else
+              message.callback(throw new Error('Filtered message'))
+              Bacon.never()
+          ).catch((err)->
+            message.callback(err)
+            Bacon.never()
+          ))
+        else
+          clonedMessage
       catch err
         message.callback(err)
         Bacon.never()
