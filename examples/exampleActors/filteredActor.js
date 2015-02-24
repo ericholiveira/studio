@@ -7,35 +7,24 @@ var userActor = new Studio.Actor({
   process: function(body, headers, sender, receiver) {
     console.log('Received message to actor = ' + userActor.id);
     return 'Hello ' + body;
-  }
-});
-/* Let's say you have a rule where the username needs to start with lower case 'e'
-   or the username is rejected. You could implement this logic on userActor 'process'
-   function, but a better approach would be to keep your filter logic away from
-   your business logic code. So all actors have the 'addTransformation' method,
-   this method receives a function which receives the current actor message stream
-   you can then use any baconjs transformation on this stream and return the
-   transformed stream.
-   With baconjs you can filter, map, buffer, reduce and apply a lot of different
-   transformations on the actor stream, check the project baconjs project page
-   on github for more information.
-*/
-//Here we apply a filter transformation
-userActor.addTransformation(function(stream) {
-  return stream.filter(function(message) {
-    //We're going to accept only username starting with lower case 'e'
-    var filterResult = (message.body.charAt(0) === 'e');
-    if (!filterResult) {
-      /* Unfortunately when dealing directly with stream you need to use the
-       raw object, so if you use filter and don't call message.callback
-       (using node standards for callback) the driver who sends the message will
-       never fail the promise.
-       So here, we call message.callback with the error string as first parameter
-      */
-      message.callback(
-        'This resource is only available for username starting with lowercase e'
-      );
-    }
+  },
+  /* Let's say you have a rule where the username needs to start with lower case 'e'
+     or the username is rejected. You could implement this logic on userActor 'process'
+     function, but a better approach would be to keep your filter logic away from
+     your business logic code. So all actors have the 'filter' method,
+     as process, this method can return any sync value or a promise, on this example we returns
+     a boolean value.
+     A message pass through the filter when:
+      - it returns true or returns any truthy value
+      - it resolves a promise with true or any truthy value
+      A message is rejected by the filter when:
+       - it returns false or returns any falsy value
+       - it resolves a promise with false or returns any falsy value
+       - it throws an exception
+       - it rejects a promise
+  */
+  filter: function(body, headers, sender, receiver) {
+    var filterResult = (body.charAt(0) === 'e');
     return filterResult;
-  });
+  }
 });

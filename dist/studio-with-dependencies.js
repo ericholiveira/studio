@@ -59,12 +59,14 @@
                   message.callback((function() {
                     throw new Error('Filtered message');
                   })());
-                  return Bacon.never();
+                  return false;
                 }
               })["catch"](function(err) {
                 message.callback(err);
-                return Bacon.never();
-              }));
+                return false;
+              })).filter(function(message) {
+                return message !== false;
+              });
             } else {
               return clonedMessage;
             }
