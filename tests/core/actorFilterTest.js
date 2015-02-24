@@ -7,6 +7,7 @@ describe("An actor filter", function() {
     RECEIVER_ID_TRUTHY = 'receiver_filter_TRUTHY',
     RECEIVER_ID_FALSE = 'receiver_filter_FALSE',
     RECEIVER_ID_FALSY = 'receiver_filter_FALSY',
+    RECEIVER_ID_EXCEPTION = 'receiver_filter_EXCEPTION',
     RECEIVER_ID_PROMISE_TRUE = 'receiver_filter_PROMISE_TRUE',
     RECEIVER_ID_PROMISE_FALSE = 'receiver_filter_PROMISE_FALSE',
     RECEIVER_ID_PROMISE_REJECT = 'receiver_filter_PROMISE_REJECT';
@@ -49,6 +50,15 @@ describe("An actor filter", function() {
     },
     filter:function(){
       return 0;
+    }
+  });
+  new Studio.Actor({
+    id: RECEIVER_ID_EXCEPTION,
+    process: function(message, headers) {
+      return message;
+    },
+    filter:function(){
+      throw new Error('ERROR');
     }
   });
   new Studio.Actor({
@@ -110,6 +120,12 @@ describe("An actor filter", function() {
   });
   it("should reject all messages when returns falsy value", function(done) {
     sender.send(RECEIVER_ID_FALSY, message).catch(function(error) {
+      expect(error instanceof Error).toBe(true);
+      done();
+    });
+  });
+  it("should reject all messages when throws exception", function(done) {
+    sender.send(RECEIVER_ID_EXCEPTION, message).catch(function(error) {
       expect(error instanceof Error).toBe(true);
       done();
     });
