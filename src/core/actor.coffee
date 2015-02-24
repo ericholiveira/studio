@@ -34,27 +34,25 @@ class Actor extends BaseClass
         clonedMessage = clone(message)
         if typeof @filter == 'function'
           {sender,body,receiver,callback,headers} = clonedMessage
-          Bacon.fromPromise(new Promise((resolve,reject)=>
-            try
-              result = @filter(body,headers,sender,receiver)
-              if result instanceof Promise
-                result.then(resolve).catch(reject)
+          result = @filter(body,headers,sender,receiver)
+          if result instanceof Promise
+            Bacon.fromPromise(result.then((result)->
+              if result
+                clonedMessage
               else
-                resolve(result)
-            catch err
-              reject(err)
-          ).then((result)->
-            if result
-              clonedMessage
-            else
-              message.callback(throw new Error('Filtered message'))
+                throw new Error('Filtered message')
+              ).catch((error)->
+              message.callback(error)
               false
-          ).catch((err)->
-            message.callback(err)
-            false
-          )).filter((message)->message!=false)
+              )).filter((message)->message!=false)
+          else
+            if result
+              Bacon.once(clonedMessage)
+            else
+              message.callback(new Error('Filtered message'))
+              Bacon.never()
         else
-          clonedMessage
+          Bacon.once(clonedMessage)
       catch err
         message.callback(err)
         Bacon.never()
