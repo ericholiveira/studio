@@ -87,9 +87,9 @@ grunt.initConfig({
     }
   },
   exec: {
-    express: 'node examples/hello-express/index.js',
-    hapi: 'node examples/hello-hapi/index.js',
-    restify: 'node examples/hello-restify/index.js'
+    express: 'node --debug examples/hello-express/index.js',
+    hapi: 'node --debug examples/hello-hapi/index.js',
+    restify: 'node --debug examples/hello-restify/index.js'
   }
 
 });
