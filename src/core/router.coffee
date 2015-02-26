@@ -12,11 +12,16 @@ class Router
   # @param [String] id the route identification
   # @example How create or get a route
   #   router.createOrGetRoute('myActor')
-  createOrGetRoute: (id) ->
+  createOrGetRoute: (id,watchPath) ->
     if not _routes[id]
       stream = new Bacon.Bus()
       _routes[id] = {stream:stream}
     _routes[id].stream
+  # Removes a route (BE CAREFUL)
+  # @param [String] id the route identification
+  # @example How to delete a route
+  #   router.deleteRoute('myActor')
+  deleteRoute:(id)-> delete _routes[id]
   # Returns a route
   # @param [String] id the route identification
   # @example How to get a route

@@ -5,6 +5,7 @@ Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
 ArrayUtil = require('./util/arrayUtil')
+fs = require('fs')
 
 
 # Base class for all actors.
@@ -58,6 +59,13 @@ class Actor extends BaseClass
         Bacon.never()
     )
     @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
+    if options.watchPath
+      watch = options.watchPath
+      fs.watch(watch,()=>
+        delete require.cache[watch]
+        router.deleteRoute(@id)
+        require(watch)
+      )
     @initialize?(options)
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
