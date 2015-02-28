@@ -24,7 +24,7 @@
 
     function Actor(options) {
       this._doProcess = __bind(this._doProcess, this);
-      var property, watch;
+      var property, watch, watcher;
       for (property in options) {
         this[property] = options[property];
       }
@@ -80,8 +80,9 @@
       })(this));
       if (options.watchPath) {
         watch = options.watchPath;
-        fs.watch(watch, (function(_this) {
+        watcher = fs.watch(watch, (function(_this) {
           return function() {
+            watcher.close();
             delete require.cache[watch];
             router.deleteRoute(_this.id);
             return require(watch);

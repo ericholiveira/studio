@@ -61,7 +61,8 @@ class Actor extends BaseClass
     @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
     if options.watchPath
       watch = options.watchPath
-      fs.watch(watch,()=>
+      watcher = fs.watch(watch,()=>
+        watcher.close()
         delete require.cache[watch]
         router.deleteRoute(@id)
         require(watch)
