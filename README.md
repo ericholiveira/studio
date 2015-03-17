@@ -42,7 +42,7 @@ Install
 
 To install execute:
 
-    npm install studio
+    npm install studio --save
 
 Intro
 ========
