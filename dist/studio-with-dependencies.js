@@ -445,51 +445,40 @@
 
 },{"csextends":11}],7:[function(require,module,exports){
 (function() {
-  var cloneAsConst;
+  var clone;
 
-  cloneAsConst = function(obj) {
-    var flags, property, tmp, value;
-    if (Object.isFrozen(obj) || (obj == null)) {
+  clone = function(obj) {
+    var flags, key, newInstance;
+    if ((obj == null) || typeof obj !== 'object' || Object.isFrozen(obj)) {
       return obj;
     }
-    tmp = obj.constructor();
-    for (property in obj) {
-      value = obj[property];
-      if (typeof value === 'object' && (value != null)) {
-        if (value instanceof Date) {
-          value = new Date(value.getTime());
-        } else {
-          if (value instanceof RegExp) {
-            flags = '';
-            if (obj.global != null) {
-              flags += 'g';
-            }
-            if (obj.ignoreCase != null) {
-              flags += 'i';
-            }
-            if (obj.multiline != null) {
-              flags += 'm';
-            }
-            if (obj.sticky != null) {
-              flags += 'y';
-            }
-            value = new RegExp(value.source, flags);
-          } else {
-            value = cloneAsConst(value);
-          }
-        }
-      }
-      Object.defineProperty(tmp, property, {
-        value: value,
-        enumerable: true,
-        writable: false,
-        configurable: false
-      });
+    if (obj instanceof Date) {
+      return new Date(obj.getTime());
     }
-    return Object.freeze(tmp);
+    if (obj instanceof RegExp) {
+      flags = '';
+      if (obj.global != null) {
+        flags += 'g';
+      }
+      if (obj.ignoreCase != null) {
+        flags += 'i';
+      }
+      if (obj.multiline != null) {
+        flags += 'm';
+      }
+      if (obj.sticky != null) {
+        flags += 'y';
+      }
+      return new RegExp(obj.source, flags);
+    }
+    newInstance = new obj.constructor();
+    for (key in obj) {
+      newInstance[key] = clone(obj[key]);
+    }
+    return Object.freeze(newInstance);
   };
 
-  module.exports = cloneAsConst;
+  module.exports = clone;
 
 }).call(this);
 

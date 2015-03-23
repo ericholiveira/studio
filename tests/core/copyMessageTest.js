@@ -1,4 +1,5 @@
 Studio = require('../../compiled/core/studio');
+clone = require('../../compiled/core/util/clone');
 
 describe("A message", function() {
   var SENDER_ID = 'sender_message',
@@ -33,5 +34,29 @@ describe("A message", function() {
       expect(message.toDelete).toBeDefined();
       done();
     });
+  });
+  function MyModel(options){
+    options = options || {};
+    this.id=+options.id;
+  }
+  it("should be clonable",function(){
+    var message = {
+      hello: 'hello',
+      inner: {
+        content: 'content',
+        num:new MyModel({id:33}),
+        nul:null
+      },
+      toDelete: 'delete',
+      num:1
+    };
+    var cloned = clone(message);
+    expect(2).toBe(clone(2));
+    expect(message.hello).toBe(cloned.hello);
+    expect(message.inner.content).toBe(cloned.inner.content);
+    expect(message.inner.num.id).toBe(cloned.inner.num.id);
+    expect(message.inner.nul).toBe(cloned.inner.nul);
+    expect(message.toDelete).toBe(cloned.toDelete);
+    expect(message.num).toBe(cloned.num);
   });
 });

@@ -1,24 +1,17 @@
-# Deep clone an object (thx coffeescript cookbook) and make it immutable
-# @param [Object] obj the object to be cloned
-cloneAsConst = (obj)->
-  if Object.isFrozen(obj) or not obj?
+clone = (obj) ->
+  if not obj? or typeof obj isnt 'object' or Object.isFrozen(obj)
     return obj
-  tmp = obj.constructor()
-  for property of obj
-    value = obj[property]
-    if typeof value is 'object' and value?
-      if value instanceof Date
-        value = new Date(value.getTime())
-      else
-        if value instanceof RegExp
-          flags = ''
-          flags += 'g' if obj.global?
-          flags += 'i' if obj.ignoreCase?
-          flags += 'm' if obj.multiline?
-          flags += 'y' if obj.sticky?
-          value = new RegExp(value.source, flags)
-        else
-          value = cloneAsConst(value)
-    Object.defineProperty(tmp, property, {value: value,enumerable: true,writable: false,configurable: false})
-  Object.freeze(tmp)
-module.exports = cloneAsConst
+  if obj instanceof Date
+    return new Date(obj.getTime())
+  if obj instanceof RegExp
+    flags = ''
+    flags += 'g' if obj.global?
+    flags += 'i' if obj.ignoreCase?
+    flags += 'm' if obj.multiline?
+    flags += 'y' if obj.sticky?
+    return new RegExp(obj.source, flags)
+  newInstance = new obj.constructor()
+  for key of obj
+    newInstance[key] = clone obj[key]
+  return Object.freeze(newInstance)
+module.exports = clone
