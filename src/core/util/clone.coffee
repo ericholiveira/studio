@@ -1,12 +1,12 @@
 # Deep clone an object (thx coffeescript cookbook) and make it immutable
 # @param [Object] obj the object to be cloned
 cloneAsConst = (obj)->
-  if Object.isFrozen(obj)
+  if Object.isFrozen(obj) or not obj?
     return obj
   tmp = obj.constructor()
   for property of obj
     value = obj[property]
-    if typeof value is 'object' and value isnt null
+    if typeof value is 'object' and value?
       if value instanceof Date
         value = new Date(value.getTime())
       else

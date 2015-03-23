@@ -449,13 +449,13 @@
 
   cloneAsConst = function(obj) {
     var flags, property, tmp, value;
-    if (Object.isFrozen(obj)) {
+    if (Object.isFrozen(obj) || (obj == null)) {
       return obj;
     }
     tmp = obj.constructor();
     for (property in obj) {
       value = obj[property];
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === 'object' && (value != null)) {
         if (value instanceof Date) {
           value = new Date(value.getTime());
         } else {
