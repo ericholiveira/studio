@@ -8,7 +8,7 @@ cloneAsConst = (obj)->
     value = obj[property]
     if typeof value is 'object' and value isnt null
       if value instanceof Date
-        value = new Date(value.getTime());
+        value = new Date(value.getTime())
       else
         if value instanceof RegExp
           flags = ''
