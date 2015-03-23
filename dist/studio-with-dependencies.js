@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, Promise, clone, fs, router,
+  var Actor, ArrayUtil, Bacon, BaseClass, Promise, fs, router,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12,8 +12,6 @@
   Promise = require('bluebird');
 
   Bacon = require('baconjs');
-
-  clone = require('./util/clone');
 
   ArrayUtil = require('./util/arrayUtil');
 
@@ -36,16 +34,15 @@
       }
       this.stream = router.createOrGetRoute(this.id).flatMap((function(_this) {
         return function(message) {
-          var body, callback, clonedMessage, err, headers, receiver, result, sender;
+          var body, callback, err, headers, receiver, result, sender;
           try {
-            clonedMessage = clone(message);
             if (typeof _this.filter === 'function') {
-              sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
+              sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
               result = _this.filter(body, headers, sender, receiver);
               if (result instanceof Promise) {
                 return Bacon.fromPromise(result.then(function(result) {
                   if (result) {
-                    return clonedMessage;
+                    return message;
                   } else {
                     throw new Error('Filtered message');
                   }
@@ -57,14 +54,14 @@
                 });
               } else {
                 if (result) {
-                  return Bacon.once(clonedMessage);
+                  return Bacon.once(message);
                 } else {
                   message.callback(new Error('Filtered message'));
                   return Bacon.never();
                 }
               }
             } else {
-              return Bacon.once(clonedMessage);
+              return Bacon.once(message);
             }
           } catch (_error) {
             err = _error;
@@ -232,7 +229,7 @@
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"baconjs":9,"bluebird":10,"fs":12}],2:[function(require,module,exports){
+},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"baconjs":9,"bluebird":10,"fs":12}],2:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, Promise, router,
     __hasProp = {}.hasOwnProperty,
@@ -343,7 +340,7 @@
       return new Promise(function(resolve, reject) {
         var route, _message;
         route = _routes[receiver];
-        _message = {
+        _message = clone({
           sender: sender,
           receiver: receiver,
           body: message,
@@ -355,7 +352,7 @@
               return resolve(result);
             }
           }
-        };
+        });
         if (route != null) {
           return Timer.enqueue(function() {
             return route.stream.push(_message);
@@ -448,40 +445,51 @@
 
 },{"csextends":11}],7:[function(require,module,exports){
 (function() {
-  var clone;
+  var cloneAsConst;
 
-  clone = function(obj) {
-    var flags, key, newInstance;
-    if ((obj == null) || typeof obj !== 'object') {
+  cloneAsConst = function(obj) {
+    var flags, property, tmp, value;
+    if (Object.isFrozen(obj)) {
       return obj;
     }
-    if (obj instanceof Date) {
-      return new Date(obj.getTime());
+    tmp = obj.constructor();
+    for (property in obj) {
+      value = obj[property];
+      if (typeof value === 'object' && value !== null) {
+        if (value instanceof Date) {
+          value = new Date(value.getTime());
+        } else {
+          if (value instanceof RegExp) {
+            flags = '';
+            if (obj.global != null) {
+              flags += 'g';
+            }
+            if (obj.ignoreCase != null) {
+              flags += 'i';
+            }
+            if (obj.multiline != null) {
+              flags += 'm';
+            }
+            if (obj.sticky != null) {
+              flags += 'y';
+            }
+            value = new RegExp(value.source, flags);
+          } else {
+            value = cloneAsConst(value);
+          }
+        }
+      }
+      Object.defineProperty(tmp, property, {
+        value: value,
+        enumerable: true,
+        writable: false,
+        configurable: false
+      });
     }
-    if (obj instanceof RegExp) {
-      flags = '';
-      if (obj.global != null) {
-        flags += 'g';
-      }
-      if (obj.ignoreCase != null) {
-        flags += 'i';
-      }
-      if (obj.multiline != null) {
-        flags += 'm';
-      }
-      if (obj.sticky != null) {
-        flags += 'y';
-      }
-      return new RegExp(obj.source, flags);
-    }
-    newInstance = new obj.constructor();
-    for (key in obj) {
-      newInstance[key] = clone(obj[key]);
-    }
-    return newInstance;
+    return Object.freeze(tmp);
   };
 
-  module.exports = clone;
+  module.exports = cloneAsConst;
 
 }).call(this);
 

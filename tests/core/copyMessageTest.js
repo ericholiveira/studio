@@ -16,7 +16,7 @@ describe("A message", function() {
       return message;
     }
   });
-  it("should be copied", function(done) {
+  it("should be immutable", function(done) {
     var message = {
       hello: 'hello',
       inner: {
@@ -26,10 +26,10 @@ describe("A message", function() {
     };
     sender.send(RECEIVER_ID, message).then(function(result) {
       expect(result.hello).toBeDefined();
-      expect(result.hello).not.toBe(message.hello);
+      expect(result.hello).toBe(message.hello);
       expect(result.inner).toBeDefined();
-      expect(result.inner.content).not.toBe(message.inner.content);
-      expect(result.toDelete).toBeUndefined();
+      expect(result.inner.content).toBe(message.inner.content);
+      expect(result.toDelete).toBeDefined();
       expect(message.toDelete).toBeDefined();
       done();
     });

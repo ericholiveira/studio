@@ -3,7 +3,7 @@ router = require('./router')
 BaseClass = require('./util/baseClass')
 Promise = require('bluebird')
 Bacon = require('baconjs')
-clone = require('./util/clone')
+
 ArrayUtil = require('./util/arrayUtil')
 fs = require('fs')
 
@@ -32,14 +32,13 @@ class Actor extends BaseClass
     throw new Error('You must provide a process function') if not @process
     @stream = router.createOrGetRoute(@id).flatMap((message)=>
       try
-        clonedMessage = clone(message)
         if typeof @filter == 'function'
-          {sender,body,receiver,callback,headers} = clonedMessage
+          {sender,body,receiver,callback,headers} = message
           result = @filter(body,headers,sender,receiver)
           if result instanceof Promise
             Bacon.fromPromise(result.then((result)->
               if result
-                clonedMessage
+                message
               else
                 throw new Error('Filtered message')
               ).catch((error)->
@@ -48,12 +47,12 @@ class Actor extends BaseClass
               )).filter((message)->message!=false)
           else
             if result
-              Bacon.once(clonedMessage)
+              Bacon.once(message)
             else
               message.callback(new Error('Filtered message'))
               Bacon.never()
         else
-          Bacon.once(clonedMessage)
+          Bacon.once(message)
       catch err
         message.callback(err)
         Bacon.never()
