@@ -52,6 +52,9 @@ describe("A message", function() {
     };
     var cloned = clone(message);
     expect(2).toBe(clone(2));
+    cloned.hello='dasdsa';
+    cloned.inner.nul=3;
+    cloned.inner.num.id=10;
     expect(message.hello).toBe(cloned.hello);
     expect(message.inner.content).toBe(cloned.inner.content);
     expect(message.inner.num.id).toBe(cloned.inner.num.id);
