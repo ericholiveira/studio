@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, Promise, fs, router,
+  var Actor, ArrayUtil, Bacon, BaseClass, Promise, clone, fs, router,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12,6 +12,8 @@
   Promise = require('bluebird');
 
   Bacon = require('baconjs');
+
+  clone = require('./util/clone');
 
   ArrayUtil = require('./util/arrayUtil');
 
@@ -34,15 +36,16 @@
       }
       this.stream = router.createOrGetRoute(this.id).flatMap((function(_this) {
         return function(message) {
-          var body, callback, err, headers, receiver, result, sender;
+          var body, callback, clonedMessage, err, headers, receiver, result, sender;
           try {
+            clonedMessage = clone(message);
             if (typeof _this.filter === 'function') {
-              sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
+              sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
               result = _this.filter(body, headers, sender, receiver);
               if (result instanceof Promise) {
                 return Bacon.fromPromise(result.then(function(result) {
                   if (result) {
-                    return message;
+                    return clonedMessage;
                   } else {
                     throw new Error('Filtered message');
                   }
@@ -54,14 +57,14 @@
                 });
               } else {
                 if (result) {
-                  return Bacon.once(message);
+                  return Bacon.once(clonedMessage);
                 } else {
                   message.callback(new Error('Filtered message'));
                   return Bacon.never();
                 }
               }
             } else {
-              return Bacon.once(message);
+              return Bacon.once(clonedMessage);
             }
           } catch (_error) {
             err = _error;
@@ -229,7 +232,7 @@
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"baconjs":9,"bluebird":10,"fs":12}],2:[function(require,module,exports){
+},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"baconjs":9,"bluebird":10,"fs":12}],2:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, Promise, router,
     __hasProp = {}.hasOwnProperty,
@@ -340,7 +343,7 @@
       return new Promise(function(resolve, reject) {
         var route, _message;
         route = _routes[receiver];
-        _message = clone({
+        _message = {
           sender: sender,
           receiver: receiver,
           body: message,
@@ -352,7 +355,7 @@
               return resolve(result);
             }
           }
-        });
+        };
         if (route != null) {
           return Timer.enqueue(function() {
             return route.stream.push(_message);

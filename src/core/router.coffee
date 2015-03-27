@@ -43,13 +43,13 @@ class Router
   send: (sender,receiver,message,headers={})->
     new Promise((resolve,reject)->
       route = _routes[receiver]
-      _message = clone({
+      _message = {
         sender:sender
         receiver:receiver
         body:message
         headers:headers
         callback:(err,result)-> if err then reject(err) else resolve(result)
-        })
+        }
       if route?
         Timer.enqueue(()->
           route.stream.push(_message)
