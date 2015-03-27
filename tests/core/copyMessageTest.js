@@ -23,7 +23,8 @@ describe("A message", function() {
       inner: {
         content: 'content'
       },
-      toDelete: 'delete'
+      toDelete: 'delete',
+      arr:[1,2]
     };
     sender.send(RECEIVER_ID, message).then(function(result) {
       expect(result.hello).toBeDefined();
@@ -32,6 +33,11 @@ describe("A message", function() {
       expect(result.inner.content).toBe(message.inner.content);
       expect(result.toDelete).toBeDefined();
       expect(message.toDelete).toBeDefined();
+      expect(result.arr).toBeDefined();
+      expect(result.arr.length).toBe(message.arr.length);
+      expect(result.arr[0]).toBe(message.arr[0]);
+      expect(result.arr[1]).toBe(message.arr[1]);
+      expect(result.arr[2]).toBe(message.arr[2]);
       done();
     });
   });
