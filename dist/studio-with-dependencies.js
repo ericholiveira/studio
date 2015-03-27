@@ -450,7 +450,7 @@
 
   clone = function(obj) {
     var flags, key, newInstance, _obj;
-    if ((obj == null) || typeof obj !== 'object' || Object.isFrozen(obj)) {
+    if ((obj == null) || typeof obj !== 'object') {
       return obj;
     }
     if (obj instanceof Date) {
@@ -475,7 +475,7 @@
     if (obj instanceof Buffer) {
       newInstance = new Buffer(obj.length);
       obj.copy(newInstance);
-      return Object.freeze(newInstance);
+      return newInstance;
     }
     if (obj instanceof Array) {
       newInstance = (function() {
@@ -487,13 +487,13 @@
         }
         return _results;
       })();
-      return Object.freeze(newInstance);
+      return newInstance;
     }
     newInstance = new obj.constructor();
     for (key in obj) {
       newInstance[key] = clone(obj[key]);
     }
-    return Object.freeze(newInstance);
+    return newInstance;
   };
 
   module.exports = clone;

@@ -14,10 +14,11 @@ describe("A message", function() {
       message.hello = 'copy';
       message.inner.content = 'new';
       delete message.toDelete;
+      message.arr.push(3);
       return message;
     }
   });
-  it("should be immutable", function(done) {
+  it("should not change the originalMessage", function(done) {
     var message = {
       hello: 'hello',
       inner: {
@@ -27,17 +28,16 @@ describe("A message", function() {
       arr:[1,2]
     };
     sender.send(RECEIVER_ID, message).then(function(result) {
-      expect(result.hello).toBeDefined();
-      expect(result.hello).toBe(message.hello);
-      expect(result.inner).toBeDefined();
-      expect(result.inner.content).toBe(message.inner.content);
-      expect(result.toDelete).toBeDefined();
+      expect(message.hello).toBeDefined();
+      expect(message.hello).toBe('hello');
+      expect(message.inner).toBeDefined();
+      expect(message.inner.content).toBe('content');
       expect(message.toDelete).toBeDefined();
-      expect(result.arr).toBeDefined();
-      expect(result.arr.length).toBe(message.arr.length);
-      expect(result.arr[0]).toBe(message.arr[0]);
-      expect(result.arr[1]).toBe(message.arr[1]);
-      expect(result.arr[2]).toBe(message.arr[2]);
+      expect(message.toDelete).toBe('delete');
+      expect(message.arr).toBeDefined();
+      expect(message.arr.length).toBe(2);
+      expect(message.arr[0]).toBe(1);
+      expect(message.arr[1]).toBe(2);
       done();
     });
   });
@@ -58,9 +58,6 @@ describe("A message", function() {
     };
     var cloned = clone(message);
     expect(2).toBe(clone(2));
-    cloned.hello='dasdsa';
-    cloned.inner.nul=3;
-    cloned.inner.num.id=10;
     expect(message.hello).toBe(cloned.hello);
     expect(message.inner.content).toBe(cloned.inner.content);
     expect(message.inner.num.id).toBe(cloned.inner.num.id);

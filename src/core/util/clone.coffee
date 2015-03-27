@@ -1,5 +1,5 @@
 clone = (obj) ->
-  if not obj? or typeof obj isnt 'object' or Object.isFrozen(obj)
+  if not obj? or typeof obj isnt 'object'
     return obj
   if obj instanceof Date
     return new Date(obj.getTime())
@@ -13,12 +13,12 @@ clone = (obj) ->
   if obj instanceof Buffer
     newInstance = new Buffer(obj.length)
     obj.copy(newInstance)
-    return Object.freeze(newInstance)
+    return newInstance
   if obj instanceof Array
     newInstance = (clone _obj for _obj in obj)
-    return Object.freeze(newInstance)
+    return newInstance
   newInstance = new obj.constructor()
   for key of obj
     newInstance[key] = clone obj[key]
-  return Object.freeze(newInstance)
+  return newInstance
 module.exports = clone
