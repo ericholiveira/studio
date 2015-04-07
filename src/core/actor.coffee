@@ -30,16 +30,16 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id).flatMap((message)=>
-      try
-        clonedMessage = clone(message)
-        if typeof @filter == 'function'
-          {sender,body,receiver,callback,headers} = clonedMessage
+    @stream = router.createOrGetRoute(@id)
+    if typeof @filter == 'function'
+      @stream = @stream.flatMap((message)=>
+        try
+          {sender,body,receiver,callback,headers} = message
           result = @filter(body,headers,sender,receiver)
           if result instanceof Promise
             Bacon.fromPromise(result.then((result)->
               if result
-                clonedMessage
+                message
               else
                 throw new Error('Filtered message')
               ).catch((error)->
@@ -48,17 +48,15 @@ class Actor extends BaseClass
               )).filter((message)->message!=false)
           else
             if result
-              Bacon.once(clonedMessage)
+              Bacon.once(message)
             else
               message.callback(new Error('Filtered message'))
               Bacon.never()
-        else
-          Bacon.once(clonedMessage)
-      catch err
-        message.callback(err)
-        Bacon.never()
+        catch err
+          message.callback(err)
+          Bacon.never()
     )
-    @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
+    @unsubscribe = @stream.onValue((message)=>@_doProcess(message))
     if options.watchPath
       watch = options.watchPath
       watcher = fs.watch(watch,()=>
@@ -73,27 +71,24 @@ class Actor extends BaseClass
   _doProcess:(message) =>
     __doProcess=(message) =>
       {sender,body,receiver,callback,headers} = message
-      new Promise((resolve,reject)=>
-        try
-          result = @process(body,headers,sender,receiver)
-          if result instanceof Promise
-            result.then(resolve).catch(reject)
-          else
-            resolve(result)
-        catch err
-          reject(err)
-      ).then((result)->
-        callback(undefined,result)
-        result
-      ).catch((err)->
-        err = err or new Error('Unexpected Error')
+      try
+        result = @process(body,headers,sender,receiver)
+        if result instanceof Promise
+          result.then((result)->
+            callback(undefined,result)
+          ).catch((err)->
+            callback(err or new Error('Unexpected Error'))
+          )
+        else
+          callback(undefined,result)
+      catch err
         callback(err or new Error('Unexpected Error'))
-        throw err
-      )
     if message?.length
       __doProcess(_message) for _message in message
+      return
     else
       __doProcess(message)
+      return
   # Transform the message stream, so you can merge other streams, filter, buffer or do anything you can do with a baconjs stream
   # @param [Function] funktion a function which receives the current stream for this actor and return the new transformed stream
   # @example How to apply a filter transformation (in javascript)
