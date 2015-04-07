@@ -34,18 +34,18 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id);
-      if (typeof this.filter === 'function') {
-        this.stream = this.stream.flatMap((function(_this) {
-          return function(message) {
-            var body, callback, err, headers, receiver, result, sender;
-            try {
-              sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
+      this.stream = router.createOrGetRoute(this.id).flatMap((function(_this) {
+        return function(message) {
+          var body, callback, clonedMessage, err, headers, receiver, result, sender;
+          try {
+            clonedMessage = clone(message);
+            if (typeof _this.filter === 'function') {
+              sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
               result = _this.filter(body, headers, sender, receiver);
               if (result instanceof Promise) {
                 return Bacon.fromPromise(result.then(function(result) {
                   if (result) {
-                    return message;
+                    return clonedMessage;
                   } else {
                     throw new Error('Filtered message');
                   }
@@ -57,23 +57,25 @@
                 });
               } else {
                 if (result) {
-                  return Bacon.once(message);
+                  return Bacon.once(clonedMessage);
                 } else {
                   message.callback(new Error('Filtered message'));
                   return Bacon.never();
                 }
               }
-            } catch (_error) {
-              err = _error;
-              message.callback(err);
-              return Bacon.never();
+            } else {
+              return Bacon.once(clonedMessage);
             }
-          };
-        })(this));
-      }
+          } catch (_error) {
+            err = _error;
+            message.callback(err);
+            return Bacon.never();
+          }
+        };
+      })(this));
       this.unsubscribe = this.stream.onValue((function(_this) {
         return function(message) {
-          return _this._doProcess(message);
+          return _this._doProcess(message)["catch"](function() {});
         };
       })(this));
       if (options.watchPath) {
@@ -93,35 +95,43 @@
     }
 
     Actor.prototype._doProcess = function(message) {
-      var __doProcess, _i, _len, _message;
+      var __doProcess, _i, _len, _message, _results;
       __doProcess = (function(_this) {
         return function(message) {
-          var body, callback, err, headers, receiver, result, sender;
+          var body, callback, headers, receiver, sender;
           sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
-          try {
-            result = _this.process(body, headers, sender, receiver);
-            if (result instanceof Promise) {
-              return result.then(function(result) {
-                return callback(void 0, result);
-              })["catch"](function(err) {
-                return callback(err || new Error('Unexpected Error'));
-              });
-            } else {
-              return callback(void 0, result);
+          return new Promise(function(resolve, reject) {
+            var err, result;
+            try {
+              result = _this.process(body, headers, sender, receiver);
+              if (result instanceof Promise) {
+                return result.then(resolve)["catch"](reject);
+              } else {
+                return resolve(result);
+              }
+            } catch (_error) {
+              err = _error;
+              return reject(err);
             }
-          } catch (_error) {
-            err = _error;
-            return callback(err || new Error('Unexpected Error'));
-          }
+          }).then(function(result) {
+            callback(void 0, result);
+            return result;
+          })["catch"](function(err) {
+            err = err || new Error('Unexpected Error');
+            callback(err || new Error('Unexpected Error'));
+            throw err;
+          });
         };
       })(this);
       if (message != null ? message.length : void 0) {
+        _results = [];
         for (_i = 0, _len = message.length; _i < _len; _i++) {
           _message = message[_i];
-          __doProcess(_message);
+          _results.push(__doProcess(_message));
         }
+        return _results;
       } else {
-        __doProcess(message);
+        return __doProcess(message);
       }
     };
 
