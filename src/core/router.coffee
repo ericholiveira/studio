@@ -51,7 +51,7 @@ class Router
         callback:(err,result)-> if err then reject(err) else resolve(result)
         }
       if route?
-        route.stream.push(clone(_message))
+        route.stream.push(_message)
       else
         reject(new Error("The route #{receiver} doesn't exists"))
       )

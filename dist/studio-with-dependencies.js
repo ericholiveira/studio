@@ -357,7 +357,7 @@
           }
         };
         if (route != null) {
-          return route.stream.push(clone(_message));
+          return route.stream.push(_message);
         } else {
           return reject(new Error("The route " + receiver + " doesn't exists"));
         }
