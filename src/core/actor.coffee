@@ -104,7 +104,7 @@ class Actor extends BaseClass
     @unsubscribe()
     @stream = funktion(@stream)
     @unsubscribe = @stream.onValue(@_doProcess)
-  # Sends message to an actor
+  # Sends message to an actor and returns a promise
   # @param [String] receiver the receiver id
   # @param [Object] message the content of the message (it could be any js object)
   # @param [Object] headers headers for the message (optional)
@@ -133,6 +133,25 @@ class Actor extends BaseClass
     sendMessage = (message,_headers)=>@send(receiver,message,headers or _headers)
     sendMessage.withHeader = (header)=> @bindSend(receiver,header)
     sendMessage
+  # Sends message to an actor with a timeout (in milliseconds). When the timeout expires the  returning promise is rejected
+  # @param [Number] timeout the message timeout in milliseconds
+  # @param [String] receiver the receiver id
+  # @param [Object] message the content of the message (it could be any js object)
+  # @param [Object] headers headers for the message (optional)
+  # @example How to send a string message with 100 milliseconds of timeout
+  #   myActor.sendWithTimeout(100,'otherActor', 'myMessage')
+  # @example How to send an object message with 100 milliseconds of timeout
+  #   myActor.sendWithTimeout(100,'otherActor', {hello:'hello',
+  #                                  obj:{
+  #                                    count:1
+  #                                  }
+  #                                })
+  sendWithTimeout:(timeout,receiver,message,headers={})->
+    sendPromise = @send(receiver,message,headers).cancellable()
+    setTimeout(()->
+      sendPromise.cancel(new Error('Timeout'))
+    ,timeout)
+    sendPromise
   # attach a named route as a function.
   # So if you use this.attachRoute('someRoute'), you can use this.someRoute(someMessage)
   # which is equivalent to this.send('someRoute',someMessage)

@@ -163,6 +163,18 @@
       return sendMessage;
     };
 
+    Actor.prototype.sendWithTimeout = function(timeout, receiver, message, headers) {
+      var sendPromise;
+      if (headers == null) {
+        headers = {};
+      }
+      sendPromise = this.send(receiver, message, headers).cancellable();
+      setTimeout(function() {
+        return sendPromise.cancel(new Error('Timeout'));
+      }, timeout);
+      return sendPromise;
+    };
+
     Actor.prototype.mapRoute = function(routePattern) {
       var allRoutes, container, route, that, _i, _j, _k, _len, _len1, _len2, _mapRouteWithProxy;
       that = this;
