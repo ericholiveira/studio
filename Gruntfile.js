@@ -89,7 +89,8 @@ grunt.initConfig({
   exec: {
     express: 'node --debug examples/hello-express/index.js',
     hapi: 'node --debug examples/hello-hapi/index.js',
-    restify: 'node --debug examples/hello-restify/index.js'
+    restify: 'node --debug examples/hello-restify/index.js',
+    koa: 'node --harmony-generators --debug examples/hello-koa/index.js',
   }
 
 });
@@ -106,3 +107,4 @@ grunt.registerTask("prod", ["all", "browserify:dist", "release"]);
 grunt.registerTask("example:express", 'exec:express');
 grunt.registerTask("example:hapi", 'exec:hapi');
 grunt.registerTask("example:restify", 'exec:restify');
+grunt.registerTask("example:koa", 'exec:koa');
