@@ -5,7 +5,7 @@ Studio.js
 
 Micro-services using actors model framework for JavaScript.
 
-Studio is a lightweight framework for node (it also runs on major browsers, but the priority is node projects) developed to make easy to create reactive applications according to [reactive manifesto](http://www.reactivemanifesto.org/) principles. It uses an actor model (freely inspired by akka actors) implemented using [baconjs](https://github.com/baconjs/bacon.js) for reactive programming and [bluebird](https://github.com/petkaantonov/bluebird) a+ promises to solve the callback hell problem.
+Studio is a lightweight framework for node developed to make easy to create reactive applications according to [reactive manifesto](http://www.reactivemanifesto.org/) principles. It uses an actor model (freely inspired by akka actors) implemented using [baconjs](https://github.com/baconjs/bacon.js) for reactive programming and [bluebird](https://github.com/petkaantonov/bluebird) a+ promises to solve the callback hell problem.
 
 The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
 
