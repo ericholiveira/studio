@@ -5,7 +5,7 @@ var driver = new Studio.Driver({
   initialize: function() {
     app.get('/buffer', function*() {
       try{
-        this.body = yield driver.send(this)
+        this.body = yield driver.send(this);
       }catch (err){
         this.body = 'Sorry, try again later => ' + err;
       }

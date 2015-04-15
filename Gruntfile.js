@@ -33,7 +33,10 @@ grunt.initConfig({
     }
   },
   jshint: {
-    all: ['src/**/*.js', '*.js', 'tests/core/*.js', 'examples/*/*.js']
+    all: ['src/**/*.js', '*.js', 'tests/core/*.js', 'examples/*/*.js'],
+    options: {
+      esnext:true
+    }
   },
   coffee: {
     multiple: {

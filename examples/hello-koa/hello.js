@@ -16,7 +16,7 @@ var driver = new Studio.Driver({
       block to handle the result
       */
       try{
-        this.body = yield driver.send(this)
+        this.body = yield driver.send(this);
       }catch (err){
         this.body = 'Sorry, try again later => ' + err;
       }
