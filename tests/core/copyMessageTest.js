@@ -65,4 +65,9 @@ describe("A message", function() {
     expect(message.toDelete).toBe(cloned.toDelete);
     expect(message.num).toBe(cloned.num);
   });
+  it("should accept user defined clone",function(){
+    var obj = {a:1};
+    obj.clone = function(){return null;};
+    expect(clone(obj)).toBe(null);
+  });
 });

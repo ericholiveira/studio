@@ -1,6 +1,8 @@
 clone = (obj) ->
   if not obj? or typeof obj isnt 'object'
     return obj
+  if typeof obj.clone is 'function'
+    return obj.clone()
   if obj instanceof Date
     return new Date(obj.getTime())
   if obj instanceof RegExp
