@@ -1,4 +1,3 @@
-Timer = require('./util/timer')
 Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
