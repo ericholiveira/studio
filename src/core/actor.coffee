@@ -73,15 +73,7 @@ class Actor extends BaseClass
   _doProcess:(message) =>
     __doProcess=(message) =>
       {sender,body,receiver,callback,headers} = message
-      new Promise((resolve,reject)=>
-        try
-          result = @process(body,headers,sender,receiver)
-          if result instanceof Promise
-            result.then(resolve).catch(reject)
-          else
-            resolve(result)
-        catch err
-          reject(err)
+      Promise.attempt(()=>@process(body,headers,sender,receiver)
       ).then((result)->
         callback(undefined,result)
         result

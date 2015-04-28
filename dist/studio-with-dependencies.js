@@ -100,19 +100,8 @@
         return function(message) {
           var body, callback, headers, receiver, sender;
           sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
-          return new Promise(function(resolve, reject) {
-            var err, result;
-            try {
-              result = _this.process(body, headers, sender, receiver);
-              if (result instanceof Promise) {
-                return result.then(resolve)["catch"](reject);
-              } else {
-                return resolve(result);
-              }
-            } catch (_error) {
-              err = _error;
-              return reject(err);
-            }
+          return Promise.attempt(function() {
+            return _this.process(body, headers, sender, receiver);
           }).then(function(result) {
             callback(void 0, result);
             return result;
