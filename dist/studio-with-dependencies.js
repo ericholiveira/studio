@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, Promise, clone, fs, router,
+  var Actor, ArrayUtil, Bacon, BaseClass, clone, fs, router, _Promise,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -9,7 +9,7 @@
 
   BaseClass = require('./util/baseClass');
 
-  Promise = require('bluebird');
+  _Promise = require('bluebird');
 
   Bacon = require('baconjs');
 
@@ -34,45 +34,37 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id).flatMap((function(_this) {
-        return function(message) {
-          var body, callback, clonedMessage, err, headers, receiver, result, sender;
-          try {
-            clonedMessage = clone(message);
-            if (typeof _this.filter === 'function') {
-              sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
-              result = _this.filter(body, headers, sender, receiver);
-              if (result instanceof Promise) {
-                return Bacon.fromPromise(result.then(function(result) {
-                  if (result) {
-                    return clonedMessage;
-                  } else {
-                    throw new Error('Filtered message');
-                  }
-                })["catch"](function(error) {
-                  message.callback(error);
-                  return false;
-                })).filter(function(message) {
-                  return message !== false;
-                });
-              } else {
+      this.stream = router.createOrGetRoute(this.id).map(clone);
+      if (typeof this.filter === 'function') {
+        this.stream = this.stream.flatMap((function(_this) {
+          return function(clonedMessage) {
+            var body, callback, headers, receiver, result, sender;
+            sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
+            result = _this.filter(body, headers, sender, receiver);
+            if (result instanceof _Promise) {
+              return Bacon.fromPromise(result.then(function(result) {
                 if (result) {
-                  return Bacon.once(clonedMessage);
+                  return clonedMessage;
                 } else {
-                  message.callback(new Error('Filtered message'));
-                  return Bacon.never();
+                  throw new Error('Filtered message');
                 }
-              }
+              })["catch"](function(error) {
+                clonedMessage.callback(error);
+                return false;
+              })).filter(function(message) {
+                return message !== false;
+              });
             } else {
-              return Bacon.once(clonedMessage);
+              if (result) {
+                return Bacon.once(clonedMessage);
+              } else {
+                message.callback(new Error('Filtered message'));
+                return Bacon.never();
+              }
             }
-          } catch (_error) {
-            err = _error;
-            message.callback(err);
-            return Bacon.never();
-          }
-        };
-      })(this));
+          };
+        })(this));
+      }
       this.unsubscribe = this.stream.onValue((function(_this) {
         return function(message) {
           return _this._doProcess(message)["catch"](function() {});
@@ -100,7 +92,7 @@
         return function(message) {
           var body, callback, headers, receiver, sender;
           sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
-          return Promise.attempt(function() {
+          return _Promise.attempt(function() {
             return _this.process(body, headers, sender, receiver);
           }).then(function(result) {
             callback(void 0, result);
@@ -235,7 +227,7 @@
 
 },{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"baconjs":8,"bluebird":9,"fs":11}],2:[function(require,module,exports){
 (function() {
-  var Bacon, BaseClass, Driver, Promise, router,
+  var Bacon, BaseClass, Driver, router, _Promise,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
@@ -246,7 +238,7 @@
 
   BaseClass = require('./util/baseClass');
 
-  Promise = require('bluebird');
+  _Promise = require('bluebird');
 
   Driver = (function(_super) {
     __extends(Driver, _super);
@@ -267,20 +259,9 @@
     Driver.prototype.send = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return new Promise((function(_this) {
-        return function(resolve, reject) {
-          var err, result;
-          try {
-            result = _this.parser.apply(_this, args);
-            if (result instanceof Promise) {
-              return result.then(resolve)["catch"](reject);
-            } else {
-              return resolve(result);
-            }
-          } catch (_error) {
-            err = _error;
-            return reject(err);
-          }
+      return _Promise.attempt((function(_this) {
+        return function() {
+          return _this.parser.apply(_this, args);
         };
       })(this)).bind(this).then(function(result) {
         var body, headers, receiver, sender;
@@ -303,9 +284,9 @@
 
 },{"./router":3,"./util/baseClass":6,"baconjs":8,"bluebird":9}],3:[function(require,module,exports){
 (function() {
-  var Bacon, Promise, Router, clone, _routes;
+  var Bacon, Router, clone, _Promise, _routes;
 
-  Promise = require('bluebird');
+  _Promise = require('bluebird');
 
   Bacon = require('baconjs');
 
@@ -339,7 +320,7 @@
       if (headers == null) {
         headers = {};
       }
-      return new Promise(function(resolve, reject) {
+      return new _Promise(function(resolve, reject) {
         var route, _message;
         route = _routes[receiver];
         _message = {

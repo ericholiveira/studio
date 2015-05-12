@@ -1,7 +1,7 @@
 
 router = require('./router')
 BaseClass = require('./util/baseClass')
-Promise = require('bluebird')
+_Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
 ArrayUtil = require('./util/arrayUtil')
@@ -30,33 +30,27 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id).flatMap((message)=>
-      try
-        clonedMessage = clone(message)
-        if typeof @filter == 'function'
-          {sender,body,receiver,callback,headers} = clonedMessage
-          result = @filter(body,headers,sender,receiver)
-          if result instanceof Promise
-            Bacon.fromPromise(result.then((result)->
-              if result
-                clonedMessage
-              else
-                throw new Error('Filtered message')
-              ).catch((error)->
-              message.callback(error)
-              false
-              )).filter((message)->message!=false)
-          else
+    @stream = router.createOrGetRoute(@id).map(clone)
+    if typeof @filter == 'function'
+      @stream = @stream.flatMap((clonedMessage)=>
+        {sender,body,receiver,callback,headers} = clonedMessage
+        result = @filter(body,headers,sender,receiver)
+        if result instanceof _Promise
+          Bacon.fromPromise(result.then((result)->
             if result
-              Bacon.once(clonedMessage)
+              clonedMessage
             else
-              message.callback(new Error('Filtered message'))
-              Bacon.never()
+              throw new Error('Filtered message')
+            ).catch((error)->
+            clonedMessage.callback(error)
+            false
+            )).filter((message)->message!=false)
         else
-          Bacon.once(clonedMessage)
-      catch err
-        message.callback(err)
-        Bacon.never()
+          if result
+            Bacon.once(clonedMessage)
+          else
+            message.callback(new Error('Filtered message'))
+            Bacon.never()
     )
     @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
     if options.watchPath
@@ -73,7 +67,7 @@ class Actor extends BaseClass
   _doProcess:(message) =>
     __doProcess=(message) =>
       {sender,body,receiver,callback,headers} = message
-      Promise.attempt(()=>@process(body,headers,sender,receiver)
+      _Promise.attempt(()=>@process(body,headers,sender,receiver)
       ).then((result)->
         callback(undefined,result)
         result

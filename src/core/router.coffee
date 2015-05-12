@@ -1,4 +1,4 @@
-Promise = require('bluebird')
+_Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
 
@@ -40,7 +40,7 @@ class Router
   #                                  }
   #                                })
   send: (sender,receiver,message,headers={})->
-    new Promise((resolve,reject)->
+    new _Promise((resolve,reject)->
       route = _routes[receiver]
       _message = {
         sender:sender

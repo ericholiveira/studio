@@ -1,7 +1,7 @@
 Bacon = require('baconjs')
 router = require('./router')
 BaseClass = require('./util/baseClass')
-Promise = require('bluebird')
+_Promise = require('bluebird')
 
 # Base class for all drivers.
 class Driver extends BaseClass
@@ -16,16 +16,7 @@ class Driver extends BaseClass
   # Takes the arguments (i.e request,response on http requests or other arguments for different communication protocols / framework), parses it, and then sends the message to the right actor
   # @param [Arguments] args the arguments to build the message
   send: (args...)->
-    new Promise((resolve,reject)=>
-      try
-        result = @parser(args...)
-        if result instanceof Promise
-          result.then(resolve).catch(reject)
-        else
-          resolve(result)
-      catch err
-        reject(err)
-    ).bind(@).then((result)->
+    _Promise.attempt(()=>@parser(args...)).bind(@).then((result)->
       {sender,receiver,body,headers}=result
       router.send(sender,receiver,body,headers).bind(@)
     )
