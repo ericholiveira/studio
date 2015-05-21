@@ -7,7 +7,12 @@ clone = require('./util/clone')
 ArrayUtil = require('./util/arrayUtil')
 fs = require('fs')
 
-
+__doProcess=(message) ->
+  {sender,body,receiver,callback,headers} = message
+  try
+    callback(undefined , @process(body,headers,sender,receiver))
+  catch err
+    callback(err)
 # Base class for all actors.
 class Actor extends BaseClass
 
@@ -52,7 +57,7 @@ class Actor extends BaseClass
             message.callback(new Error('Filtered message'))
             Bacon.never()
     )
-    @unsubscribe = @stream.onValue((message)=>@_doProcess(message).catch(->))
+    @unsubscribe = @stream.onValue(@_doProcess)
     if options.watchPath
       watch = options.watchPath
       watcher = fs.watch(watch,()=>
@@ -65,21 +70,10 @@ class Actor extends BaseClass
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
-    __doProcess=(message) =>
-      {sender,body,receiver,callback,headers} = message
-      _Promise.attempt(()=>@process(body,headers,sender,receiver)
-      ).then((result)->
-        callback(undefined,result)
-        result
-      ).catch((err)->
-        err = err or new Error('Unexpected Error')
-        callback(err or new Error('Unexpected Error'))
-        throw err
-      )
     if message?.length
-      __doProcess(_message) for _message in message
+      __doProces.call(@,message) for _message in message
     else
-      __doProcess(message)
+      __doProcess.call(@,message)
   # Transform the message stream, so you can merge other streams, filter, buffer or do anything you can do with a baconjs stream
   # @param [Function] funktion a function which receives the current stream for this actor and return the new transformed stream
   # @example How to apply a filter transformation (in javascript)

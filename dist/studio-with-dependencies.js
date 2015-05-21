@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, clone, fs, router, _Promise,
+  var Actor, ArrayUtil, Bacon, BaseClass, clone, fs, router, _Promise, __doProcess,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -18,6 +18,17 @@
   ArrayUtil = require('./util/arrayUtil');
 
   fs = require('fs');
+
+  __doProcess = function(message) {
+    var body, callback, err, headers, receiver, sender;
+    sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
+    try {
+      return callback(void 0, this.process(body, headers, sender, receiver));
+    } catch (_error) {
+      err = _error;
+      return callback(err);
+    }
+  };
 
   Actor = (function(_super) {
     __extends(Actor, _super);
@@ -65,11 +76,7 @@
           };
         })(this));
       }
-      this.unsubscribe = this.stream.onValue((function(_this) {
-        return function(message) {
-          return _this._doProcess(message)["catch"](function() {});
-        };
-      })(this));
+      this.unsubscribe = this.stream.onValue(this._doProcess);
       if (options.watchPath) {
         watch = options.watchPath;
         watcher = fs.watch(watch, (function(_this) {
@@ -87,32 +94,16 @@
     }
 
     Actor.prototype._doProcess = function(message) {
-      var __doProcess, _i, _len, _message, _results;
-      __doProcess = (function(_this) {
-        return function(message) {
-          var body, callback, headers, receiver, sender;
-          sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
-          return _Promise.attempt(function() {
-            return _this.process(body, headers, sender, receiver);
-          }).then(function(result) {
-            callback(void 0, result);
-            return result;
-          })["catch"](function(err) {
-            err = err || new Error('Unexpected Error');
-            callback(err || new Error('Unexpected Error'));
-            throw err;
-          });
-        };
-      })(this);
+      var _i, _len, _message, _results;
       if (message != null ? message.length : void 0) {
         _results = [];
         for (_i = 0, _len = message.length; _i < _len; _i++) {
           _message = message[_i];
-          _results.push(__doProcess(_message));
+          _results.push(__doProces.call(this, message));
         }
         return _results;
       } else {
-        return __doProcess(message);
+        return __doProcess.call(this, message);
       }
     };
 
