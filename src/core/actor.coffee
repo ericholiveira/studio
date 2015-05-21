@@ -3,9 +3,9 @@ router = require('./router')
 BaseClass = require('./util/baseClass')
 _Promise = require('bluebird')
 Bacon = require('baconjs')
-clone = require('./util/clone')
 ArrayUtil = require('./util/arrayUtil')
 fs = require('fs')
+StudioStream = require('./util/studioStream')
 
 __doProcess=(message) ->
   {sender,body,receiver,callback,headers} = message
@@ -35,29 +35,31 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id).map(clone)
-    if typeof @filter == 'function'
-      @stream = @stream.flatMap((clonedMessage)=>
-        {sender,body,receiver,callback,headers} = clonedMessage
-        result = @filter(body,headers,sender,receiver)
-        if result instanceof _Promise
-          Bacon.fromPromise(result.then((result)->
-            if result
-              clonedMessage
-            else
-              throw new Error('Filtered message')
-            ).catch((error)->
-            clonedMessage.callback(error)
-            false
-            )).filter((message)->message!=false)
-        else
-          if result
-            Bacon.once(clonedMessage)
-          else
-            message.callback(new Error('Filtered message'))
-            Bacon.never()
-    )
+    @stream = router.createOrGetRoute(@id)
     @unsubscribe = @stream.onValue(@_doProcess)
+    if typeof @filter == 'function'
+      @addTransformation((stream)=>
+        stream.flatMap((message)=>
+          {sender,body,receiver,callback,headers} = message
+          result = @filter(body,headers,sender,receiver)
+          if result instanceof _Promise
+            Bacon.fromPromise(result.then((result)->
+              if result
+                message
+              else
+                throw new Error('Filtered message')
+              ).catch((error)->
+              message.callback(error)
+              false
+              )).filter((message)->message!=false)
+          else
+            if result
+              Bacon.once(message)
+            else
+              message.callback(new Error('Filtered message'))
+              Bacon.never()
+        )
+      )
     if options.watchPath
       watch = options.watchPath
       watcher = fs.watch(watch,()=>
@@ -71,7 +73,7 @@ class Actor extends BaseClass
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
     if message?.length
-      __doProces.call(@,message) for _message in message
+      __doProcess.call(@,message) for _message in message
     else
       __doProcess.call(@,message)
   # Transform the message stream, so you can merge other streams, filter, buffer or do anything you can do with a baconjs stream
@@ -81,6 +83,10 @@ class Actor extends BaseClass
   # @example How to apply a filter transformation (in Coffescript)
   #   myActor.addTransformation((stream)->stream.filter((message)->message.sender == 'otherActor'))
   addTransformation:(funktion)->
+    route = router.getRoute(@id)
+    if route.stream instanceof StudioStream
+      route.stream = new Bacon.Bus()
+      @stream = route.stream
     @unsubscribe()
     @stream = funktion(@stream)
     @unsubscribe = @stream.onValue(@_doProcess)

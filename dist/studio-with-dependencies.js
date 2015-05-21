@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, clone, fs, router, _Promise, __doProcess,
+  var Actor, ArrayUtil, Bacon, BaseClass, StudioStream, fs, router, _Promise, __doProcess,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13,11 +13,11 @@
 
   Bacon = require('baconjs');
 
-  clone = require('./util/clone');
-
   ArrayUtil = require('./util/arrayUtil');
 
   fs = require('fs');
+
+  StudioStream = require('./util/studioStream');
 
   __doProcess = function(message) {
     var body, callback, err, headers, receiver, sender;
@@ -45,38 +45,40 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id).map(clone);
+      this.stream = router.createOrGetRoute(this.id);
+      this.unsubscribe = this.stream.onValue(this._doProcess);
       if (typeof this.filter === 'function') {
-        this.stream = this.stream.flatMap((function(_this) {
-          return function(clonedMessage) {
-            var body, callback, headers, receiver, result, sender;
-            sender = clonedMessage.sender, body = clonedMessage.body, receiver = clonedMessage.receiver, callback = clonedMessage.callback, headers = clonedMessage.headers;
-            result = _this.filter(body, headers, sender, receiver);
-            if (result instanceof _Promise) {
-              return Bacon.fromPromise(result.then(function(result) {
-                if (result) {
-                  return clonedMessage;
-                } else {
-                  throw new Error('Filtered message');
-                }
-              })["catch"](function(error) {
-                clonedMessage.callback(error);
-                return false;
-              })).filter(function(message) {
-                return message !== false;
-              });
-            } else {
-              if (result) {
-                return Bacon.once(clonedMessage);
+        this.addTransformation((function(_this) {
+          return function(stream) {
+            return stream.flatMap(function(message) {
+              var body, callback, headers, receiver, result, sender;
+              sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
+              result = _this.filter(body, headers, sender, receiver);
+              if (result instanceof _Promise) {
+                return Bacon.fromPromise(result.then(function(result) {
+                  if (result) {
+                    return message;
+                  } else {
+                    throw new Error('Filtered message');
+                  }
+                })["catch"](function(error) {
+                  message.callback(error);
+                  return false;
+                })).filter(function(message) {
+                  return message !== false;
+                });
               } else {
-                message.callback(new Error('Filtered message'));
-                return Bacon.never();
+                if (result) {
+                  return Bacon.once(message);
+                } else {
+                  message.callback(new Error('Filtered message'));
+                  return Bacon.never();
+                }
               }
-            }
+            });
           };
         })(this));
       }
-      this.unsubscribe = this.stream.onValue(this._doProcess);
       if (options.watchPath) {
         watch = options.watchPath;
         watcher = fs.watch(watch, (function(_this) {
@@ -99,7 +101,7 @@
         _results = [];
         for (_i = 0, _len = message.length; _i < _len; _i++) {
           _message = message[_i];
-          _results.push(__doProces.call(this, message));
+          _results.push(__doProcess.call(this, message));
         }
         return _results;
       } else {
@@ -108,6 +110,12 @@
     };
 
     Actor.prototype.addTransformation = function(funktion) {
+      var route;
+      route = router.getRoute(this.id);
+      if (route.stream instanceof StudioStream) {
+        route.stream = new Bacon.Bus();
+        this.stream = route.stream;
+      }
       this.unsubscribe();
       this.stream = funktion(this.stream);
       return this.unsubscribe = this.stream.onValue(this._doProcess);
@@ -216,7 +224,7 @@
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/clone":7,"baconjs":8,"bluebird":9,"fs":11}],2:[function(require,module,exports){
+},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/studioStream":8,"baconjs":9,"bluebird":10,"fs":12}],2:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, router, _Promise,
     __hasProp = {}.hasOwnProperty,
@@ -273,15 +281,17 @@
 
 //# sourceMappingURL=../maps/driver.js.map
 
-},{"./router":3,"./util/baseClass":6,"baconjs":8,"bluebird":9}],3:[function(require,module,exports){
+},{"./router":3,"./util/baseClass":6,"baconjs":9,"bluebird":10}],3:[function(require,module,exports){
 (function() {
-  var Bacon, Router, clone, _Promise, _routes;
+  var Bacon, Router, StudioStream, clone, _Promise, _routes;
 
   _Promise = require('bluebird');
 
   Bacon = require('baconjs');
 
   clone = require('./util/clone');
+
+  StudioStream = require('./util/studioStream');
 
   _routes = {};
 
@@ -291,7 +301,7 @@
     Router.prototype.createOrGetRoute = function(id, watchPath) {
       var stream;
       if (!_routes[id]) {
-        stream = new Bacon.Bus();
+        stream = new StudioStream();
         _routes[id] = {
           stream: stream
         };
@@ -328,7 +338,7 @@
           }
         };
         if (route != null) {
-          return route.stream.push(_message);
+          return route.stream.push(clone(_message));
         } else {
           return reject(new Error("The route " + receiver + " doesn't exists"));
         }
@@ -354,7 +364,7 @@
 
 //# sourceMappingURL=../maps/router.js.map
 
-},{"./util/clone":7,"baconjs":8,"bluebird":9}],4:[function(require,module,exports){
+},{"./util/clone":7,"./util/studioStream":8,"baconjs":9,"bluebird":10}],4:[function(require,module,exports){
 (function() {
   var Studio,
     __slice = [].slice;
@@ -378,7 +388,7 @@
 
 //# sourceMappingURL=../maps/studio.js.map
 
-},{"./actor":1,"./driver":2,"./router":3,"baconjs":8,"bluebird":9}],5:[function(require,module,exports){
+},{"./actor":1,"./driver":2,"./router":3,"baconjs":9,"bluebird":10}],5:[function(require,module,exports){
 (function() {
   module.exports.isArray = Array.isArray || function(value) {
     return {}.toString.call(value) === '[object Array]';
@@ -411,7 +421,7 @@
 
 //# sourceMappingURL=../../maps/baseClass.js.map
 
-},{"csextends":10}],7:[function(require,module,exports){
+},{"csextends":11}],7:[function(require,module,exports){
 (function (Buffer){
 (function() {
   var clone;
@@ -474,7 +484,33 @@
 //# sourceMappingURL=../../maps/clone.js.map
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":12}],8:[function(require,module,exports){
+},{"buffer":13}],8:[function(require,module,exports){
+(function() {
+  var StudioStream;
+
+  StudioStream = (function() {
+    function StudioStream() {}
+
+    StudioStream.prototype.push = function(message) {
+      return this._onValue(message);
+    };
+
+    StudioStream.prototype.onValue = function(fn) {
+      this._onValue = fn;
+      return function() {};
+    };
+
+    return StudioStream;
+
+  })();
+
+  module.exports = StudioStream;
+
+}).call(this);
+
+//# sourceMappingURL=../../maps/studioStream.js.map
+
+},{}],9:[function(require,module,exports){
 (function (global){
 (function() {
   var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, DepCache, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertString, cloneArray, compositeUnsubscribe, containsDuplicateDeps, convertArgsToFunction, describe, end, eventIdCounter, findDeps, flatMap_, former, idCounter, initial, isArray, isFieldKey, isFunction, isObservable, latterF, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, next, nop, partiallyApplied, recursionDepth, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, withDescription, withMethodCallSupport, _, _ref,
@@ -3567,7 +3603,7 @@
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (process,global){
 /* @preserve
  * The MIT License (MIT)
@@ -8236,7 +8272,7 @@ module.exports = ret;
 },{"./es5.js":14}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":16}],10:[function(require,module,exports){
+},{"_process":17}],11:[function(require,module,exports){
 // Generated by CoffeeScript 1.7.1
 (function() {
   var __hasProp = {}.hasOwnProperty,
@@ -8277,9 +8313,9 @@ module.exports = ret;
 
 }).call(this);
 
-},{}],11:[function(require,module,exports){
-
 },{}],12:[function(require,module,exports){
+
+},{}],13:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -9333,7 +9369,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":13,"ieee754":14,"is-array":15}],13:[function(require,module,exports){
+},{"base64-js":14,"ieee754":15,"is-array":16}],14:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -9455,7 +9491,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -9541,7 +9577,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 /**
  * isArray
@@ -9576,7 +9612,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
