@@ -61,4 +61,32 @@ describe("An plugin", function () {
       parser:function(){}
     }).destroy();
 	});
+  it("should be able to intercept send", function (done) {
+    var ACTOR_ID_1="actor_intercept_send1", ACTOR_ID_2="actor_intercept_send2", preSend = false, postSend = false, messageToActor2='message';
+    var actor1=new Studio.Actor({
+      id:ACTOR_ID_1,
+      process:function(){}
+    });
+    new Studio.Actor({
+      id:ACTOR_ID_2,
+      process:function(message){return message;}
+    });
+    Studio.use(function interceptSend(opt){
+      opt.interceptSend(function(callSend){
+        return function(sender,receiver,message,headers){
+          preSend = true;
+          return callSend(sender,receiver,message,headers).then(function(result){
+            postSend = true;
+            return result;
+          });
+        };
+      });
+    });
+    actor1.send(ACTOR_ID_2,messageToActor2).then(function(message){
+      expect(preSend).toBe(true);
+      expect(postSend).toBe(true);
+      expect(message).toBe(messageToActor2);
+      done();
+    });
+  });
 });

@@ -7,7 +7,9 @@ Studio={
   Bacon:require('baconjs'),
   use : (plugin)->
     plugin({
-      routerSend:Studio.router.send.bind(Studio.router),
+      interceptSend:(funk)->
+        _send = Studio.router.send
+        Studio.router.send = funk(_send.bind(Studio.router))
       listenTo:{
         onCreateActor:(listener)-> require('./util/listeners').addOnCreateActor(listener)
         onDestroyActor:(listener)-> require('./util/listeners').addOnDestroyActor(listener)

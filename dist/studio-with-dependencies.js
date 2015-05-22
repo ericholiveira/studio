@@ -392,7 +392,11 @@
     Bacon: require('baconjs'),
     use: function(plugin) {
       return plugin({
-        routerSend: Studio.router.send.bind(Studio.router),
+        interceptSend: function(funk) {
+          var _send;
+          _send = Studio.router.send;
+          return Studio.router.send = funk(_send.bind(Studio.router));
+        },
         listenTo: {
           onCreateActor: function(listener) {
             return require('./util/listeners').addOnCreateActor(listener);
