@@ -8,10 +8,10 @@ fs = require('fs')
 StudioStream = require('./util/studioStream')
 listeners = require('./util/listeners')
 
-__doProcess=(message) ->
+__doProcess=(self,message) ->
   {sender,body,receiver,callback,headers} = message
   try
-    callback(undefined , @process(body,headers,sender,receiver))
+    callback(undefined , self.process(body,headers,sender,receiver))
   catch err
     callback(err)
 # Base class for all actors.
@@ -78,10 +78,10 @@ class Actor extends BaseClass
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
     if message.length
-      __doProcess.call(@,_message) for _message in message
+      __doProcess(@,_message) for _message in message
       undefined
     else
-      __doProcess.call(@,message)
+      __doProcess(@,message)
   # Transform the message stream, so you can merge other streams, filter, buffer or do anything you can do with a baconjs stream
   # @param [Function] funktion a function which receives the current stream for this actor and return the new transformed stream
   # @example How to apply a filter transformation (in javascript)

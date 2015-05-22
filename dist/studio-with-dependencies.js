@@ -21,11 +21,11 @@
 
   listeners = require('./util/listeners');
 
-  __doProcess = function(message) {
+  __doProcess = function(self, message) {
     var body, callback, err, headers, receiver, sender;
     sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
     try {
-      return callback(void 0, this.process(body, headers, sender, receiver));
+      return callback(void 0, self.process(body, headers, sender, receiver));
     } catch (_error) {
       err = _error;
       return callback(err);
@@ -108,11 +108,11 @@
       if (message.length) {
         for (_i = 0, _len = message.length; _i < _len; _i++) {
           _message = message[_i];
-          __doProcess.call(this, _message);
+          __doProcess(this, _message);
         }
         return void 0;
       } else {
-        return __doProcess.call(this, message);
+        return __doProcess(this, message);
       }
     };
 
