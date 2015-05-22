@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, StudioStream, fs, router, _Promise, __doProcess,
+  var Actor, ArrayUtil, Bacon, BaseClass, StudioStream, fs, listeners, router, _Promise, __doProcess,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -18,6 +18,8 @@
   fs = require('fs');
 
   StudioStream = require('./util/studioStream');
+
+  listeners = require('./util/listeners');
 
   __doProcess = function(message) {
     var body, callback, err, headers, receiver, sender;
@@ -45,7 +47,7 @@
       if (!this.process) {
         throw new Error('You must provide a process function');
       }
-      this.stream = router.createOrGetRoute(this.id);
+      this.stream = router.createRoute(this.id);
       this.unsubscribe = this.stream.onValue(this._doProcess);
       if (typeof this.filter === 'function') {
         this.addTransformation((function(_this) {
@@ -85,7 +87,7 @@
           return function() {
             watcher.close();
             delete require.cache[watch];
-            router.deleteRoute(_this.id);
+            _this.destroy();
             return require(watch);
           };
         })(this));
@@ -93,17 +95,22 @@
       if (typeof this.initialize === "function") {
         this.initialize(options);
       }
+      listeners.actorCreated(this);
     }
 
+    Actor.prototype.destroy = function() {
+      router.deleteRoute(this.id);
+      return listeners.actorDestroyed(this);
+    };
+
     Actor.prototype._doProcess = function(message) {
-      var _i, _len, _message, _results;
-      if (message != null ? message.length : void 0) {
-        _results = [];
+      var _i, _len, _message;
+      if (message.length) {
         for (_i = 0, _len = message.length; _i < _len; _i++) {
           _message = message[_i];
-          _results.push(__doProcess.call(this, message));
+          __doProcess.call(this, _message);
         }
-        return _results;
+        return void 0;
       } else {
         return __doProcess.call(this, message);
       }
@@ -224,9 +231,9 @@
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/studioStream":8,"baconjs":9,"bluebird":10,"fs":12}],2:[function(require,module,exports){
+},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/listeners":8,"./util/studioStream":9,"baconjs":10,"bluebird":11,"fs":13}],2:[function(require,module,exports){
 (function() {
-  var Bacon, BaseClass, Driver, router, _Promise,
+  var Bacon, BaseClass, Driver, listeners, router, _Promise,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
@@ -238,6 +245,8 @@
   BaseClass = require('./util/baseClass');
 
   _Promise = require('bluebird');
+
+  listeners = require('./util/listeners');
 
   Driver = (function(_super) {
     __extends(Driver, _super);
@@ -253,23 +262,29 @@
       if (typeof this.initialize === "function") {
         this.initialize(options);
       }
+      listeners.driverCreated(this);
     }
 
     Driver.prototype.send = function() {
-      var args;
+      var args, that;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      that = this;
       return _Promise.attempt((function(_this) {
         return function() {
           return _this.parser.apply(_this, args);
         };
-      })(this)).bind(this).then(function(result) {
+      })(this)).then(function(result) {
         var body, headers, receiver, sender;
         sender = result.sender, receiver = result.receiver, body = result.body, headers = result.headers;
-        return router.send(sender, receiver, body, headers).bind(this);
+        return router.send(sender, receiver, body, headers).bind(that);
       });
     };
 
     Driver.prototype.initialize = function() {};
+
+    Driver.prototype.destroy = function() {
+      return listeners.driverDestroyed(this);
+    };
 
     return Driver;
 
@@ -281,7 +296,7 @@
 
 //# sourceMappingURL=../maps/driver.js.map
 
-},{"./router":3,"./util/baseClass":6,"baconjs":9,"bluebird":10}],3:[function(require,module,exports){
+},{"./router":3,"./util/baseClass":6,"./util/listeners":8,"baconjs":10,"bluebird":11}],3:[function(require,module,exports){
 (function() {
   var Bacon, Router, StudioStream, clone, _Promise, _routes;
 
@@ -298,14 +313,15 @@
   Router = (function() {
     function Router() {}
 
-    Router.prototype.createOrGetRoute = function(id, watchPath) {
+    Router.prototype.createRoute = function(id, watchPath) {
       var stream;
-      if (!_routes[id]) {
-        stream = new StudioStream();
-        _routes[id] = {
-          stream: stream
-        };
+      if (_routes[id]) {
+        throw new Error('Route already exists');
       }
+      stream = new StudioStream();
+      _routes[id] = {
+        stream: stream
+      };
       return _routes[id].stream;
     };
 
@@ -364,10 +380,9 @@
 
 //# sourceMappingURL=../maps/router.js.map
 
-},{"./util/clone":7,"./util/studioStream":8,"baconjs":9,"bluebird":10}],4:[function(require,module,exports){
+},{"./util/clone":7,"./util/studioStream":9,"baconjs":10,"bluebird":11}],4:[function(require,module,exports){
 (function() {
-  var Studio,
-    __slice = [].slice;
+  var Studio;
 
   Studio = {
     router: require('./router'),
@@ -375,10 +390,24 @@
     Driver: require('./driver'),
     Promise: require('bluebird'),
     Bacon: require('baconjs'),
-    use: function() {
-      var args, plugin;
-      plugin = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      return plugin.apply(null, [Studio].concat(__slice.call(args)));
+    use: function(plugin) {
+      return plugin({
+        routerSend: Studio.router.send.bind(Studio.router),
+        listenTo: {
+          onCreateActor: function(listener) {
+            return require('./util/listeners').addOnCreateActor(listener);
+          },
+          onDestroyActor: function() {
+            return require('./util/listeners').addOnDestroyActor(listener);
+          },
+          onCreateDriver: function() {
+            return require('./util/listeners').addOnCreateDriver(listener);
+          },
+          onDestroyDriver: function() {
+            return require('./util/listeners').addOnDestroyDriver(listener);
+          }
+        }
+      });
     }
   };
 
@@ -388,7 +417,7 @@
 
 //# sourceMappingURL=../maps/studio.js.map
 
-},{"./actor":1,"./driver":2,"./router":3,"baconjs":9,"bluebird":10}],5:[function(require,module,exports){
+},{"./actor":1,"./driver":2,"./router":3,"./util/listeners":8,"baconjs":10,"bluebird":11}],5:[function(require,module,exports){
 (function() {
   module.exports.isArray = Array.isArray || function(value) {
     return {}.toString.call(value) === '[object Array]';
@@ -421,7 +450,7 @@
 
 //# sourceMappingURL=../../maps/baseClass.js.map
 
-},{"csextends":11}],7:[function(require,module,exports){
+},{"csextends":12}],7:[function(require,module,exports){
 (function (Buffer){
 (function() {
   var clone;
@@ -484,7 +513,60 @@
 //# sourceMappingURL=../../maps/clone.js.map
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":13}],8:[function(require,module,exports){
+},{"buffer":14}],8:[function(require,module,exports){
+(function() {
+  var callListeners, onCreateActorListeners, onCreateDriverListeners, onDestroyActorListeners, onDestroyDriverListeners;
+
+  callListeners = function(listeners, target) {
+    var listener, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = listeners.length; _i < _len; _i++) {
+      listener = listeners[_i];
+      _results.push(listener(target));
+    }
+    return _results;
+  };
+
+  onCreateActorListeners = [];
+
+  onDestroyActorListeners = [];
+
+  onCreateDriverListeners = [];
+
+  onDestroyDriverListeners = [];
+
+  module.exports = {
+    addOnCreateActor: function(listener) {
+      return onCreateActorListeners.push(listener);
+    },
+    addOnDestroyActor: function(listener) {
+      return onDestroyActorListeners.push(listener);
+    },
+    addOnCreateDriver: function(listener) {
+      return onCreateDriverListeners.push(listener);
+    },
+    addOnDestroyDriver: function(listener) {
+      return onDestroyDriverListeners.push(listener);
+    },
+    actorCreated: function(actor) {
+      return callListeners(onCreateActorListeners, actor);
+    },
+    actorDestroyed: function(actor) {
+      return callListeners(onDestroyActorListeners, actor);
+    },
+    driverCreated: function(driver) {
+      return callListeners(onCreateDriverListeners, driver);
+    },
+    driverDestroyed: function(driver) {
+      return callListeners(onDestroyDriverListeners, driver);
+    }
+  };
+
+}).call(this);
+
+//# sourceMappingURL=../../maps/listeners.js.map
+
+},{}],9:[function(require,module,exports){
 (function() {
   var StudioStream;
 
@@ -510,7 +592,7 @@
 
 //# sourceMappingURL=../../maps/studioStream.js.map
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 (function() {
   var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, DepCache, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertString, cloneArray, compositeUnsubscribe, containsDuplicateDeps, convertArgsToFunction, describe, end, eventIdCounter, findDeps, flatMap_, former, idCounter, initial, isArray, isFieldKey, isFunction, isObservable, latterF, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, next, nop, partiallyApplied, recursionDepth, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, withDescription, withMethodCallSupport, _, _ref,
@@ -3603,7 +3685,7 @@
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (process,global){
 /* @preserve
  * The MIT License (MIT)
@@ -8272,7 +8354,7 @@ module.exports = ret;
 },{"./es5.js":14}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":17}],11:[function(require,module,exports){
+},{"_process":18}],12:[function(require,module,exports){
 // Generated by CoffeeScript 1.7.1
 (function() {
   var __hasProp = {}.hasOwnProperty,
@@ -8313,9 +8395,9 @@ module.exports = ret;
 
 }).call(this);
 
-},{}],12:[function(require,module,exports){
-
 },{}],13:[function(require,module,exports){
+
+},{}],14:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -9369,7 +9451,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":14,"ieee754":15,"is-array":16}],14:[function(require,module,exports){
+},{"base64-js":15,"ieee754":16,"is-array":17}],15:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -9491,8 +9573,8 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],15:[function(require,module,exports){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+},{}],16:[function(require,module,exports){
+exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
       eMax = (1 << eLen) - 1,
@@ -9500,32 +9582,32 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
       nBits = -7,
       i = isLE ? (nBytes - 1) : 0,
       d = isLE ? -1 : 1,
-      s = buffer[offset + i]
+      s = buffer[offset + i];
 
-  i += d
+  i += d;
 
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
 
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
 
   if (e === 0) {
-    e = 1 - eBias
+    e = 1 - eBias;
   } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
+    return m ? NaN : ((s ? -1 : 1) * Infinity);
   } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
   }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+};
 
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   var e, m, c,
       eLen = nBytes * 8 - mLen - 1,
       eMax = (1 << eLen) - 1,
@@ -9533,51 +9615,51 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
       rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
       i = isLE ? 0 : (nBytes - 1),
       d = isLE ? 1 : -1,
-      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
 
-  value = Math.abs(value)
+  value = Math.abs(value);
 
   if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
   } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
+    e = Math.floor(Math.log(value) / Math.LN2);
     if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
+      e--;
+      c *= 2;
     }
     if (e + eBias >= 1) {
-      value += rt / c
+      value += rt / c;
     } else {
-      value += rt * Math.pow(2, 1 - eBias)
+      value += rt * Math.pow(2, 1 - eBias);
     }
     if (value * c >= 2) {
-      e++
-      c /= 2
+      e++;
+      c /= 2;
     }
 
     if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
+      m = 0;
+      e = eMax;
     } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
     } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
     }
   }
 
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
 
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
 
-  buffer[offset + i - d] |= s * 128
-}
+  buffer[offset + i - d] |= s * 128;
+};
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
 /**
  * isArray
@@ -9612,7 +9694,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

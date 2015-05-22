@@ -6,6 +6,7 @@ Bacon = require('baconjs')
 ArrayUtil = require('./util/arrayUtil')
 fs = require('fs')
 StudioStream = require('./util/studioStream')
+listeners = require('./util/listeners')
 
 __doProcess=(message) ->
   {sender,body,receiver,callback,headers} = message
@@ -35,7 +36,7 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
-    @stream = router.createOrGetRoute(@id)
+    @stream = router.createRoute(@id)
     @unsubscribe = @stream.onValue(@_doProcess)
     if typeof @filter == 'function'
       @addTransformation((stream)=>
@@ -65,15 +66,20 @@ class Actor extends BaseClass
       watcher = fs.watch(watch,()=>
         watcher.close()
         delete require.cache[watch]
-        router.deleteRoute(@id)
+        @destroy()
         require(watch)
       )
     @initialize?(options)
+    listeners.actorCreated(@)
+  destroy :()->
+    router.deleteRoute(@id)
+    listeners.actorDestroyed(@)
   # PRIVATE METHOD SHOULD NOT BE CALLED
   # Takes a stream message and open it for the actor process function format. And creates a promise with the result of the message
   _doProcess:(message) =>
-    if message?.length
-      __doProcess.call(@,message) for _message in message
+    if message.length
+      __doProcess.call(@,_message) for _message in message
+      undefined
     else
       __doProcess.call(@,message)
   # Transform the message stream, so you can merge other streams, filter, buffer or do anything you can do with a baconjs stream

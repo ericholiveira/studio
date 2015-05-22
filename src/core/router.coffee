@@ -8,14 +8,15 @@ _routes ={}
 class Router
   # Constructs a new Router
   constructor: () ->
-  # Creates a route, if it already exists return this route
+  # Creates a route, if it already exists throws exception
   # @param [String] id the route identification
   # @example How create or get a route
-  #   router.createOrGetRoute('myActor')
-  createOrGetRoute: (id,watchPath) ->
-    if not _routes[id]
-      stream = new StudioStream()
-      _routes[id] = {stream:stream}
+  #   router.createRoute('myActor')
+  createRoute: (id,watchPath) ->
+    if _routes[id]
+      throw new Error('Route already exists')
+    stream = new StudioStream()
+    _routes[id] = {stream:stream}
     _routes[id].stream
   # Removes a route (BE CAREFUL)
   # @param [String] id the route identification
