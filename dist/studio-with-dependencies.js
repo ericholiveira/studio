@@ -334,9 +334,6 @@
     };
 
     Router.prototype.send = function(sender, receiver, message, headers) {
-      if (headers == null) {
-        headers = {};
-      }
       return new _Promise(function(resolve, reject) {
         var route, _message;
         route = _routes[receiver];

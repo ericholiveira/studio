@@ -41,7 +41,7 @@ class Router
   #                                    count:1
   #                                  }
   #                                })
-  send: (sender,receiver,message,headers={})->
+  send: (sender,receiver,message,headers)->
     new _Promise((resolve,reject)->
       route = _routes[receiver]
       _message = {
