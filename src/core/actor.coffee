@@ -71,6 +71,7 @@ class Actor extends BaseClass
       )
     @initialize?(options)
     listeners.actorCreated(@)
+  #Destroy the actor, making it unreachble
   destroy :()->
     router.deleteRoute(@id)
     listeners.actorDestroyed(@)
