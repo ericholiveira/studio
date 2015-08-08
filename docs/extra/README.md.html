@@ -34,7 +34,7 @@
         </p>
       </nav>
       <div id='filecontents'>
-        <h1 id="studio-js">Studio.js</h1><p><img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" /></p><p>Micro-services using actors model framework for JavaScript.</p><p>Studio is a lightweight framework for node developed to make easy to create reactive applications according to <a href="http://www.reactivemanifesto.org/">reactive manifesto</a> principles. It uses an actor model (freely inspired by akka actors) implemented using <a href="https://github.com/baconjs/bacon.js">baconjs</a> for reactive programming and <a href="https://github.com/petkaantonov/bluebird">bluebird</a> a+ promises to solve the callback hell problem.</p><p>The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i&#39;ll keep a concise api, so other developers can create (and share) plugins for the framework.</p><p>Studio isn&#39;t only a library, it&#39;s a framework. It&#39;s really important to learn how to program and not only what each method can do.</p><p>I would love to receive feedback.Let me know if you&#39;ve used it. What worked and what is wrong. Contribute and spread the word.</p><p><a href="https://travis-ci.org/onstagejs/studio"><img src="https://travis-ci.org/onstagejs/studio.svg?branch=master" alt="Build Status"></a>
+        <h1 id="studio-js">Studio.js</h1><p><img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" /></p><p>Micro-services using actors model framework for JavaScript.</p><p>Studio is a lightweight framework for node development to make easy to create reactive applications according to <a href="http://www.reactivemanifesto.org/">reactive manifesto</a> principles. It uses an actor model (freely inspired by akka actors) implemented using <a href="https://github.com/baconjs/bacon.js">baconjs</a> for reactive programming and <a href="https://github.com/petkaantonov/bluebird">bluebird</a> a+ promises to solve the callback hell problem.</p><p>The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i&#39;ll keep a concise api, so other developers can create (and share) plugins for the framework.</p><p>Studio isn&#39;t only a library, it&#39;s a framework. It&#39;s really important to learn how to program and not only what each method can do.</p><p>I would love to receive feedback.Let me know if you&#39;ve used it. What worked and what is wrong. Contribute and spread the word.</p><p><a href="https://travis-ci.org/onstagejs/studio"><img src="https://travis-ci.org/onstagejs/studio.svg?branch=master" alt="Build Status"></a>
 <a href="http://badge.fury.io/js/studio"><img src="https://badge.fury.io/js/studio.svg" alt="npm version"></a>
 <a href="https://david-dm.org/onstagejs/studio"><img src="https://david-dm.org/onstagejs/studio.svg" alt="Dependency Status"></a>
 <a href="https://david-dm.org/onstagejs/studio#info=devDependencies"><img src="https://david-dm.org/onstagejs/studio/dev-status.svg" alt="devDependency Status"></a>
@@ -46,6 +46,12 @@
 <li><a href="#intro">Intro</a></li>
 <li><a href="#api">API</a></li>
 <li><a href="#examples">Examples</a></li>
+<li><a href="#filters">Filters</a></li>
+<li><a href="#streams">Streams</a></li>
+<li><a href="#timeouts">Timeouts</a></li>
+<li><a href="#generators">Co / Generators and flow-control</a></li>
+<li><a href="#plugins">Plugins</a></li>
+<li><a href="#zero-downtime-reload">Zero Downtime Reload</a></li>
 <li><a href="#pro-tips">Pro tips</a></li>
 <li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#build">Build</a></li>
@@ -53,8 +59,8 @@
 <li><a href="#license">License</a></li>
 </ul>
 <h1 id="install">Install</h1><p>To install execute:</p><pre><code>npm install studio --save
-</code></pre><h1 id="intro">Intro</h1><p>We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a <a href="http://martinfowler.com/articles/microservices.html">micro-services</a> framework for nodejs using and architecture freely inspired on <a href="http://en.wikipedia.org/wiki/Actor_model">actor model</a>. I present you <a href="https://github.com/onstagejs/studio">Studio</a></p><p>Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.</p><p>First of all, almost everything in a Studio-based application is an <a href="http://onstagejs.com/studio/docs/class/Actor.html">Actor</a>.</p><p>So if you&#39;re used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can&#39;t mess with the objects of another actor) increasing your code security, use <a href="https://github.com/baconjs/bacon.js">baconjs</a> streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and <a href="https://github.com/petkaantonov/bluebird">bluebird</a> A+ promises to help you with the callback hell.</p><p>The other important class on Studio is the <a href="http://onstagejs.com/studio/docs/class/Driver.html">Driver</a>.</p><p>A driver takes your endpoint input and parses it in a message for a certain actor.</p><p>And this is it... this is all you need to create <a href="http://reactivemanifesto.org">reactive</a> applications.</p><h1 id="api">API</h1><p>The API documentation can be accessed on <a href="http://onstagejs.com/studio/docs/">Docs</a></p><h1 id="examples">Examples</h1><p>Follow the link to see all available <a href="https://github.com/onstagejs/studio/tree/master/examples">examples</a></p><p>Studio works with any web framework anf i&#39;ll create at least a &quot;Hello World&quot; application for the most used.</p><p>Here i`m going to put just a basic hello world with express, on <a href="https://github.com/onstagejs/studio/tree/master/examples">examples</a> folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
-Hello World with Express (using express 4.11.1):</p><pre><code class="lang-js">var express = require(&#39;express&#39;);
+</code></pre><h1 id="intro">Intro</h1><p>We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a <a href="http://martinfowler.com/articles/microservices.html">micro-services</a> framework for nodejs using and architecture freely inspired on <a href="http://en.wikipedia.org/wiki/Actor_model">actor model</a>. I present you <a href="https://github.com/onstagejs/studio">Studio</a></p><p>Studio makes easy to create code without ANY dependency between your actors, so you can deploy all in a single machine or just easily change to each one in a different machine or anything between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be affraid of exceptions, Studio handles it to you), plugin and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express, restify, hapi and even koa) and flow-control libs (we have an example with Co for those who loves generators).</p><p>Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.</p><p>First of all, almost everything in a Studio-based application is an <a href="http://onstagejs.com/studio/docs/class/Actor.html">Actor</a>.</p><p>So if you&#39;re used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can&#39;t mess with the objects of another actor) increasing your code security, use <a href="https://github.com/baconjs/bacon.js">baconjs</a> streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and <a href="https://github.com/petkaantonov/bluebird">bluebird</a> A+ promises to help you with the callback hell.</p><p>The other important class on Studio is the <a href="http://onstagejs.com/studio/docs/class/Driver.html">Driver</a>.</p><p>A driver takes your endpoint input and parses it in a message for a certain actor.</p><p>And this is it... this is all you need to create <a href="http://reactivemanifesto.org">reactive</a> applications.</p><h1 id="api">API</h1><p>The API documentation can be accessed on <a href="http://onstagejs.com/studio/docs/">Docs</a></p><h1 id="examples">Examples</h1><p>Follow the link to see all available <a href="https://github.com/onstagejs/studio/tree/master/examples">examples</a></p><p>Studio works with any web framework.</p><p>Here i`m going to put just a basic hello world with express, on <a href="https://github.com/onstagejs/studio/tree/master/examples">examples</a> folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
+Hello World with Express, Restify , Koa or Hapi :</p><pre><code class="lang-js">var express = require(&#39;express&#39;);
 var Studio = require(&#39;studio&#39;); //require Studio namespace
 var app = express(); // create an express app
 //The first thing we have to do is create a driver to listen to the request
@@ -105,17 +111,81 @@ var hello = new Studio.Actor({
     /*An actor can communicate to others using the &#39;send&#39; method as
         this.send(&#39;otherActor&#39;,{foo:&#39;bar&#39;});
     The &#39;send&#39; message of an actor also returns a promise, so you can return it or use
-    then/catch to deal with the message
+    then/catch to deal with the message. Also you can throw an exception here in case of fail
     */
         return &#39;Hello World!!!&#39;;
     }
 });
 app.listen(3000);// Listen on port 3000
-</code></pre><p>On examples folder you can learn how to deal with errors, how to buffer or filter messages and much more.</p><h1 id="pro-tips">Pro tips</h1>
+</code></pre><p>On examples folder you can learn how to deal with errors, how to buffer or filter messages and much more.</p><h1 id="filters">Filters</h1><p>Validation and filters are a common use for your actors, so the Studio already make it as a built-in resource. Any actor can have a &quot;filter&quot; function to handle this. As any other action on Studio, it already deals with async or sync results automatically.</p><pre><code class="lang-js">new Studio.Actor({
+  id: &#39;helloActorFiltered&#39;,
+  process: function(body, headers, sender, receiver) {
+    console.log(&#39;Received message to actor = &#39; + userActor.id);
+    return &#39;Hello&#39;;
+  },
+  /* Let&#39;s say you have a rule where the body needs to be greater than 0.
+     You could implement this logic on userActor &#39;process&#39;
+     function, but a better approach would be to keep your filter logic away from
+     your business logic code. So all actors have the &#39;filter&#39; method,
+     as process, this method can return any sync value or a promise, on this example we returns
+     a boolean value.
+     A message pass through the filter when:
+      - it returns true or returns any truthy value
+      - it resolves a promise with true or any truthy value
+      A message is rejected by the filter when:
+       - it returns false or returns any falsy value
+       - it resolves a promise with false or returns any falsy value
+       - it throws an exception
+       - it rejects a promise
+  */
+  filter: function(body, headers, sender, receiver) {
+    return body&gt;0; // As said before, you can also return a promise for async
+  }
+});
+</code></pre><p>One important thing, you can also use to filter based on headers or on the sender, so its possible to use it to keep your actor private to your module (you just have to keep an namespace on all your modules actor id, &#39;myModule_myActor&#39; for instance, and check the sender for it).</p><h1 id="streams">Streams</h1><p>As said before Studio uses Baconjs so you can use it to add any kind of transformation supported by Baconjs (like, buffer, map, throttling...). And its really easy to use it (you can see examples of buffer on examples folder, using any other transformation follows the same pattern)</p><pre><code class="lang-js">//Here we apply a map transformation
+myActor.addTransformation(function(stream) {
+  return stream.map(function(message) {
+    message.body = &#39;HELLO&#39;;
+    return message;
+  });
+});
+</code></pre>
+<h1 id="timeouts">Timeouts</h1><p>Studio also supports timeouts and is really easy to use.
+When a actor sends a message to another actor you just have to do:</p><pre><code class="lang-js">senderActor.send(&#39;receiverActorId&#39;,{foo:&#39;bar&#39;});
+</code></pre><p>To add a timeout to the message all you have to do is:</p><pre><code class="lang-js">var timeout = 1000;//1000 ms or 1 seg
+senderActor.sendWithTimeout(timeout,&#39;receiverActorId&#39;,{foo:&#39;bar&#39;});
+`
+</code></pre><p>And if your message is not processed in &lt;<timeout>&gt; milisseconds the promise is going to be cancelled and fail.</p><h1 id="generators">Generators</h1><p>If you use generators to control your system flow, you can also use Studio to it, and its incredibly simple the whole code can be seen in koa examples:</p><pre><code class="lang-js"> new Studio.Actor({
+  id: &#39;chainActorCo&#39;,
+  initialize:function(opt){
+    //Wrap process function using co library, this way we can use yield and write cleaner code with generators
+    this.process = co.wrap(opt.process);
+  },
+  //On this case we define process function as a generator, so we can use yield keyword
+  process: function*(body, headers, sender, receiver) {
+    var messageToChainActor1 = &#39;actorCo -&gt; &#39;;
+    console.log(&#39;Received message to actor = &#39; + chainActorCo.id);
+    /*
+      As you can see the called actor (chainActor1) don&#39;t need any changes, so we can
+      communicate to actors using co or regular (non-co) actors without any changes, i.e.
+      we dont have to worry about the implementation of other actors, you can use Co, or any
+      generators/promise flow-control lib without any changes on your regular actors
+    */
+    return yield this.send(&#39;chainActor1&#39;, messageToChainActor1);
+  }
+});
+</code></pre>
+<h1 id="plugins">Plugins</h1><p>Studio also makes easy to add plugin to enhance the usage. Plugins can listen to actors or drivers creation and destruction and also intercept all messages sent. By now we only have the <a href="https://github.com/onstagejs/studio-timer">studio-timer plugin</a>, this plugin calculate the time elapsed in all send messages. We also plan to implement a automatic discovery plugin, so, soon you will be able to deploy and redeploy your actor in multiple instances and keep the communication working with ZERO configuration.</p><h1 id="zero-downtime-reload">Zero downtime reload</h1><p>Studio can listen to modification on your actors and reload it whenever anything changes, without the need to stop the application. By deafult, this feature is disabled and you have to enable it for each of your actors separetely. To do this just add a property &lt;<watchPath:__filename>&gt; on your actor on creation</p><pre><code class="lang-js">new Studio.Actor({
+  id:&#39;id&#39;,
+  watchPath:__filename,
+  process:function(){}
+});
+</code></pre>
+<h1 id="pro-tips">Pro tips</h1>
 <ul>
-<li>The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this <a href="https://blog.domenic.me/youre-missing-the-point-of-promises/">blog</a> have a incredible explanation of what A+ promises means and it saves you from callback hell</li>
-<li>Studio uses <a href="https://github.com/baconjs/bacon.js">Baconjs</a> streams to deliver messages, so use it, to filter , map and apply different transformations to your messages. Baconjs is a powerful tool to keep your code clean, you use it to keep your validations and non-functional requisites away from your actor process function. This way your actor will be more easy to read, mantainable and testable.</li>
-<li>All your actor must be <a href="http://en.wikipedia.org/wiki/Idempotence">indempotent</a> , Studio helps you to achieve this delivering to each actor a copy of the original message. Stop keep states on your code.</li>
+<li>The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this <a href="https://blog.domenic.me/youre-missing-the-point-of-promises/">blog</a> have a incredible explanation of what A+ promises means and how it saves you from callback hell</li>
+<li>Studio uses <a href="https://github.com/baconjs/bacon.js">Baconjs</a> streams to deliver messages, so use it, to filter , map,buffer and apply different transformations to your messages. Baconjs is a powerful tool to keep your code clean, you use it to keep your validations and non-functional requisites away from your actor process function. This way your actor will be more easy to read, mantainable and testable.</li>
+<li>All your actor must be <a href="http://en.wikipedia.org/wiki/Idempotence">idempotent</a> , Studio helps you to achieve this delivering to each actor a copy of the original message. Stop keep states on your code.</li>
 <li>When dealing with stream transformation of an actor keep in mind you&#39;re dealing with (a copy of) raw message, the ray message have sender, receiver,body,headers and callback attributes, if you decide to filter a message you need to call the callback function manually to give to the blocked sender a response, the same applies for buffer.</li>
 </ul>
 <h1 id="dependencies">Dependencies</h1><p>Studio depends on:</p><ul>
@@ -141,7 +211,7 @@ THE SOFTWARE.</p>
       </div>
     </div>
     <div id='footer'>
-  August 08, 15 14:10:02 by
+  August 08, 15 14:27:18 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
