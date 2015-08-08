@@ -29,8 +29,8 @@
   },
   "main": "./compiled/core/studio.js",
   "dependencies": {
-    "baconjs": "0.7.22",
-    "bluebird": "2.9.6",
+    "baconjs": "0.7.70",
+    "bluebird": "2.9.34",
     "csextends": "1.0.3"
   },
   "scripts": {
@@ -40,6 +40,7 @@
   "devDependencies": {
     "co": "^4.5.1",
     "coffee-script": "1.8.0",
+    "express": "^4.13.3",
     "grunt": "0.4.x",
     "grunt-browserify": "3.1.0",
     "grunt-cli": "0.1.13",
