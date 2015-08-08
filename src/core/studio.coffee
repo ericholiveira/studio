@@ -16,6 +16,6 @@ Studio={
         onCreateDriver:(listener)-> require('./util/listeners').addOnCreateDriver(listener)
         onDestroyDriver:(listener)-> require('./util/listeners').addOnDestroyDriver(listener)
       }
-    })
+    },Studio)
 }
 module.exports=Studio
