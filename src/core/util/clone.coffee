@@ -1,3 +1,4 @@
+#Clones message
 clone = (obj) ->
   if not obj? or typeof obj isnt 'object'
     return obj

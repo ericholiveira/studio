@@ -25,5 +25,6 @@ class Driver extends BaseClass
     )
   # Empty initializer
   initialize:()->
+  #Destroy driver
   destroy :()->listeners.driverDestroyed(@)
 module.exports = Driver

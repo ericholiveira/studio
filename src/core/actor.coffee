@@ -7,7 +7,7 @@ ArrayUtil = require('./util/arrayUtil')
 fs = require('fs')
 StudioStream = require('./util/studioStream')
 listeners = require('./util/listeners')
-
+#private __doProcess
 __doProcess=(self,message) ->
   {sender,body,receiver,callback,headers} = message
   try

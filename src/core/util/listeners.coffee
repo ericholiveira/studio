@@ -1,4 +1,4 @@
-
+#call listeners for plugins
 callListeners = (listeners,target)->
   listener(target) for listener in listeners
 

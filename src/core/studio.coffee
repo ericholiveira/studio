@@ -5,6 +5,7 @@ Studio={
   Driver :require('./driver'),
   Promise:require('bluebird'),
   Bacon:require('baconjs'),
+  #Plugin
   use : (plugin)->
     plugin({
       interceptSend:(funk)->
