@@ -25,41 +25,114 @@
     &raquo;
     <span class='title'>util</span>
     &raquo;
-    <span class='title'>baseClass.coffee</span>
+    <span class='title'>listeners.coffee</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         File:
-        baseClass.coffee
+        listeners.coffee
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
           <td>src&#47;core&#47;util</td>
         </tr>
-        <tr>
-          <td>
-            Classes:
-          </td>
-          <td>
-            <a href='../../../../class/BaseClass.html'>
-              BaseClass
-            </a>
-          </td>
-        </tr>
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
+  <dt id='onCreateActorListeners-variable'>
+    onCreateActorListeners
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
+  <dt id='onDestroyActorListeners-variable'>
+    onDestroyActorListeners
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
+  <dt id='onCreateDriverListeners-variable'>
+    onCreateDriverListeners
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
+  <dt id='onDestroyDriverListeners-variable'>
+    onDestroyDriverListeners
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    
+  </dd>
   <dt id='module.exports-variable'>
     module.exports
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>BaseClass</code></pre>
+    <pre><code class='coffeescript'>{
+  addOnCreateActor: function(listener) {
+    return onCreateActorListeners.push(listener);
+  },
+  addOnDestroyActor: function(listener) {
+    return onDestroyActorListeners.push(listener);
+  },
+  addOnCreateDriver: function(listener) {
+    return onCreateDriverListeners.push(listener);
+  },
+  addOnDestroyDriver: function(listener) {
+    return onDestroyDriverListeners.push(listener);
+  },
+  actorCreated: function(actor) {
+    return callListeners(onCreateActorListeners, actor);
+  },
+  actorDestroyed: function(actor) {
+    return callListeners(onDestroyActorListeners, actor);
+  },
+  driverCreated: function(driver) {
+    return callListeners(onCreateDriverListeners, driver);
+  },
+  driverDestroyed: function(driver) {
+    return callListeners(onDestroyDriverListeners, driver);
+  }
+}</code></pre>
     
   </dd>
 </dl>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#callListeners-'>
+        ~
+(void)
+<b>callListeners</b><span>(listeners, target)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='callListeners-'>
+      ~
+(void)
+<b>callListeners</b><span>(listeners, target)</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
     </div>
     <div id='footer'>
   August 08, 15 14:10:02 by

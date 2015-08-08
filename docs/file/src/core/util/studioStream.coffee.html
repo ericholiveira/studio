@@ -25,63 +25,48 @@
     &raquo;
     <span class='title'>util</span>
     &raquo;
-    <span class='title'>timer.coffee</span>
+    <span class='title'>studioStream.coffee</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         File:
-        timer.coffee
+        studioStream.coffee
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
           <td>src&#47;core&#47;util</td>
         </tr>
+        <tr>
+          <td>
+            Classes:
+          </td>
+          <td>
+            <a href='../../../../class/StudioStream.html'>
+              StudioStream
+            </a>
+          </td>
+        </tr>
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
-  <dt id='Timer-variable'>
-    Timer
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-
-  &#47;*
-  Enqueue a function (uses proccess.nextTick on node and setTimeout on browsers)
-  @param [Function] funktion the enqueued function
-   *&#47;
-  enqueue: function(funktion) {
-    if ((typeof proccess !== &quot;undefined&quot; &amp;&amp; proccess !== null ? proccess.nextTick : void 0) != null) {
-      return proccess.nextTick(funktion);
-    } else {
-      return setTimeout(funktion, 0);
-    }
-  }
-}</code></pre>
-    <div class='docstring'>
-  <p>Cross-enviroment enqueue</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
   <dt id='module.exports-variable'>
     module.exports
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>Timer</code></pre>
+    <pre><code class='coffeescript'>StudioStream</code></pre>
     
   </dd>
 </dl>
     </div>
     <div id='footer'>
-  February 13, 15 21:59:48 by
+  August 08, 15 14:10:02 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.9
+  2.0.11
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

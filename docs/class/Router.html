@@ -43,14 +43,26 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#createOrGetRoute-dynamic'>
+      <a href='#createRoute-dynamic'>
         #
 (void)
-<b>createOrGetRoute</b><span>(id)</span>
+<b>createRoute</b><span>(id, watchPath)</span>
       </a>
     </span>
     <span class='desc'>
-      Creates a route, if it already exists return this route 
+      Creates a route, if it already exists throws exception 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#deleteRoute-dynamic'>
+        #
+(void)
+<b>deleteRoute</b><span>(id)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Removes a route (BE CAREFUL) 
     </span>
   </li>
   <li>
@@ -70,7 +82,7 @@
       <a href='#send-dynamic'>
         #
 (void)
-<b>send</b><span>(sender, receiver, message, headers = {})</span>
+<b>send</b><span>(sender, receiver, message, headers)</span>
       </a>
     </span>
     <span class='desc'>
@@ -109,20 +121,53 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='createOrGetRoute-dynamic'>
+    <p class='signature' id='createRoute-dynamic'>
       #
 (void)
-<b>createOrGetRoute</b><span>(id)</span>
+<b>createRoute</b><span>(id, watchPath)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Creates a route, if it already exists return this route</p>
+  <p>Creates a route, if it already exists throws exception</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       How create or get a route
     </h4>
-    <pre><code class='coffeescript'>router.createOrGetRoute(&#39;myActor&#39;)</code></pre>
+    <pre><code class='coffeescript'>router.createRoute(&#39;myActor&#39;)</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the route identification </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='deleteRoute-dynamic'>
+      #
+(void)
+<b>deleteRoute</b><span>(id)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Removes a route (BE CAREFUL)</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to delete a route
+    </h4>
+    <pre><code class='coffeescript'>router.deleteRoute(&#39;myActor&#39;)</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -178,7 +223,7 @@
     <p class='signature' id='send-dynamic'>
       #
 (void)
-<b>send</b><span>(sender, receiver, message, headers = {})</span>
+<b>send</b><span>(sender, receiver, message, headers)</span>
       <br>
     </p>
     <div class='docstring'>
@@ -261,11 +306,11 @@
 </div>
     </div>
     <div id='footer'>
-  February 13, 15 21:59:48 by
+  August 08, 15 14:10:02 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.9
+  2.0.11
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

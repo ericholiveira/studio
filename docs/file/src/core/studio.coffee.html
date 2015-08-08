@@ -39,16 +39,8 @@
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
-  <dt id='oldStudio-variable'>
-    oldStudio
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>_global</code></pre>
-    
-  </dd>
-  <dt id='_global.Studio-variable'>
-    _global.Studio
+  <dt id='Studio-variable'>
+    Studio
     =
   </dt>
   <dd>
@@ -58,29 +50,48 @@
   Driver: require(&#39;.&#47;driver&#39;),
   Promise: require(&#39;bluebird&#39;),
   Bacon: require(&#39;baconjs&#39;),
-
-  &#47;*
-  Change the global Studio to the previous to avoid conflicts
-   *&#47;
-  noConflict: function() {
-    if (typeof oldStudio !== &#39;undefined&#39;) {
-      _global.Studio = oldStudio;
-    } else {
-      delete _global.Studio;
-    }
-    return this;
+  use: function(plugin) {
+    return plugin({
+      interceptSend: function(funk) {
+        var _send;
+        _send = Studio.router.send;
+        return Studio.router.send = funk(_send.bind(Studio.router));
+      },
+      listenTo: {
+        onCreateActor: function(listener) {
+          return require(&#39;.&#47;util&#47;listeners&#39;).addOnCreateActor(listener);
+        },
+        onDestroyActor: function(listener) {
+          return require(&#39;.&#47;util&#47;listeners&#39;).addOnDestroyActor(listener);
+        },
+        onCreateDriver: function(listener) {
+          return require(&#39;.&#47;util&#47;listeners&#39;).addOnCreateDriver(listener);
+        },
+        onDestroyDriver: function(listener) {
+          return require(&#39;.&#47;util&#47;listeners&#39;).addOnDestroyDriver(listener);
+        }
+      }
+    }, Studio);
   }
 }</code></pre>
+    
+  </dd>
+  <dt id='module.exports-variable'>
+    module.exports
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>Studio</code></pre>
     
   </dd>
 </dl>
     </div>
     <div id='footer'>
-  February 13, 15 21:59:48 by
+  August 08, 15 14:10:02 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.9
+  2.0.11
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

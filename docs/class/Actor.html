@@ -49,6 +49,17 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#destroy-dynamic'>
+        #
+(void)
+<b>destroy</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#_doProcess-dynamic'>
         #
 (void)
@@ -82,7 +93,7 @@
       </a>
     </span>
     <span class='desc'>
-      Sends message to an actor 
+      Sends message to an actor and returns a promise 
     </span>
   </li>
   <li>
@@ -95,6 +106,18 @@
     </span>
     <span class='desc'>
       Returns a function with receiver and headers binded 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#sendWithTimeout-dynamic'>
+        #
+(void)
+<b>sendWithTimeout</b><span>(timeout, receiver, message, headers = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sends message to an actor with a timeout (in milliseconds). 
     </span>
   </li>
   <li>
@@ -143,6 +166,18 @@
     </span>
     <span class='desc'>
       Returns the actor id 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#initialize-dynamic'>
+        #
+(void)
+<b>initialize</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Empty initializer 
     </span>
   </li>
 </ul>
@@ -241,6 +276,15 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
+    <p class='signature' id='destroy-dynamic'>
+      #
+(void)
+<b>destroy</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
     <p class='signature' id='_doProcess-dynamic'>
       #
 (void)
@@ -300,7 +344,7 @@ Takes a stream message and open it for the actor process function format. And cr
       <br>
     </p>
     <div class='docstring'>
-  <p>Sends message to an actor</p>
+  <p>Sends message to an actor and returns a promise</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -390,6 +434,77 @@ Takes a stream message and open it for the actor process function format. And cr
       </span>
       &mdash;
       <span class='desc'>the receiver id </span>
+    </li>
+    <li>
+      <span class='name'>headers</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>headers for the message (optional) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='sendWithTimeout-dynamic'>
+      #
+(void)
+<b>sendWithTimeout</b><span>(timeout, receiver, message, headers = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Sends message to an actor with a timeout (in milliseconds). When the timeout expires the  returning promise is rejected</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      How to send a string message with 100 milliseconds of timeout
+    </h4>
+    <pre><code class='coffeescript'>myActor.sendWithTimeout(100,&#39;otherActor&#39;, &#39;myMessage&#39;)</code></pre>
+    <h4>
+      How to send an object message with 100 milliseconds of timeout
+    </h4>
+    <pre><code class='coffeescript'>myActor.sendWithTimeout(100,&#39;otherActor&#39;, {hello:&#39;hello&#39;,
+                               obj:{
+                                 count:1
+                               }
+                             })</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>timeout</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the message timeout in milliseconds </span>
+    </li>
+    <li>
+      <span class='name'>receiver</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the receiver id </span>
+    </li>
+    <li>
+      <span class='name'>message</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the content of the message (it could be any js object) </span>
     </li>
     <li>
       <span class='name'>headers</span>
@@ -497,14 +612,27 @@ myActor.mapRoute();</code></pre>
 <div class='tags'>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='initialize-dynamic'>
+      #
+(void)
+<b>initialize</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Empty initializer</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
 </div>
     </div>
     <div id='footer'>
-  February 13, 15 21:59:48 by
+  August 08, 15 14:10:02 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.9
+  2.0.11
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;
