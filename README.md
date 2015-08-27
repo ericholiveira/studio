@@ -146,6 +146,27 @@ app.listen(3000);// Listen on port 3000
 
 On examples folder you can learn how to deal with errors, how to buffer or filter messages and much more.
 
+If you think theres too much boilerplate to create an actor, you can define an actor using 3 different approaches. The 3 actors described above are the same:
+
+```js
+new Studio.Actor({
+	id: 'helloActor',
+	process: function (body, headers, sender, receiver) {
+		return 'Hello World!!!';
+	}
+});
+```
+```js
+Studio.actorFactory({
+	helloActor: function (body, headers, sender, receiver) {
+		return 'Hello World!!!';
+	}
+});
+```
+```js
+Studio.actorFactory(function helloActor (body, headers, sender, receiver) {return 'Hello World!!!';});
+```
+
 Filters
 ========
 
