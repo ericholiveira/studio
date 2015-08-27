@@ -1,8 +1,9 @@
-# Deep clone an object (thx coffeescript cookbook)
-# @param [Object] obj the object to be cloned
+#Clones message
 clone = (obj) ->
   if not obj? or typeof obj isnt 'object'
     return obj
+  if typeof obj.clone is 'function'
+    return obj.clone()
   if obj instanceof Date
     return new Date(obj.getTime())
   if obj instanceof RegExp
@@ -12,6 +13,13 @@ clone = (obj) ->
     flags += 'm' if obj.multiline?
     flags += 'y' if obj.sticky?
     return new RegExp(obj.source, flags)
+  if obj instanceof Buffer
+    newInstance = new Buffer(obj.length)
+    obj.copy(newInstance)
+    return newInstance
+  if obj instanceof Array
+    newInstance = (clone _obj for _obj in obj)
+    return newInstance
   newInstance = new obj.constructor()
   for key of obj
     newInstance[key] = clone obj[key]

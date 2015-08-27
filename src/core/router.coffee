@@ -1,22 +1,28 @@
-Timer = require('./util/timer')
-Promise = require('bluebird')
+_Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
+StudioStream = require('./util/studioStream')
 
 _routes ={}
 # Base class for Router (is singleton, should not be reimplemented nor reinstantiated, and probably not direct accessed).
 class Router
   # Constructs a new Router
   constructor: () ->
-  # Creates a route, if it already exists return this route
+  # Creates a route, if it already exists throws exception
   # @param [String] id the route identification
   # @example How create or get a route
-  #   router.createOrGetRoute('myActor')
-  createOrGetRoute: (id) ->
-    if not _routes[id]
-      stream = new Bacon.Bus()
-      _routes[id] = {stream:stream}
+  #   router.createRoute('myActor')
+  createRoute: (id,watchPath) ->
+    if _routes[id]
+      throw new Error('Route already exists')
+    stream = new StudioStream()
+    _routes[id] = {stream:stream}
     _routes[id].stream
+  # Removes a route (BE CAREFUL)
+  # @param [String] id the route identification
+  # @example How to delete a route
+  #   router.deleteRoute('myActor')
+  deleteRoute:(id)-> delete _routes[id]
   # Returns a route
   # @param [String] id the route identification
   # @example How to get a route
@@ -35,8 +41,8 @@ class Router
   #                                    count:1
   #                                  }
   #                                })
-  send: (sender,receiver,message,headers={})->
-    new Promise((resolve,reject)->
+  send: (sender,receiver,message,headers)->
+    new _Promise((resolve,reject)->
       route = _routes[receiver]
       _message = {
         sender:sender
@@ -46,9 +52,7 @@ class Router
         callback:(err,result)-> if err then reject(err) else resolve(result)
         }
       if route?
-        Timer.enqueue(()->
-          route.stream.push(_message)
-        )
+        route.stream.push(clone(_message))
       else
         reject(new Error("The route #{receiver} doesn't exists"))
       )

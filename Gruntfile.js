@@ -13,89 +13,93 @@ grunt.loadNpmTasks('grunt-jasmine-node-coverage');
 grunt.loadNpmTasks('grunt-exec');
 
 grunt.initConfig({
-  coffeelint: {
-    app: ['src/**/*.coffee', '*.coffee'],
-    options: {
-      'max_line_length': {
-        level: 'ignore'
-      }
-    }
-  },
-  watch: {
-    scripts: {
-      files: ['src/**/*.{coffee,js}', '*.{coffee,js}',
-        'tests/core/*.{coffee,js}'
-      ],
-      tasks: ['all'],
-      options: {
-        spawn: false
-      }
-    }
-  },
-  jshint: {
-    all: ['src/**/*.js', '*.js', 'tests/core/*.js', 'examples/*/*.js']
-  },
-  coffee: {
-    multiple: {
-      options: {
-        sourceMap: true,
-        sourceMapDir: 'compiled/maps/'
-      },
-      expand: true,
-      cwd: 'src',
-      src: '**/*.coffee',
-      dest: 'compiled/',
-      ext: '.js'
-    }
-  },
-  copy: {
-    js: {
-      expand: true,
-      cwd: 'src/',
-      src: '**/*.js',
-      dest: 'compiled/'
-    }
-  },
-  codo: {
-    all: {
-      src: ['src/**/*.coffee'],
-      dest: 'docs/'
-    }
-  },
-  jasmine: {
-    src: ['tests/target/studio-with-dependencies-with-tests.js']
-  },
-  browserify: {
-    dist: {
-      files: {
-        'dist/studio-with-dependencies.js': ['compiled/core/studio.js']
-      }
-    },
-    testCore: {
-      files: {
-        'tests/target/studio-with-dependencies-with-tests.js': [
-          'tests/core/*.js'
-        ]
-      }
-    }
-  },
-  release: {
-    options: {
-      bump: true,
-      npm: true,
-      npmTag: "<%= version %>"
-    }
-  },
-  exec: {
-    express: 'node examples/hello-express/index.js',
-    hapi: 'node examples/hello-hapi/index.js',
-    restify: 'node examples/hello-restify/index.js'
-  }
+	coffeelint: {
+		app: ['src/**/*.coffee', '*.coffee'],
+		options: {
+			'max_line_length': {
+				level: 'ignore'
+			}
+		}
+	},
+	watch: {
+		scripts: {
+			files: ['src/**/*.{coffee,js}', '*.{coffee,js}',
+				'tests/core/*.{coffee,js}'
+			],
+			tasks: ['all'],
+			options: {
+				spawn: false
+			}
+		}
+	},
+	jshint: {
+		all: ['src/**/*.js', '*.js', 'tests/core/*.js', 'examples/*/*.js'],
+		options: {
+			esnext: true
+		}
+	},
+	coffee: {
+		multiple: {
+			options: {
+				sourceMap: true,
+				sourceMapDir: 'compiled/maps/'
+			},
+			expand: true,
+			cwd: 'src',
+			src: '**/*.coffee',
+			dest: 'compiled/',
+			ext: '.js'
+		}
+	},
+	copy: {
+		js: {
+			expand: true,
+			cwd: 'src/',
+			src: '**/*.js',
+			dest: 'compiled/'
+		}
+	},
+	codo: {
+		all: {
+			src: ['src/**/*.coffee'],
+			dest: 'docs/'
+		}
+	},
+	jasmine: {
+		src: ['tests/target/studio-with-dependencies-with-tests.js']
+	},
+	browserify: {
+		dist: {
+			files: {
+				'dist/studio-with-dependencies.js': ['compiled/core/studio.js']
+			}
+		},
+		testCore: {
+			files: {
+				'tests/target/studio-with-dependencies-with-tests.js': [
+					'tests/core/*.js'
+				]
+			}
+		}
+	},
+	release: {
+		options: {
+			bump: true,
+			npm: true,
+			npmTag: "<%= version %>"
+		}
+	},
+	exec: {
+		express: 'node --debug examples/hello-express/index.js',
+		hapi: 'node --debug examples/hello-hapi/index.js',
+		restify: 'node --debug examples/hello-restify/index.js',
+		koa: 'node --harmony-generators --debug examples/hello-koa/index.js',
+	}
 
 });
 grunt.registerTask("test", ["jasmine"]);
 grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist",
-  "browserify:testCore", "test"
+	"browserify:testCore", "test"
 ]);
 grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
 grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
@@ -106,3 +110,4 @@ grunt.registerTask("prod", ["all", "browserify:dist", "release"]);
 grunt.registerTask("example:express", 'exec:express');
 grunt.registerTask("example:hapi", 'exec:hapi');
 grunt.registerTask("example:restify", 'exec:restify');
+grunt.registerTask("example:koa", 'exec:koa');

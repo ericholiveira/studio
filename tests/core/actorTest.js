@@ -98,8 +98,35 @@ describe("An actor", function() {
     var headers = {
       header: 1
     };
-    sender.send(RECEIVER_OBJECT_WITH_HEADER_ID, 'hello', headers,
-      sender).then(
+    sender.send(RECEIVER_OBJECT_WITH_HEADER_ID, 'hello', headers).then(
+      function(result) {
+        expect(result.header).toBe(headers.header);
+        expect(sender).toBe(sender);
+        done();
+      });
+  });
+  it("should be able bind send function without headers", function(done) {
+    sender.bindSend(RECEIVER_OBJECT_ID)('hello').then(function(result) {
+      expect(result).toBe(RECEIVER_OBJECT_RESULT);
+      done();
+    });
+  });
+  it("should be able to bind send with headers", function(done) {
+    var headers = {
+      header: 1
+    };
+    sender.bindSend(RECEIVER_OBJECT_WITH_HEADER_ID,headers)('hello',{}).then(
+      function(result) {
+        expect(result.header).toBe(headers.header);
+        expect(sender).toBe(sender);
+        done();
+      });
+  });
+  it("should be able to change binded header", function(done) {
+    var headers = {
+      header: 1
+    };
+    sender.bindSend(RECEIVER_OBJECT_WITH_HEADER_ID).withHeader(headers)('hello',{}).then(
       function(result) {
         expect(result.header).toBe(headers.header);
         expect(sender).toBe(sender);

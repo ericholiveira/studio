@@ -1,8 +1,6 @@
 # Namespace
-_global = @ or {}
-oldStudio = _global.Studio
 Actor = require('./actor')
-module.exports=_global.Studio={
+Studio={
   router:require('./router'),
   Actor :require('./actor'),
   Driver :require('./driver'),
@@ -25,11 +23,18 @@ module.exports=_global.Studio={
       act.id = id
       act.process = options[id]
     new clazz(act)
-  # Change the global Studio to the previous to avoid conflicts
-  noConflict:()->
-    if typeof oldStudio!='undefined'
-      _global.Studio=oldStudio
-    else
-      delete _global.Studio
-    return @
+  #Plugin
+  use : (plugin)->
+    plugin({
+      interceptSend:(funk)->
+        _send = Studio.router.send
+        Studio.router.send = funk(_send.bind(Studio.router))
+      listenTo:{
+        onCreateActor:(listener)-> require('./util/listeners').addOnCreateActor(listener)
+        onDestroyActor:(listener)-> require('./util/listeners').addOnDestroyActor(listener)
+        onCreateDriver:(listener)-> require('./util/listeners').addOnCreateDriver(listener)
+        onDestroyDriver:(listener)-> require('./util/listeners').addOnDestroyDriver(listener)
+      }
+    },Studio)
 }
+module.exports=Studio
