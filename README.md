@@ -1,7 +1,7 @@
 Studio.js
 ========
 
-<img src="http://onstagejs.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
+<img src="http://ericholiveira.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
 Micro-services using actors model framework for JavaScript.
 
