@@ -14,12 +14,12 @@ Studio isn't only a library, it's a framework. It's really important to learn ho
 I would love to receive feedback.Let me know if you've used it. What worked and what is wrong. Contribute and spread the word.
 
 
-[![Build Status](https://travis-ci.org/onstagejs/studio.svg?branch=master)](https://travis-ci.org/onstagejs/studio)
+[![Build Status](https://travis-ci.org/ericholiveira/studio.svg?branch=master)](https://travis-ci.org/ericholiveira/studio)
 [![npm version](https://badge.fury.io/js/studio.svg)](http://badge.fury.io/js/studio)
-[![Dependency Status](https://david-dm.org/onstagejs/studio.svg)](https://david-dm.org/onstagejs/studio)
-[![devDependency Status](https://david-dm.org/onstagejs/studio/dev-status.svg)](https://david-dm.org/onstagejs/studio#info=devDependencies)
-[![Issue Stats](http://issuestats.com/github/onstagejs/studio/badge/issue?style=flat)](http://issuestats.com/github/onstagejs/studio)
-[![Issue Stats](http://issuestats.com/github/onstagejs/studio/badge/pr?style=flat)](http://issuestats.com/github/onstagejs/studio)
+[![Dependency Status](https://david-dm.org/ericholiveira/studio.svg)](https://david-dm.org/ericholiveira/studio)
+[![devDependency Status](https://david-dm.org/ericholiveira/studio/dev-status.svg)](https://david-dm.org/ericholiveira/studio#info=devDependencies)
+[![Issue Stats](http://issuestats.com/github/ericholiveira/studio/badge/issue?style=flat)](http://issuestats.com/github/ericholiveira/studio)
+[![Issue Stats](http://issuestats.com/github/ericholiveira/studio/badge/pr?style=flat)](http://issuestats.com/github/ericholiveira/studio)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onstagejs/studio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![NPM](https://nodei.co/npm/studio.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/studio/)
