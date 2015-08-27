@@ -310,11 +310,13 @@
 
 },{"./util/clone":7,"./util/timer":8,"baconjs":9,"bluebird":10}],4:[function(require,module,exports){
 (function() {
-  var oldStudio, _global;
+  var Actor, oldStudio, _global;
 
   _global = this || {};
 
   oldStudio = _global.Studio;
+
+  Actor = require('./actor');
 
   module.exports = _global.Studio = {
     router: require('./router'),
@@ -322,6 +324,22 @@
     Driver: require('./driver'),
     Promise: require('bluebird'),
     Bacon: require('baconjs'),
+    actorFactory: function(options, clazz) {
+      var act, id;
+      if (clazz == null) {
+        clazz = Actor;
+      }
+      act = {};
+      if (typeof options === 'function' && options.name) {
+        act.id = options.name;
+        act.process = options;
+      } else {
+        id = Object.keys(options)[0];
+        act.id = id;
+        act.process = options[id];
+      }
+      return new clazz(act);
+    },
     noConflict: function() {
       if (typeof oldStudio !== 'undefined') {
         _global.Studio = oldStudio;
