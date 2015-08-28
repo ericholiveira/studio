@@ -379,9 +379,12 @@
 
 },{"./util/clone":7,"./util/studioStream":9,"baconjs":10,"bluebird":11}],4:[function(require,module,exports){
 (function() {
-  var Actor, Studio;
+  var Actor, Driver, Studio,
+    __slice = [].slice;
 
   Actor = require('./actor');
+
+  Driver = require('./driver');
 
   Studio = {
     router: require('./router'),
@@ -389,6 +392,30 @@
     Driver: require('./driver'),
     Promise: require('bluebird'),
     Bacon: require('baconjs'),
+    driverFactory: function(execute, clazz) {
+      var driver, driverFunction, _message;
+      if (clazz == null) {
+        clazz = Driver;
+      }
+      _message = {
+        value: null
+      };
+      driver = new clazz({
+        parser: function() {
+          return _message.value;
+        }
+      });
+      driverFunction = function() {
+        var args;
+        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return execute.apply(null, [function(message) {
+          _message.value = message;
+          return driver.send.apply(driver, args);
+        }].concat(__slice.call(args)));
+      };
+      driverFunction.driver = driver;
+      return driverFunction;
+    },
     actorFactory: function(options, clazz) {
       var act, id;
       if (clazz == null) {

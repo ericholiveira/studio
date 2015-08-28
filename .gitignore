@@ -7,3 +7,4 @@ docs/
 bin/
 coverage/
 compiled/
+.idea
