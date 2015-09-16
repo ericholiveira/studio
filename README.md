@@ -83,7 +83,7 @@ Follow the link to see all available [examples](https://github.com/onstagejs/stu
 Studio works with any web framework.
 
 Here i`m going to put just a basic hello world with express, on [examples](https://github.com/onstagejs/studio/tree/master/examples) folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
-Hello World with Express, Restify , Koa or Hapi :
+with Express, Restify , Koa or Hapi :
 ```js
 var express = require('express');
 var Studio = require('studio'); //require Studio namespace
