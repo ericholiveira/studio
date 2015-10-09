@@ -52,8 +52,8 @@ class Actor extends BaseClass
               else
                 throw exceptions.FilteredMessageException(receiver)
               ).catch((error)->
-              message.callback(error)
-              false
+                message.callback(error)
+                false
               )).filter((message)->message!=false)
           else
             if result
