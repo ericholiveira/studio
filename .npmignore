@@ -13,3 +13,5 @@ examples/
 .travis.yml
 .gitignore
 .idea
+CHANGELOG.md
+changelog.sh
