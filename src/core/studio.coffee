@@ -7,6 +7,7 @@ Studio= {
   Driver: require('./driver'),
   Promise: require('bluebird'),
   Bacon: require('baconjs'),
+  Exception: require('./exception'),
   # Constructs a new driver and automatically starts it
   # On the example with express, you can see that all you have to do is to wraps the message on the `to` function and deal with the promise result
   # (in this case, put the actor response on response body)

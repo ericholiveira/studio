@@ -11,6 +11,7 @@ class Driver extends BaseClass
   # @option options [Function] parser a function who receives an input and parse it to the format {sender:sender , receiver: receiver ,message:message}
   # @option options [Function] initialize function called after driver creation
   constructor: (options) ->
+    return new Driver(options) unless @ instanceof Driver
     @[property] = options[property] for property of options
     throw new Error('You must provide a parser function') if not @parser
     @initialize?(options)

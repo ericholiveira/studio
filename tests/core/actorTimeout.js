@@ -38,7 +38,7 @@ describe("An actor process function", function() {
   });
   it("should fail after timeout", function(done) {
     sender.sendWithTimeout(TIMEOUT,RECEIVER_CANCEL, message).catch(function(error) {
-      expect(error.message).toBe('Timeout');
+      expect(error instanceof Studio.Exception.TimeoutException).toBe(true);
       done();
     });
   });

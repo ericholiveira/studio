@@ -2,6 +2,7 @@ _Promise = require('bluebird')
 Bacon = require('baconjs')
 clone = require('./util/clone')
 StudioStream = require('./util/studioStream')
+exceptions = require('./exception')
 
 _routes ={}
 # Base class for Router (is singleton, should not be reimplemented nor reinstantiated, and probably not direct accessed).
@@ -13,8 +14,7 @@ class Router
   # @example How create or get a route
   #   router.createRoute('myActor')
   createRoute: (id,watchPath) ->
-    if _routes[id]
-      throw new Error('Route already exists')
+    throw exceptions.RouteAlreadyExistsException(id) if _routes[id]
     stream = new StudioStream()
     _routes[id] = {stream:stream}
     _routes[id].stream
@@ -54,7 +54,7 @@ class Router
       if route?
         route.stream.push(clone(_message))
       else
-        reject(new Error("The route #{receiver} doesn't exists"))
+        reject(exceptions.RouteNotFoundException(receiver))
       )
   # Retrieves all defined routes for this router
   getAllRoutes:()->

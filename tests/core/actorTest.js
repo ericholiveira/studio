@@ -2,6 +2,7 @@ Studio = require('../../compiled/core/studio');
 
 describe("An actor", function() {
   var SENDER_ID = 'sender',
+    ACTOR_WITHOUT_NEW_ID = 'actorWithoutNew',
     RECEIVER_UNDEF_ID = 'undef',
     RECEIVER_BOOLEAN_ID = 'boolean',
     RECEIVER_BOOLEAN_RESULT = true,
@@ -110,6 +111,14 @@ describe("An actor", function() {
       expect(result).toBe(RECEIVER_OBJECT_RESULT);
       done();
     });
+  });
+  it("should be possible to instantiate an actor without the 'new' keyword", function() {
+    var actor = Studio.Actor({
+      id:ACTOR_WITHOUT_NEW_ID,
+      process:function(){}
+    });
+    expect(actor instanceof Studio.Actor).toBe(true);
+    expect(actor.id).toBe(ACTOR_WITHOUT_NEW_ID);
   });
   it("should be able to bind send with headers", function(done) {
     var headers = {

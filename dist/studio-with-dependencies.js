@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Actor, ArrayUtil, Bacon, BaseClass, StudioStream, fs, listeners, router, _Promise, __doProcess,
+  var Actor, ArrayUtil, Bacon, BaseClass, StudioStream, exceptions, fs, listeners, router, _Promise, __doProcess,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -16,6 +16,8 @@
   ArrayUtil = require('./util/arrayUtil');
 
   fs = require('fs');
+
+  exceptions = require('./exception');
 
   StudioStream = require('./util/studioStream');
 
@@ -38,6 +40,9 @@
     function Actor(options) {
       this._doProcess = __bind(this._doProcess, this);
       var property, watch, watcher;
+      if (!(this instanceof Actor)) {
+        return new Actor(options);
+      }
       for (property in options) {
         this[property] = options[property];
       }
@@ -61,7 +66,7 @@
                   if (result) {
                     return message;
                   } else {
-                    throw new Error('Filtered message');
+                    throw exceptions.FilteredMessageException(receiver);
                   }
                 })["catch"](function(error) {
                   message.callback(error);
@@ -73,7 +78,7 @@
                 if (result) {
                   return Bacon.once(message);
                 } else {
-                  message.callback(new Error('Filtered message'));
+                  message.callback(exceptions.FilteredMessageException(receiver));
                   return Bacon.never();
                 }
               }
@@ -151,13 +156,14 @@
     };
 
     Actor.prototype.sendWithTimeout = function(timeout, receiver, message, headers) {
-      var sendPromise;
+      var sendPromise, _id;
       if (headers == null) {
         headers = {};
       }
+      _id = this.id;
       sendPromise = this.send(receiver, message, headers).cancellable();
       setTimeout(function() {
-        return sendPromise.cancel(new Error('Timeout'));
+        return sendPromise.cancel(exceptions.TimeoutException(_id, receiver));
       }, timeout);
       return sendPromise;
     };
@@ -231,7 +237,7 @@
 
 //# sourceMappingURL=../maps/actor.js.map
 
-},{"./router":3,"./util/arrayUtil":5,"./util/baseClass":6,"./util/listeners":8,"./util/studioStream":9,"baconjs":10,"bluebird":11,"fs":13}],2:[function(require,module,exports){
+},{"./exception":3,"./router":4,"./util/arrayUtil":6,"./util/baseClass":7,"./util/listeners":9,"./util/studioStream":10,"baconjs":11,"bluebird":12,"fs":14}],2:[function(require,module,exports){
 (function() {
   var Bacon, BaseClass, Driver, listeners, router, _Promise,
     __hasProp = {}.hasOwnProperty,
@@ -253,6 +259,9 @@
 
     function Driver(options) {
       var property;
+      if (!(this instanceof Driver)) {
+        return new Driver(options);
+      }
       for (property in options) {
         this[property] = options[property];
       }
@@ -296,9 +305,100 @@
 
 //# sourceMappingURL=../maps/driver.js.map
 
-},{"./router":3,"./util/baseClass":6,"./util/listeners":8,"baconjs":10,"bluebird":11}],3:[function(require,module,exports){
+},{"./router":4,"./util/baseClass":7,"./util/listeners":9,"baconjs":11,"bluebird":12}],3:[function(require,module,exports){
 (function() {
-  var Bacon, Router, StudioStream, clone, _Promise, _routes;
+  var FilteredMessageException, RouteAlreadyExistsException, RouteNotFoundException, StudioException, TimeoutException,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  StudioException = (function(_super) {
+    __extends(StudioException, _super);
+
+    function StudioException(code, message) {
+      this.code = code;
+      this.message = message;
+    }
+
+    return StudioException;
+
+  })(Error);
+
+  RouteNotFoundException = (function(_super) {
+    __extends(RouteNotFoundException, _super);
+
+    function RouteNotFoundException(route) {
+      this.route = route;
+      if (!(this instanceof RouteNotFoundException)) {
+        return new RouteNotFoundException(this.route);
+      }
+      RouteNotFoundException.__super__.constructor.call(this, 'ROUTE_NOT_FOUND', "The route " + this.route + " doesnt exists");
+    }
+
+    return RouteNotFoundException;
+
+  })(StudioException);
+
+  RouteAlreadyExistsException = (function(_super) {
+    __extends(RouteAlreadyExistsException, _super);
+
+    function RouteAlreadyExistsException(route) {
+      this.route = route;
+      if (!(this instanceof RouteAlreadyExistsException)) {
+        return new RouteAlreadyExistsException(this.route);
+      }
+      RouteAlreadyExistsException.__super__.constructor.call(this, 'ROUTE_ALREADY_EXISTS', "The route " + this.route + " already exists");
+    }
+
+    return RouteAlreadyExistsException;
+
+  })(StudioException);
+
+  FilteredMessageException = (function(_super) {
+    __extends(FilteredMessageException, _super);
+
+    function FilteredMessageException(receiver) {
+      this.receiver = receiver;
+      if (!(this instanceof FilteredMessageException)) {
+        return new FilteredMessageException(this.receiver);
+      }
+      FilteredMessageException.__super__.constructor.call(this, 'FILTERED_MESSAGE', "" + this.receiver + " filtered a message");
+    }
+
+    return FilteredMessageException;
+
+  })(StudioException);
+
+  TimeoutException = (function(_super) {
+    __extends(TimeoutException, _super);
+
+    function TimeoutException(sender, receiver) {
+      this.sender = sender;
+      this.receiver = receiver;
+      if (!(this instanceof TimeoutException)) {
+        return new TimeoutException(this.sender, this.receiver);
+      }
+      TimeoutException.__super__.constructor.call(this, 'TIMEOUT', "Timeout from " + this.sender + " to " + this.receiver);
+    }
+
+    return TimeoutException;
+
+  })(StudioException);
+
+  module.exports = {
+    StudioException: StudioException,
+    RouteNotFoundException: RouteNotFoundException,
+    FilteredMessageException: FilteredMessageException,
+    TimeoutException: TimeoutException,
+    RouteAlreadyExistsException: RouteAlreadyExistsException
+  };
+
+}).call(this);
+
+//# sourceMappingURL=../../maps/index.js.map
+
+},{}],4:[function(require,module,exports){
+(function() {
+  var Bacon, Router, StudioStream, clone, exceptions, _Promise, _routes;
 
   _Promise = require('bluebird');
 
@@ -308,6 +408,8 @@
 
   StudioStream = require('./util/studioStream');
 
+  exceptions = require('./exception');
+
   _routes = {};
 
   Router = (function() {
@@ -316,7 +418,7 @@
     Router.prototype.createRoute = function(id, watchPath) {
       var stream;
       if (_routes[id]) {
-        throw new Error('Route already exists');
+        throw exceptions.RouteAlreadyExistsException(id);
       }
       stream = new StudioStream();
       _routes[id] = {
@@ -353,7 +455,7 @@
         if (route != null) {
           return route.stream.push(clone(_message));
         } else {
-          return reject(new Error("The route " + receiver + " doesn't exists"));
+          return reject(exceptions.RouteNotFoundException(receiver));
         }
       });
     };
@@ -377,7 +479,7 @@
 
 //# sourceMappingURL=../maps/router.js.map
 
-},{"./util/clone":7,"./util/studioStream":9,"baconjs":10,"bluebird":11}],4:[function(require,module,exports){
+},{"./exception":3,"./util/clone":8,"./util/studioStream":10,"baconjs":11,"bluebird":12}],5:[function(require,module,exports){
 (function() {
   var Actor, Driver, Studio,
     __slice = [].slice;
@@ -392,6 +494,7 @@
     Driver: require('./driver'),
     Promise: require('bluebird'),
     Bacon: require('baconjs'),
+    Exception: require('./exception'),
     driverFactory: function(execute, clazz) {
       var driver, driverFunction, _message;
       if (clazz == null) {
@@ -463,7 +566,7 @@
 
 //# sourceMappingURL=../maps/studio.js.map
 
-},{"./actor":1,"./driver":2,"./router":3,"./util/listeners":8,"baconjs":10,"bluebird":11}],5:[function(require,module,exports){
+},{"./actor":1,"./driver":2,"./exception":3,"./router":4,"./util/listeners":9,"baconjs":11,"bluebird":12}],6:[function(require,module,exports){
 (function() {
   module.exports.isArray = Array.isArray || function(value) {
     return {}.toString.call(value) === '[object Array]';
@@ -473,7 +576,7 @@
 
 //# sourceMappingURL=../../maps/arrayUtil.js.map
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function() {
   var BaseClass, csextends;
 
@@ -496,7 +599,7 @@
 
 //# sourceMappingURL=../../maps/baseClass.js.map
 
-},{"csextends":12}],7:[function(require,module,exports){
+},{"csextends":13}],8:[function(require,module,exports){
 (function (Buffer){
 (function() {
   var clone;
@@ -559,7 +662,7 @@
 //# sourceMappingURL=../../maps/clone.js.map
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":14}],8:[function(require,module,exports){
+},{"buffer":15}],9:[function(require,module,exports){
 (function() {
   var callListeners, onCreateActorListeners, onCreateDriverListeners, onDestroyActorListeners, onDestroyDriverListeners;
 
@@ -612,7 +715,7 @@
 
 //# sourceMappingURL=../../maps/listeners.js.map
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function() {
   var StudioStream;
 
@@ -638,7 +741,7 @@
 
 //# sourceMappingURL=../../maps/studioStream.js.map
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 (function() {
   var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, _, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertObservable, assertObservableIsProperty, assertString, cloneArray, constantToFunction, containsDuplicateDeps, convertArgsToFunction, describe, endEvent, eventIdCounter, eventMethods, findDeps, findHandlerMethods, flatMap_, former, idCounter, initialEvent, isArray, isFieldKey, isObservable, latter, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, nextEvent, nop, partiallyApplied, recursionDepth, ref, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, valueAndEnd, withDesc, withMethodCallSupport,
@@ -4074,7 +4177,7 @@ if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) 
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process,global){
 /* @preserve
  * The MIT License (MIT)
@@ -8934,7 +9037,7 @@ module.exports = ret;
 },{"./es5.js":14}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":18}],12:[function(require,module,exports){
+},{"_process":19}],13:[function(require,module,exports){
 // Generated by CoffeeScript 1.7.1
 (function() {
   var __hasProp = {}.hasOwnProperty,
@@ -8975,9 +9078,9 @@ module.exports = ret;
 
 }).call(this);
 
-},{}],13:[function(require,module,exports){
-
 },{}],14:[function(require,module,exports){
+
+},{}],15:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -10031,7 +10134,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":15,"ieee754":16,"is-array":17}],15:[function(require,module,exports){
+},{"base64-js":16,"ieee754":17,"is-array":18}],16:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -10153,7 +10256,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -10239,7 +10342,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
 /**
  * isArray
@@ -10274,7 +10377,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -10362,4 +10465,4 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}]},{},[4]);
+},{}]},{},[5]);

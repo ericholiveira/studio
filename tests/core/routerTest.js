@@ -25,9 +25,20 @@ describe("A router", function () {
 	});
 	it("should return a failed promise when route don't exist", function (done) {
 		Studio.router.send('test', '___NON___MAPPED___ROUTE___', {}).catch(
-			function () {
-				expect(true).toBe(true);
+			function (err) {
+				expect(err  instanceof Studio.Exception.RouteNotFoundException).toBe(true);
 				done();
 			});
+	});
+	it("should fail when instantiate actors with same id", function () {
+		try{
+			new Studio.Actor({
+				id: SENDER_ID,
+				process: function (message, sender) {}
+			});
+			expect(false).toBe(true);
+		}catch(err){
+			expect(err instanceof Studio.Exception.RouteAlreadyExistsException).toBe(true);
+		}
 	});
 });

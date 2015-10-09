@@ -45,4 +45,8 @@ describe("A driver", function() {
       done();
     });
   });
+  it("should be able to instantiate without the 'new' keyword", function() {
+    var driver = Studio.Driver({parser:function(){}});
+    expect(driver instanceof Studio.Driver).toBe(true);
+  });
 });

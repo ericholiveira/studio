@@ -121,14 +121,14 @@ describe("An actor filter", function() {
   it("should reject all messages when returns false", function(done) {
     sender.send(RECEIVER_ID_FALSE, message).catch(function(error) {
       expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
-      expect(error instanceof Error).toBe(true);
+      expect(error instanceof Studio.Exception.FilteredMessageException).toBe(true);
       done();
     });
   });
   it("should reject all messages when returns falsy value", function(done) {
     sender.send(RECEIVER_ID_FALSY, message).catch(function(error) {
       expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
-      expect(error instanceof Error).toBe(true);
+      expect(error instanceof Studio.Exception.FilteredMessageException).toBe(true);
       done();
     });
   });
@@ -148,7 +148,7 @@ describe("An actor filter", function() {
   it("should reject all messages when returns promise resolved with falsy value", function(done) {
     sender.send(RECEIVER_ID_PROMISE_FALSE, message).catch(function(error) {
       expect(filteredMessageProcessedInAnyUnexpectedActor).toBe(false);
-      expect(error instanceof Error).toBe(true);
+      expect(error instanceof Studio.Exception.FilteredMessageException).toBe(true);
       done();
     });
   });

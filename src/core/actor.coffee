@@ -5,6 +5,7 @@ _Promise = require('bluebird')
 Bacon = require('baconjs')
 ArrayUtil = require('./util/arrayUtil')
 fs = require('fs')
+exceptions = require('./exception')
 StudioStream = require('./util/studioStream')
 listeners = require('./util/listeners')
 #private __doProcess
@@ -33,6 +34,7 @@ class Actor extends BaseClass
   #               process:(body,sender,receiver)-> console.log(body)
   #             })
   constructor: (options) ->
+    return new Actor(options) unless @ instanceof Actor
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
@@ -48,7 +50,7 @@ class Actor extends BaseClass
               if result
                 message
               else
-                throw new Error('Filtered message')
+                throw exceptions.FilteredMessageException(receiver)
               ).catch((error)->
               message.callback(error)
               false
@@ -57,7 +59,7 @@ class Actor extends BaseClass
             if result
               Bacon.once(message)
             else
-              message.callback(new Error('Filtered message'))
+              message.callback(exceptions.FilteredMessageException(receiver))
               Bacon.never()
         )
       )
@@ -140,9 +142,10 @@ class Actor extends BaseClass
   #                                  }
   #                                })
   sendWithTimeout:(timeout,receiver,message,headers={})->
+    _id = @id
     sendPromise = @send(receiver,message,headers).cancellable()
     setTimeout(()->
-      sendPromise.cancel(new Error('Timeout'))
+      sendPromise.cancel(exceptions.TimeoutException(_id,receiver))
     ,timeout)
     sendPromise
   # attach a named route as a function.
