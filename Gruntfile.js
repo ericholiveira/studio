@@ -84,21 +84,11 @@ grunt.initConfig({
 	},
 	release: {
 		options: {
-			/*bump: true,
+			bump: true,
 			npm: true,
 			changelog: 'CHANGELOG.md',
 			changelogText: '### <%= version %> - ' + grunt.template.today('yyyy-mm-dd') + '\n',
-			npmTag: "<%= version %>"*/
-			bump: false, //default: true
-      changelog:true, //default: false
-      changelogText: '<%= version %>\n', //default: '### <%= version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n'
-      add: false, //default: true
-      commit: false, //default: true
-      tag: false, //default: true
-      push: false, //default: true
-      pushTags: false, //default: true
-      npm: false, //default: true
-      npmtag: false
+			npmTag: "<%= version %>"
 		}
 	},
 	exec: {
