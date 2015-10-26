@@ -60,6 +60,6 @@
     "grunt-release": "0.13.0",
     "koa": "^0.19.1",
     "koa-router": "^4.3.2",
-    "source-map-support": "0.2.7"
+    "source-map-support": "^0.3.2"
   }
 }

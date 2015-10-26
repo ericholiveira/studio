@@ -58,5 +58,14 @@ Studio= {
         onDestroyDriver:(listener)-> require('./util/listeners').addOnDestroyDriver(listener)
       }
     },Studio)
+  #Gets reference to an actor
+  # @param [Object] options can be a string with the receiver id or an object with receiver and send properties containing the id
+  # @example How to get reference to an actor
+  #   var someActorRef = Studio.ref('someActorId');
+  #   someActorRef('hello',null);  //passing body and headers to process
+  ref : (receiver)->
+    receiver= if typeof receiver is "string" then {sender:null,receiver:receiver} else receiver
+    Studio.router.send.bind(Studio.router,receiver.sender, receiver.receiver)
+
 }
 module.exports=Studio

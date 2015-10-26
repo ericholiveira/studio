@@ -557,6 +557,13 @@
           }
         }
       }, Studio);
+    },
+    ref: function(receiver) {
+      receiver = typeof receiver === "string" ? {
+        sender: null,
+        receiver: receiver
+      } : receiver;
+      return Studio.router.send.bind(Studio.router, receiver.sender, receiver.receiver);
     }
   };
 
