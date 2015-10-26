@@ -9,7 +9,7 @@ describe("A Studio namespace", function () {
     });
     it("should contain a ref property to bind send accepting string", function (done) {
         Studio.ref(RECEIVER_ID)('message').then(function(result){
-            expct(result.id).toBe(RECEIVER_ID);
+            expect(result.id).toBe(RECEIVER_ID);
             done();
         });
     });
