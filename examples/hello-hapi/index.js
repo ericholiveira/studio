@@ -5,4 +5,4 @@ require('./helloFiltered');
 require('./helloBuffered');
 require('./helloChain');
 require('../exampleActors');
-require('./server').start();
+require('./server').start(function(){});

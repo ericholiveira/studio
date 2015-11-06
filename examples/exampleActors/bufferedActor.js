@@ -1,6 +1,6 @@
 var Studio = require('../../compiled/core/studio');
 
-var bufferedActor = new Studio.Actor({
+var bufferedActor = Studio.Actor({
   id: 'helloActorBuffered',
   process: function(body, headers, sender, receiver) {
     /*On this example you have to request five times the http://localhost:3000/buffer

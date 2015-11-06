@@ -58,6 +58,7 @@
     "grunt-jasmine-node": "0.2.1",
     "grunt-jasmine-node-coverage": "0.2.0",
     "grunt-release": "0.13.0",
+    "hapi": "^11.0.2",
     "koa": "^0.19.1",
     "koa-router": "^4.3.2",
     "source-map-support": "^0.3.2"

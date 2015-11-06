@@ -1,6 +1,6 @@
 var Studio = require('../../compiled/core/studio');
 
-var hello = new Studio.Actor({
+var hello = Studio.Actor({
   id: 'helloActor', //UNIQUE Actor identification is required.
   process: function(body, headers, sender, receiver) {
     /* When a message arrives, the process function is going to receive a copy

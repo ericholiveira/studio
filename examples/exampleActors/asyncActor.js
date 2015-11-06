@@ -1,5 +1,5 @@
 var Studio = require('../../compiled/core/studio');
-var delayed = new Studio.Actor({
+var delayed = Studio.Actor({
   id: 'helloActorDelayed',
   process: function(body, headers, sender, receiver) {
     //Now we're going to return a promise

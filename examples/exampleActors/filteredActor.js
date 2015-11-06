@@ -2,7 +2,7 @@ var Studio = require('../../compiled/core/studio');
 
 
 
-var userActor = new Studio.Actor({
+var userActor = Studio.Actor({
   id: 'helloActorFiltered',
   process: function(body, headers, sender, receiver) {
     console.log('Received message to actor = ' + userActor.id);
