@@ -15,6 +15,11 @@ __doProcess=(self,message) ->
     callback(undefined , self.process(body,headers,sender,receiver))
   catch err
     callback(err)
+
+isGeneratorFunction = (obj)->
+  constructor = obj.constructor or {}
+  'GeneratorFunction' is constructor.name or 'GeneratorFunction' is constructor.displayName
+
 # Base class for all actors.
 class Actor extends BaseClass
 
@@ -38,6 +43,7 @@ class Actor extends BaseClass
     @[property] = options[property] for property of options
     throw new Error('You must provide an id') if not @id
     throw new Error('You must provide a process function') if not @process
+    @process = _Promise.coroutine(@process) if isGeneratorFunction(@process)
     @stream = router.createRoute(@id)
     @unsubscribe = @stream.onValue(@_doProcess)
     if typeof @filter == 'function'
