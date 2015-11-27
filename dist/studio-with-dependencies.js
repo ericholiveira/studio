@@ -3,7 +3,8 @@
   var Actor, ArrayUtil, Bacon, BaseClass, StudioStream, exceptions, fs, isGeneratorFunction, listeners, router, _Promise, __doProcess,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
 
   router = require('./router');
 
@@ -24,10 +25,10 @@
   listeners = require('./util/listeners');
 
   __doProcess = function(self, message) {
-    var body, callback, err, headers, receiver, sender;
-    sender = message.sender, body = message.body, receiver = message.receiver, callback = message.callback, headers = message.headers;
+    var body, callback, err;
+    body = message.body, callback = message.callback;
     try {
-      return callback(void 0, self.process(body, headers, sender, receiver));
+      return callback(void 0, self.process.apply(self, body));
     } catch (_error) {
       err = _error;
       return callback(err);
@@ -142,26 +143,21 @@
       return this.unsubscribe = this.stream.onValue(this._doProcess);
     };
 
-    Actor.prototype.send = function(receiver, message, headers) {
-      if (headers == null) {
-        headers = {};
-      }
-      return router.send(this.id, receiver, message, headers).bind(this);
+    Actor.prototype.send = function() {
+      var params, receiver;
+      receiver = arguments[0], params = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      params = params != null ? params : [];
+      return router.send(this.id, receiver, params).bind(this);
     };
 
-    Actor.prototype.bindSend = function(receiver, headers) {
-      var sendMessage;
-      sendMessage = (function(_this) {
-        return function(message, _headers) {
-          return _this.send(receiver, message, headers || _headers);
+    Actor.prototype.bindSend = function(receiver) {
+      return (function(_this) {
+        return function() {
+          var params;
+          params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+          return _this.send.apply(_this, [receiver].concat(__slice.call(params)));
         };
       })(this);
-      sendMessage.withHeader = (function(_this) {
-        return function(header) {
-          return _this.bindSend(receiver, header);
-        };
-      })(this);
-      return sendMessage;
     };
 
     Actor.prototype.sendWithTimeout = function(timeout, receiver, message, headers) {
@@ -292,9 +288,9 @@
           return _this.parser.apply(_this, args);
         };
       })(this)).then(function(result) {
-        var body, headers, receiver, sender;
-        sender = result.sender, receiver = result.receiver, body = result.body, headers = result.headers;
-        return router.send(sender, receiver, body, headers).bind(that);
+        var body, receiver, sender;
+        sender = result.sender, receiver = result.receiver, body = result.body;
+        return router.send(sender, receiver, body).bind(that);
       });
     };
 
@@ -407,7 +403,7 @@
 
 },{}],4:[function(require,module,exports){
 (function() {
-  var Bacon, Router, StudioStream, clone, exceptions, _Promise, _routes;
+  var ArrayUtil, Bacon, Router, StudioStream, clone, exceptions, _Promise, _routes;
 
   _Promise = require('bluebird');
 
@@ -418,6 +414,8 @@
   StudioStream = require('./util/studioStream');
 
   exceptions = require('./exception');
+
+  ArrayUtil = require('./util/arrayUtil');
 
   _routes = {};
 
@@ -444,15 +442,20 @@
       return _routes[id];
     };
 
-    Router.prototype.send = function(sender, receiver, message, headers) {
+    Router.prototype.send = function(sender, receiver, params) {
+      if (params == null) {
+        params = [];
+      }
+      if (!ArrayUtil.isArray(params)) {
+        params = [params];
+      }
       return new _Promise(function(resolve, reject) {
         var route, _message;
         route = _routes[receiver];
         _message = {
           sender: sender,
           receiver: receiver,
-          body: message,
-          headers: headers,
+          body: params,
           callback: function(err, result) {
             if (err) {
               return reject(err);
@@ -488,7 +491,7 @@
 
 //# sourceMappingURL=../maps/router.js.map
 
-},{"./exception":3,"./util/clone":8,"./util/studioStream":10,"baconjs":11,"bluebird":12}],5:[function(require,module,exports){
+},{"./exception":3,"./util/arrayUtil":6,"./util/clone":8,"./util/studioStream":10,"baconjs":11,"bluebird":12}],5:[function(require,module,exports){
 (function() {
   var Actor, Driver, Studio,
     __slice = [].slice;
@@ -504,30 +507,6 @@
     Promise: require('bluebird'),
     Bacon: require('baconjs'),
     Exception: require('./exception'),
-    driverFactory: function(execute, clazz) {
-      var driver, driverFunction, _message;
-      if (clazz == null) {
-        clazz = Driver;
-      }
-      _message = {
-        value: null
-      };
-      driver = new clazz({
-        parser: function() {
-          return _message.value;
-        }
-      });
-      driverFunction = function() {
-        var args;
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        return execute.apply(null, [function(message) {
-          _message.value = message;
-          return driver.send.apply(driver, args);
-        }].concat(__slice.call(args)));
-      };
-      driverFunction.driver = driver;
-      return driverFunction;
-    },
     actorFactory: function(options, clazz) {
       var act, id;
       if (clazz == null) {
@@ -572,7 +551,14 @@
         sender: null,
         receiver: receiver
       } : receiver;
-      return Studio.router.send.bind(Studio.router, receiver.sender, receiver.receiver);
+      return function() {
+        var params;
+        params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return Studio.router.send(receiver.sender, receiver.receiver, params);
+      };
+    },
+    service: function(options, clazz) {
+      return this.actorFactory(options, clazz);
     }
   };
 

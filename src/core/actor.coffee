@@ -10,9 +10,9 @@ StudioStream = require('./util/studioStream')
 listeners = require('./util/listeners')
 #private __doProcess
 __doProcess=(self,message) ->
-  {sender,body,receiver,callback,headers} = message
+  {body,callback} = message
   try
-    callback(undefined , self.process(body,headers,sender,receiver))
+    callback(undefined , self.process(body...))
   catch err
     callback(err)
 
@@ -117,8 +117,9 @@ class Actor extends BaseClass
   #                                    count:1
   #                                  }
   #                                })
-  send: (receiver,message,headers={})->
-    router.send(@id,receiver,message,headers).bind(@)
+  send: (receiver,params...)->
+    params = params ? []
+    router.send(@id,receiver,params).bind(@)
   # Returns a function with receiver and headers binded
   # @param [String] receiver the receiver id
   # @param [Object] headers headers for the message (optional)
@@ -130,10 +131,8 @@ class Actor extends BaseClass
   #                                    count:1
   #                                  }
   #                                })
-  bindSend:(receiver,headers)->
-    sendMessage = (message,_headers)=>@send(receiver,message,headers or _headers)
-    sendMessage.withHeader = (header)=> @bindSend(receiver,header)
-    sendMessage
+  bindSend:(receiver)->
+    (params...)=>@send(receiver,params...)
   # Sends message to an actor with a timeout (in milliseconds). When the timeout expires the  returning promise is rejected
   # @param [Number] timeout the message timeout in milliseconds
   # @param [String] receiver the receiver id

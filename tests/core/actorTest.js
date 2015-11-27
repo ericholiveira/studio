@@ -120,26 +120,4 @@ describe("An actor", function() {
     expect(actor instanceof Studio.Actor).toBe(true);
     expect(actor.id).toBe(ACTOR_WITHOUT_NEW_ID);
   });
-  it("should be able to bind send with headers", function(done) {
-    var headers = {
-      header: 1
-    };
-    sender.bindSend(RECEIVER_OBJECT_WITH_HEADER_ID,headers)('hello',{}).then(
-      function(result) {
-        expect(result.header).toBe(headers.header);
-        expect(sender).toBe(sender);
-        done();
-      });
-  });
-  it("should be able to change binded header", function(done) {
-    var headers = {
-      header: 1
-    };
-    sender.bindSend(RECEIVER_OBJECT_WITH_HEADER_ID).withHeader(headers)('hello',{}).then(
-      function(result) {
-        expect(result.header).toBe(headers.header);
-        expect(sender).toBe(sender);
-        done();
-      });
-  });
 });

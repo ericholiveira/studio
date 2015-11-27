@@ -21,8 +21,8 @@ class Driver extends BaseClass
   send: (args...)->
     that = @
     _Promise.attempt(()=>@parser(args...)).then((result)->
-      {sender,receiver,body,headers}=result
-      router.send(sender,receiver,body,headers).bind(that)
+      {sender,receiver,body}=result
+      router.send(sender,receiver,body).bind(that)
     )
   # Empty initializer
   initialize:()->

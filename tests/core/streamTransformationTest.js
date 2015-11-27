@@ -11,8 +11,8 @@ describe("A Stream", function () {
 	});
 	var receiver = new Studio.Actor({
 		id: RECEIVER_ID,
-		process: function (message, headers) {
-			return message;
+		process: function (param1,param2,param3) {
+			return [param1,param2,param3];
 		}
 	});
 	var receiver2 = new Studio.Actor({
@@ -33,7 +33,7 @@ describe("A Stream", function () {
 					acc.callbacks = acc.callbacks || [];
 					acc.callbacks.push(array[i].callback);
 					acc.body = acc.body || [];
-					acc.body.push(array[i].body);
+					acc.body.push(array[i].body[0]);
 				}
 				acc.callback = function (err, result) {
 					var i = 0;

@@ -3,6 +3,7 @@ Bacon = require('baconjs')
 clone = require('./util/clone')
 StudioStream = require('./util/studioStream')
 exceptions = require('./exception')
+ArrayUtil = require('./util/arrayUtil')
 
 _routes ={}
 # Base class for Router (is singleton, should not be reimplemented nor reinstantiated, and probably not direct accessed).
@@ -41,14 +42,14 @@ class Router
   #                                    count:1
   #                                  }
   #                                })
-  send: (sender,receiver,message,headers)->
+  send: (sender,receiver,params = [])->
+    params = [params] if not ArrayUtil.isArray(params)
     new _Promise((resolve,reject)->
       route = _routes[receiver]
       _message = {
         sender:sender
         receiver:receiver
-        body:message
-        headers:headers
+        body:params
         callback:(err,result)-> if err then reject(err) else resolve(result)
         }
       if route?
