@@ -25,7 +25,8 @@ grunt.initConfig({
 	mochaTest: {
 		test: {
 			options: {
-				reporter: 'spec'
+				reporter: 'spec',
+				clearRequireCache:true
 			},
 			src: ['tests/*.js']
 		}

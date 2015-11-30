@@ -31,23 +31,17 @@ module.exports = function serviceFactory(options) {
             process: _process
         };
     }
-    if (!options.name && ! options.id) throw new Error('You must provide an id or name');
+    if (!options.name) throw new Error('You must provide a name');
     if (!options.process) throw new Error('You must provide a process function');
     if (isGeneratorFunction(options.process)) {
         _process = _Promise.coroutine(options.process);
     } else {
         _process = options.process;
     }
-
     for (key in options) {
         if (key !== 'process') {
             _process[key] = options[key];
         }
-    }
-    if(!options.name) {
-        options.name = options.id;
-    }else {
-        options.id = options.name;
     }
     if (options.watchPath) {
         watch = options.watchPath;
@@ -62,7 +56,7 @@ module.exports = function serviceFactory(options) {
         router.deleteRoute(_process.id);
         //destroy listener
     };
-    router.createRoute(_process.name,_doProcess.bind(_process,_process));
+    router.createRoute(options.name,_doProcess.bind(_process,_process));
     //add listener
 
     //start

@@ -34,7 +34,8 @@
     "csextends": "1.0.3"
   },
   "scripts": {
-    "test": "grunt all"
+    "test": "node --harmony ./node_modules/.bin/grunt all",
+    "start": "node --harmony ./node_modules/.bin/grunt"
   },
   "readmeFilename": "README.md",
   "devDependencies": {
