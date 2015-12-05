@@ -9,12 +9,7 @@ var _doProcess=function(self,message){
     var body = message.body;
     body.push(message.sender);
     body.push(message.receiver);
-    try{
-        var result = self.apply(self,body);
-        return Promise.resolve(result);
-    }catch(err){
-        return Promise.reject(err);
-    }
+    return _Promise.method(self).apply(self,body);
 };
 var isGeneratorFunction = function (obj) {
     var constructor = obj.constructor || {};
@@ -22,24 +17,25 @@ var isGeneratorFunction = function (obj) {
 };
 
 module.exports = function serviceFactory(options) {
-    var name, _process, key, watch, watcher;
+    var _process, key, watch, watcher;
     if (typeof options === 'function') {
-        name = options.name;
         _process = options;
         options = {
-            name: name,
-            process: _process
+            id : options.id,
+            name: options.name,
+            fn: _process
         };
     }
-    if (!options.name) throw new Error('You must provide a name');
-    if (!options.process) throw new Error('You must provide a process function');
-    if (isGeneratorFunction(options.process)) {
-        _process = _Promise.coroutine(options.process);
+    options.id = options.id || options.name;
+    if (!options.id) throw exceptions.ServiceNameOrIdNotFoundException();
+    if (!options.fn) throw exceptions.ServiceFunctionNotFoundException();
+    if (isGeneratorFunction(options.fn)) {
+        _process = _Promise.coroutine(options.fn);
     } else {
-        _process = options.process;
+        _process = options.fn;
     }
     for (key in options) {
-        if (key !== 'process') {
+        if (key !== 'fn') {
             _process[key] = options[key];
         }
     }
@@ -56,7 +52,8 @@ module.exports = function serviceFactory(options) {
         router.deleteRoute(_process.id);
         //destroy listener
     };
-    router.createRoute(options.name,_doProcess.bind(_process,_process));
+
+    router.createRoute(options.id,_doProcess.bind(_process,_process));
     //add listener
 
     //start
@@ -65,7 +62,7 @@ module.exports = function serviceFactory(options) {
     //bindSend
     //sendWithTimeout
     //addTransformation plugin
-    return ref(_process.name);
+    return ref(options.id);
 };
 
 

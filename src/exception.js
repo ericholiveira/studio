@@ -3,7 +3,7 @@ function StudioException(){}
 util.inherits(StudioException,Error);
 
 function RouteNotFoundException (route){
-    if(!this instanceof RouteNotFoundException){
+    if(!(this instanceof RouteNotFoundException)){
         return new RouteNotFoundException(route);
     }
     this.code = 'ROUTE_NOT_FOUND';
@@ -13,7 +13,7 @@ function RouteNotFoundException (route){
 util.inherits(RouteNotFoundException,StudioException);
 
 function RouteAlreadyExistsException (route){
-    if(!this instanceof RouteAlreadyExistsException){
+    if(!(this instanceof RouteAlreadyExistsException)){
         return new RouteAlreadyExistsException(route);
     }
     this.code = 'ROUTE_ALREADY_EXISTS';
@@ -22,8 +22,26 @@ function RouteAlreadyExistsException (route){
 }
 util.inherits(RouteNotFoundException,StudioException);
 
+function ServiceNameOrIdNotFoundException (){
+    if(!(this instanceof ServiceNameOrIdNotFoundException)){
+        return new ServiceNameOrIdNotFoundException();
+    }
+    this.code = 'SERVICE_NAME_OR_ID_NOT_FOUND';
+    this.message = "You must provide an unique name or id for the service";
+}
+util.inherits(ServiceNameOrIdNotFoundException,StudioException);
+
+function ServiceFunctionNotFoundException (){
+    if(!(this instanceof ServiceFunctionNotFoundException)){
+        return new ServiceFunctionNotFoundException();
+    }
+    this.code = 'SERVICE_FUNCTION_NOT_FOUND';
+    this.message = "You must provide a function for the service";
+}
+util.inherits(ServiceFunctionNotFoundException,StudioException);
+
 function FilteredMessageException (receiver){
-    if(!this instanceof FilteredMessageException){
+    if(!(this instanceof FilteredMessageException)){
         return new FilteredMessageException(receiver);
     }
     this.code = 'FILTERED_MESSAGE';
@@ -32,21 +50,10 @@ function FilteredMessageException (receiver){
 }
 util.inherits(FilteredMessageException,StudioException);
 
-function TimeoutException (sender,receiver){
-    if(!this instanceof TimeoutException){
-        return new TimeoutException(sender,receiver);
-    }
-    this.code = 'TIMEOUT';
-    this.receiver = receiver;
-    this.sender = sender;
-    this.message = "Timeout on message from "+sender+" to "+receiver;
-}
-util.inherits(FilteredMessageException,StudioException);
-
 module.exports={
-    StudioException:StudioException,
     RouteNotFoundException:RouteNotFoundException,
     FilteredMessageException:FilteredMessageException,
-    TimeoutException:TimeoutException,
-    RouteAlreadyExistsException:RouteAlreadyExistsException
+    RouteAlreadyExistsException:RouteAlreadyExistsException,
+    ServiceNameOrIdNotFoundException:ServiceNameOrIdNotFoundException,
+    ServiceFunctionNotFoundException:ServiceFunctionNotFoundException,
 };

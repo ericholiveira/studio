@@ -2,7 +2,7 @@ var cloneArray = function(arr){
     var i, len, results;
     results = [];
     for (i = 0, len = arr.length; i < len; i++) {
-        results.push(arr[i]);
+        results.push(clone(arr[i]));
     }
     return results;
 };

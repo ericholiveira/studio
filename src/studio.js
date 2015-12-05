@@ -1,18 +1,26 @@
 var key;
-require('./util/promise_handlers');
+var exception= require('./exception');
 var _Studio= {
     router: require('./router'),
     service: require('./service'),
     promise: require('bluebird'),
-    exception: require('./exception'),
+    exception: exception,
+    defer:require('./util/promise_handlers'),
     module:function(moduleName){
-        return function(options){
+        var result = function(options){
             if(typeof options === 'string'){
-                return _Studio.ref(moduleName+'.'+options);
+                return _Studio.ref(moduleName+'/'+options);
             }
-            options.name = moduleName+'.'+options;
+            if(!options.id && !options.name) throw exception.ServiceNameOrIdNotFoundException();
+            options.id = options.id || options.name;
+            options.id = moduleName+'/'+options.id;
             return _Studio.service(options);
         };
+        copyStudioProperties(result);
+        result.module=function(module2){
+          return _Studio.module(moduleName+'/'+module2);
+        };
+        return result;
     },
     /*use : (plugin)->
      plugin({
@@ -35,8 +43,11 @@ var Studio = function Studio(options){
     }
     return _Studio.service(options);
 };
-for (key in _Studio){
-    Studio[key] = _Studio[key];
+function copyStudioProperties(destination){
+    for (key in _Studio){
+        destination[key] = _Studio[key];
+    }
 }
+copyStudioProperties(Studio);
 
 module.exports=Studio;

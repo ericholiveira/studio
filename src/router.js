@@ -4,27 +4,25 @@ exceptions = require('./exception');
 
 var _routes ={};
 var Router = function Router(){};
-Router.prototype.createRoute = function(name,service){
-    if(_routes[name]) throw exceptions.RouteAlreadyExistsException(id);
-    _routes[name] = service;
-    return _routes[name];
+Router.prototype.createRoute = function(id,service){
+    if(_routes[id]) throw exceptions.RouteAlreadyExistsException(id);
+    _routes[id] = service;
+    return _routes[id];
 };
 Router.prototype.deleteRoute = function(){
     return delete _routes[id];
 };
-/*Router.prototype.getRoute = function(id){
-    return _routes[id];
-};*/
+
 Router.prototype.send = function(sender,receiver){
     var params = [].slice.call(arguments,2);
     var route = _routes[receiver];
     if(route){
-        var _message = {
+        var _message = clone({
             sender: sender,
             receiver: receiver,
             body: params
-        };
-        return route.call(route,clone(_message));
+        });
+        return route.call(route,_message);
     }else{
         return _Promise.reject(exceptions.RouteNotFoundException(receiver));
     }

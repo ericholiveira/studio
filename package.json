@@ -57,6 +57,7 @@
     "grunt-exec": "0.4.6",
     "grunt-execute": "0.2.2",
     "grunt-express-server": "0.4.19",
+    "grunt-istanbul": "^0.6.1",
     "grunt-jasmine-node": "0.2.1",
     "grunt-jasmine-node-coverage": "0.2.0",
     "grunt-mocha-test": "^0.12.7",
