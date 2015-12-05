@@ -48,10 +48,7 @@ module.exports = function serviceFactory(options) {
             require(watch);
         });
     }
-    _process.destroy = function(){
-        router.deleteRoute(_process.id);
-        //destroy listener
-    };
+
 
     router.createRoute(options.id,_doProcess.bind(_process,_process));
     //add listener
@@ -62,7 +59,15 @@ module.exports = function serviceFactory(options) {
     //bindSend
     //sendWithTimeout
     //addTransformation plugin
-    return ref(options.id);
+    var result = ref(options.id);
+    result.stop = function(){
+        router.deleteRoute(options.id);
+        //destroy listener
+    };
+    result.start = function(){
+        serviceFactory(options);
+    };
+    return result;
 };
 
 

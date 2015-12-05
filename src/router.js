@@ -9,7 +9,7 @@ Router.prototype.createRoute = function(id,service){
     _routes[id] = service;
     return _routes[id];
 };
-Router.prototype.deleteRoute = function(){
+Router.prototype.deleteRoute = function(id){
     return delete _routes[id];
 };
 
