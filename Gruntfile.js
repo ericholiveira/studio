@@ -72,7 +72,7 @@ grunt.initConfig({
 		express: 'node --debug examples/hello-express/index.js',
 		hapi: 'node --debug examples/hello-hapi/index.js',
 		restify: 'node --debug examples/hello-restify/index.js',
-		koa: 'node --harmony-generators --debug examples/hello-koa/index.js',
+		koa: 'node --harmony-generators --debug examples/hello-koa/index.js'
 	}
 
 });

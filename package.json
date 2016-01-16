@@ -35,7 +35,8 @@
   },
   "scripts": {
     "test": "node --harmony ./node_modules/.bin/grunt all",
-    "start": "node --harmony ./node_modules/.bin/grunt"
+    "start": "node --harmony ./node_modules/.bin/grunt",
+    "coverage": "node --harmony ./node_modules/.bin/grunt coverage"
   },
   "readmeFilename": "README.md",
   "devDependencies": {

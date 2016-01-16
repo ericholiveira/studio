@@ -20,19 +20,16 @@ var _Studio= {
         result.module=function(module2){
           return _Studio.module(moduleName+'/'+module2);
         };
+        result._moduleName = moduleName;
         return result;
     },
-    /*use : (plugin)->
-     plugin({
-     interceptSend:(funk)->
-     _send = Studio.router.send
-     Studio.router.send = funk(_send.bind(Studio.router))
-     listenTo:{
-     onCreateActor:(listener)-> require('./util/listeners').addOnCreateActor(listener)
-     onDestroyActor:(listener)-> require('./util/listeners').addOnDestroyActor(listener)
-     onCreateDriver:(listener)-> require('./util/listeners').addOnCreateDriver(listener)
-     onDestroyDriver:(listener)-> require('./util/listeners').addOnDestroyDriver(listener)
-     }       },Studio)*/
+    use : function(plugin,filter){
+        return plugin({
+            onCall:function(funk) {require('./util/listeners').addOnCallListener(funk,filter);},
+            onStart:function(listener){require('./util/listeners').addOnStartListener(listener,filter);},
+            onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter);}
+        },Studio);
+    },
     ref : require('./ref')
 
 };

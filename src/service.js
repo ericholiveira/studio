@@ -3,17 +3,14 @@ var _Promise = require('bluebird');
 var fs = require('fs');
 var ref = require('./ref');
 var exceptions = require('./exception');
-//listeners = require('./util/listeners')
+var listeners = require('./util/listeners');
+var isGeneratorFunction = require('./util/generator').isGeneratorFunction;
 
 var _doProcess=function(self,message){
     var body = message.body;
     body.push(message.sender);
     body.push(message.receiver);
     return _Promise.method(self).apply(self,body);
-};
-var isGeneratorFunction = function (obj) {
-    var constructor = obj.constructor || {};
-    return 'GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName;
 };
 
 module.exports = function serviceFactory(options) {
@@ -29,6 +26,7 @@ module.exports = function serviceFactory(options) {
     options.id = options.id || options.name;
     if (!options.id) throw exceptions.ServiceNameOrIdNotFoundException();
     if (!options.fn) throw exceptions.ServiceFunctionNotFoundException();
+    listeners.notifyStart(options);
     if (isGeneratorFunction(options.fn)) {
         _process = _Promise.coroutine(options.fn);
     } else {
@@ -59,9 +57,11 @@ module.exports = function serviceFactory(options) {
     //bindSend
     //sendWithTimeout
     //addTransformation plugin
+
     var result = ref(options.id);
     result.stop = function(){
         router.deleteRoute(options.id);
+        listeners.notifyStop(result);
         //destroy listener
     };
     result.start = function(){
