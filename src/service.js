@@ -6,12 +6,22 @@ var exceptions = require('./exception');
 var listeners = require('./util/listeners');
 var generatorUtil = require('./util/generator');
 
+var _getCallerFile=function (){
+    try{
+        var err = new Error();
+        return err.stack.split('\n')[3].match(/\(.*\)/g)[0].split(':')[0].substring(1);
+    }catch(e){
+        return '';
+    }
+};
+
 var _doProcess=function(self,message){
     var body = message.body;
     body.push(message.sender);
     body.push(message.receiver);
+    var result;
     if(typeof self._filter === 'function'){
-        return self._filter.apply(self,body).then(function(res){
+        result = self._filter.apply(self,body).then(function(res){
             if(res){
                 return self.apply(self,body);
             }else{
@@ -19,13 +29,16 @@ var _doProcess=function(self,message){
             }
         });
     }else{
-        return self.apply(self,body);
+        result = self.apply(self,body);
     }
-
+    if(self._timeout){
+        result = result.timeout(self._timeout);
+    }
+    return result;
 };
 
 module.exports = function serviceFactory(options) {
-    var _process, key, watch, watcher;
+    var _process, key;
     if (typeof options === 'function') {
         _process = options;
         options = {
@@ -48,26 +61,8 @@ module.exports = function serviceFactory(options) {
             _process[key] = options[key];
         }
     }
-    if (options.watchPath) {
-        watch = options.watchPath;
-        watcher = fs.watch(watch, function () {
-            watcher.close();
-            _process.destroy();
-            delete require.cache[watch];
-            require(watch);
-        });
-    }
-
 
     router.createRoute(options.id,_doProcess.bind(_process,_process));
-    //add listener
-
-    //start
-    //stop (@process = ()-> throw new Error('Stopped'))
-    //send
-    //bindSend
-    //sendWithTimeout
-    //addTransformation plugin
 
     var result = ref(options.id);
     result.stop = function(){
@@ -81,6 +76,21 @@ module.exports = function serviceFactory(options) {
 
     result.filter = function(fn){
         _process._filter = generatorUtil.toAsync(fn);
+        return result;
+    };
+    result.timeout = function(ts){
+        _process._timeout = ts;
+        return result;
+    };
+    result.watch = function(path){
+        path = path || _getCallerFile();
+        var watcher = fs.watch(path, function () {
+            watcher.close();
+            result.stop();
+            delete require.cache[path];
+            require(path);
+        });
+        return result;
     };
 
     return result;

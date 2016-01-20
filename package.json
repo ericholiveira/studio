@@ -34,7 +34,7 @@
     "csextends": "1.0.3"
   },
   "scripts": {
-    "test": "node --harmony ./node_modules/.bin/grunt all",
+    "test": "node --harmony ./node_modules/.bin/grunt test",
     "start": "node --harmony ./node_modules/.bin/grunt",
     "coverage": "node --harmony ./node_modules/.bin/grunt coverage"
   },
