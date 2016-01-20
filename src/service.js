@@ -15,7 +15,8 @@ var _getCallerFile=function (){
     }
 };
 
-var _doProcess=function(self,message){
+var _doProcess=function(message){
+    var self = this;
     var body = message.body;
     body.push(message.sender);
     body.push(message.receiver);
@@ -62,7 +63,7 @@ module.exports = function serviceFactory(options) {
         }
     }
 
-    router.createRoute(options.id,_doProcess.bind(_process,_process));
+    router.createRoute(options.id,_doProcess.bind(_process));
 
     var result = ref(options.id);
     result.stop = function(){

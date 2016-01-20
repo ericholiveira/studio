@@ -30,8 +30,10 @@ var _Studio= {
             onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter);}
         },Studio);
     },
-    ref : require('./ref')
-
+    ref : require('./ref'),
+    plugin : {
+        timer:require('./plugin/timer')
+    }
 };
 
 var Studio = function Studio(options){
