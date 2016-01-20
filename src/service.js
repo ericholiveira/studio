@@ -4,13 +4,24 @@ var fs = require('fs');
 var ref = require('./ref');
 var exceptions = require('./exception');
 var listeners = require('./util/listeners');
-var isGeneratorFunction = require('./util/generator').isGeneratorFunction;
+var generatorUtil = require('./util/generator');
 
 var _doProcess=function(self,message){
     var body = message.body;
     body.push(message.sender);
     body.push(message.receiver);
-    return _Promise.method(self).apply(self,body);
+    if(typeof self._filter === 'function'){
+        return self._filter.apply(self,body).then(function(res){
+            if(res){
+                return self.apply(self,body);
+            }else{
+                throw exceptions.FilteredMessageException(self.id);
+            }
+        });
+    }else{
+        return self.apply(self,body);
+    }
+
 };
 
 module.exports = function serviceFactory(options) {
@@ -27,10 +38,10 @@ module.exports = function serviceFactory(options) {
     if (!options.id) throw exceptions.ServiceNameOrIdNotFoundException();
     if (!options.fn) throw exceptions.ServiceFunctionNotFoundException();
     listeners.notifyStart(options);
-    if (isGeneratorFunction(options.fn)) {
+    if (generatorUtil.isGeneratorFunction(options.fn)) {
         _process = _Promise.coroutine(options.fn);
     } else {
-        _process = options.fn;
+        _process = _Promise.method(options.fn);
     }
     for (key in options) {
         if (key !== 'fn') {
@@ -67,6 +78,11 @@ module.exports = function serviceFactory(options) {
     result.start = function(){
         serviceFactory(options);
     };
+
+    result.filter = function(fn){
+        _process._filter = generatorUtil.toAsync(fn);
+    };
+
     return result;
 };
 
