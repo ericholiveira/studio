@@ -28,8 +28,5 @@ Router.prototype.send = function(sender,receiver){
         return _Promise.reject(exceptions.RouteNotFoundException(receiver));
     }
 };
-Router.prototype.getAllRoutes = function(){
-    return Object.keys(_routes);
-};
 
 module.exports = new Router();

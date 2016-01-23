@@ -7,46 +7,35 @@ var listeners = {
 };
 var addListener=function(type, listener){
     var opt={},helper;
-    if(typeof listener === 'function'){
+    opt.filter = listener.filter;
+    if(isGeneratorFunction(listener.fn)){
+        opt.fn = _Promise.coroutine(listener.fn);
+    }else{
+        opt.fn = _Promise.method(listener.fn);
+    }
+    if(!opt.filter){
         opt.filter = function(){
             return true;
         };
-        if(isGeneratorFunction(listener)){
-            opt.fn = _Promise.coroutine(listener);
-        }else{
-            opt.fn =  _Promise.method(listener);
-        }
-    }else{
-        opt.filter = listener.filter;
-        if(isGeneratorFunction(listener.fn)){
-            opt.fn = _Promise.coroutine(listener.fn);
-        }else{
-            opt.fn = _Promise.method(listener.fn);
-        }
-        if(!opt.filter){
-            opt.filter = function(){
-                return true;
-            };
-        }else if(opt.filter instanceof RegExp){
-            helper = opt.filter;
-            opt.filter = function(route){
-                return helper.test(route);
-            };
-        }else if(Array.isArray(opt.filter)){
-            helper = opt.filter;
-            opt.filter = function(route){
-                var i= 0,_len = helper.length,res = false;
-                for(;i<_len;i++){
-                    res = res || (helper[i]===route);
-                }
-                return res;
-            };
-        }else if(typeof opt.filter !== 'function'){
-            helper = opt.filter;
-            opt.filter = function(route){
-                return helper === route;
-            };
-        }
+    }else if(opt.filter instanceof RegExp){
+        helper = opt.filter;
+        opt.filter = function(route){
+            return helper.test(route);
+        };
+    }else if(Array.isArray(opt.filter)){
+        helper = opt.filter;
+        opt.filter = function(route){
+            var i= 0,_len = helper.length,res = false;
+            for(;i<_len;i++){
+                res = res || (helper[i]===route);
+            }
+            return res;
+        };
+    }else if(typeof opt.filter !== 'function'){
+        helper = opt.filter;
+        opt.filter = function(route){
+            return helper === route;
+        };
     }
     listeners[type].push(opt);
     return listeners[type];
