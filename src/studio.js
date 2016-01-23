@@ -49,4 +49,6 @@ function copyStudioProperties(destination){
 }
 copyStudioProperties(Studio);
 
+Studio.use(require('./plugin/filter'));
+Studio.use(require('./plugin/watch'));
 module.exports=Studio;

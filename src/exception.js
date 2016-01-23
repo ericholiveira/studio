@@ -6,7 +6,7 @@ function RouteNotFoundException (route){
     if(!(this instanceof RouteNotFoundException)){
         return new RouteNotFoundException(route);
     }
-    this.code = 'ROUTE_NOT_FOUND';
+    this.name = 'ROUTE_NOT_FOUND';
     this.route = route;
     this.message = "The route "+route+" doesnt exists";
 }
@@ -16,7 +16,7 @@ function RouteAlreadyExistsException (route){
     if(!(this instanceof RouteAlreadyExistsException)){
         return new RouteAlreadyExistsException(route);
     }
-    this.code = 'ROUTE_ALREADY_EXISTS';
+    this.name = 'ROUTE_ALREADY_EXISTS';
     this.route = route;
     this.message = "The route "+route+" already exists";
 }
@@ -26,7 +26,7 @@ function ServiceNameOrIdNotFoundException (){
     if(!(this instanceof ServiceNameOrIdNotFoundException)){
         return new ServiceNameOrIdNotFoundException();
     }
-    this.code = 'SERVICE_NAME_OR_ID_NOT_FOUND';
+    this.name = 'SERVICE_NAME_OR_ID_NOT_FOUND';
     this.message = "You must provide an unique name or id for the service";
 }
 util.inherits(ServiceNameOrIdNotFoundException,StudioException);
@@ -35,7 +35,7 @@ function ServiceFunctionNotFoundException (){
     if(!(this instanceof ServiceFunctionNotFoundException)){
         return new ServiceFunctionNotFoundException();
     }
-    this.code = 'SERVICE_FUNCTION_NOT_FOUND';
+    this.name = 'SERVICE_FUNCTION_NOT_FOUND';
     this.message = "You must provide a function for the service";
 }
 util.inherits(ServiceFunctionNotFoundException,StudioException);
@@ -44,7 +44,7 @@ function FilteredMessageException (receiver){
     if(!(this instanceof FilteredMessageException)){
         return new FilteredMessageException(receiver);
     }
-    this.code = 'FILTERED_MESSAGE';
+    this.name = 'FILTERED_MESSAGE';
     this.receiver = receiver;
     this.message = receiver+" filtered a message";
 }

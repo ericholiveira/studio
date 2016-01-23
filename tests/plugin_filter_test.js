@@ -9,12 +9,15 @@ describe("Filter plugin",function(){
     });
     var serviceSync = Studio('sumPositive');
     it("must accept sync filters",function(done){
-        serviceSync(1,2).then(function(res){
-            expect(res).to.equal(1+2);
-            done();
-        }).catch(done);
-        serviceSync(-1,2).then(done).catch(function(e){
-            expect(e.code).to.equal('FILTERED_MESSAGE');
+        Studio.promise.join(
+            serviceSync(1,2).then(function(res){
+                expect(res).to.equal(1+2);
+            }).catch(done),
+            serviceSync(-1,2).then(done).catch(function(e){
+                expect(e.name).to.equal('FILTERED_MESSAGE');
+            })
+        ).then(function(){
+           done();
         });
     });
 
@@ -24,13 +27,16 @@ describe("Filter plugin",function(){
         return yield param1 > 0 && param2 > 0;
     });
     var serviceAsync = Studio('sumPositiveAsync');
-    it("must accept async filters",function(done){
-        serviceAsync(1,2).then(function(res){
-            expect(res).to.equal(1+2);
+    it("must accept generator filters",function(done){
+        Studio.promise.join(
+            serviceAsync(1,2).then(function(res){
+                expect(res).to.equal(1+2);
+            }).catch(done),
+            serviceAsync(-1,2).then(done).catch(function(e){
+                expect(e.name).to.equal('FILTERED_MESSAGE');
+            })
+        ).then(function(){
             done();
-        }).catch(done);
-        serviceAsync(-1,2).then(done).catch(function(e){
-            expect(e.code).to.equal('FILTERED_MESSAGE');
         });
     });
 
@@ -40,13 +46,40 @@ describe("Filter plugin",function(){
         return Studio.promise.resolve( param1 > 0 && param2 > 0);
     });
     var serviceGen = Studio('sumPositiveGen');
-    it("must accept async filters",function(done){
-        serviceGen(1,2).then(function(res){
-            expect(res).to.equal(1+2);
+    it("must accept promise filters",function(done){
+        Studio.promise.join(
+            serviceGen(1,2).then(function(res){
+                expect(res).to.equal(1+2);
+            }).catch(done),
+            serviceGen(-1,2).then(done).catch(function(e){
+                expect(e.name).to.equal('FILTERED_MESSAGE');
+            })
+        ).then(function(){
             done();
-        }).catch(done);
-        serviceGen(-1,2).then(done).catch(function(e){
-            expect(e.code).to.equal('FILTERED_MESSAGE');
+        });
+    });
+
+    Studio(function multipleFilter(param){
+        return param;
+    }).filter(function greaterThan0(param){
+        return param>0;
+    }).filter(function even (param){
+        return param%2 === 0;
+    });
+    var multipleFilter = Studio('multipleFilter');
+    it("must accept multiple filters",function(done){
+        Studio.promise.join(
+            multipleFilter(1).then(done).catch(function(e){
+                expect(e.name).to.equal('FILTERED_MESSAGE');
+            }),
+            multipleFilter(-2).then(done).catch(function(e){
+                expect(e.name).to.equal('FILTERED_MESSAGE');
+            }),
+            multipleFilter(2).then(function(res){
+                expect(res).to.equal(2);
+            }).catch(function(){})
+        ).then(function(){
+            done();
         });
     });
 

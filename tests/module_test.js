@@ -27,7 +27,7 @@ describe("Modules",function(){
             });
             expect(false).to.equal(true);
         }catch(exc){
-            expect(exc.code).to.equal('ROUTE_ALREADY_EXISTS');
+            expect(exc.name).to.equal('ROUTE_ALREADY_EXISTS');
         }
     });
     it("must let services being called with fullname",function(done){

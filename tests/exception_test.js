@@ -4,7 +4,7 @@ Studio = Studio.module('exception');
 describe("Studio exceptions",function(){
     it("must throw ROUTE_NOT_FOUND on inexistent route",function(done){
         Studio('inexistent')().catch(function(exc){
-            expect(exc.code).to.equal('ROUTE_NOT_FOUND');
+            expect(exc.name).to.equal('ROUTE_NOT_FOUND');
             done();
         }).catch(done);
     });
@@ -14,7 +14,7 @@ describe("Studio exceptions",function(){
             Studio(function some(){});
             expect(false).to.equal(true);
         }catch(exc){
-            expect(exc.code).to.equal('ROUTE_ALREADY_EXISTS');
+            expect(exc.name).to.equal('ROUTE_ALREADY_EXISTS');
         }
     });
     it("must throw SERVICE_NAME_OR_ID_NOT_FOUND on service without id (out of module)",function(){
@@ -22,7 +22,7 @@ describe("Studio exceptions",function(){
             require('../src/studio')(function (){});
             expect(false).to.equal(true);
         }catch(exc){
-            expect(exc.code).to.equal('SERVICE_NAME_OR_ID_NOT_FOUND');
+            expect(exc.name).to.equal('SERVICE_NAME_OR_ID_NOT_FOUND');
         }
     });
     it("must throw SERVICE_NAME_OR_ID_NOT_FOUND on service without id (on module)",function(){
@@ -30,7 +30,7 @@ describe("Studio exceptions",function(){
             Studio(function (){});
             expect(false).to.equal(true);
         }catch(exc){
-            expect(exc.code).to.equal('SERVICE_NAME_OR_ID_NOT_FOUND');
+            expect(exc.name).to.equal('SERVICE_NAME_OR_ID_NOT_FOUND');
         }
     });
     it("must throw SERVICE_FUNCTION_NOT_FOUND if dont have a function to run",function(){
@@ -38,7 +38,7 @@ describe("Studio exceptions",function(){
             Studio({id:'dummy', fn:null});
             expect(false).to.equal(true);
         }catch(exc){
-            expect(exc.code).to.equal('SERVICE_FUNCTION_NOT_FOUND');
+            expect(exc.name).to.equal('SERVICE_FUNCTION_NOT_FOUND');
         }
     });
 });

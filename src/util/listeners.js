@@ -56,7 +56,7 @@ var notify = function(type, target){
     var _listeners = listeners[type];
     for(i=0,len=_listeners.length;i<len;i++){
         if(_listeners[i].filter(target.id)){
-            _listeners[i].fn(target);
+            _listeners[i].fn(target,target.__plugin_info.ref);
         }
     }
     return target;

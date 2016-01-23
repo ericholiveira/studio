@@ -11,7 +11,7 @@ describe("Start/stop feature",function(){
             _basic.stop();
             return Studio('basic')();
         }).catch(function(exc){
-            expect(exc.code).to.equal('ROUTE_NOT_FOUND');
+            expect(exc.name).to.equal('ROUTE_NOT_FOUND');
             done();
         });
     });
