@@ -34,7 +34,7 @@ var _Studio= {
     plugin : {
         timer:require('./plugin/timer'),
         timeout:require('./plugin/timeout'),
-        watch:require('./plugin/watch')
+        watch:require('./plugin/watch') // ALPHA , avoid usage in production
     }
 };
 
