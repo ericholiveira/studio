@@ -32,7 +32,9 @@ var _Studio= {
     },
     ref : require('./ref'),
     plugin : {
-        timer:require('./plugin/timer')
+        timer:require('./plugin/timer'),
+        timeout:require('./plugin/timeout'),
+        watch:require('./plugin/watch')
     }
 };
 
