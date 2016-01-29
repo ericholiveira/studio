@@ -34,6 +34,8 @@ var _Studio= {
     plugin : {
         timer:require('./plugin/timer'),
         timeout:require('./plugin/timeout'),
+        restify:require('./plugin/restify'),
+        JsMockito:require('./plugin/jsmockito'),
         watch:require('./plugin/watch') // ALPHA , avoid usage in production
     }
 };

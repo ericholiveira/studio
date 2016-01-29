@@ -64,9 +64,12 @@
     "grunt-mocha-test": "^0.12.7",
     "grunt-release": "0.13.0",
     "hapi": "^11.0.2",
+    "joi": "^7.2.2",
+    "jsmockito": "^1.0.5",
     "koa": "^0.19.1",
     "koa-router": "^4.3.2",
     "mocha": "^2.3.4",
+    "restify": "^4.0.3",
     "source-map-support": "^0.3.2"
   }
 }
