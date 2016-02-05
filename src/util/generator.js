@@ -1,0 +1,13 @@
+var _Promise = require('bluebird');
+module.exports = {
+    isGeneratorFunction : function (obj) {
+        var constructor = obj.constructor || {};
+        return 'GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName;
+    },
+    toAsync: function(fn){
+        if (this.isGeneratorFunction(fn)) {
+            return _Promise.coroutine(fn);
+        }
+        return _Promise.method(fn);
+    }
+};

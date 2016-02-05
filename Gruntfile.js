@@ -1,30 +1,15 @@
 var grunt = require("grunt");
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-contrib-jshint');
-grunt.loadNpmTasks('grunt-coffeelint');
-grunt.loadNpmTasks('grunt-contrib-coffee');
-grunt.loadNpmTasks('grunt-contrib-copy');
-grunt.loadNpmTasks('grunt-codo');
-grunt.loadNpmTasks('grunt-contrib-jasmine');
-grunt.loadNpmTasks('grunt-browserify');
 grunt.loadNpmTasks('grunt-release');
-grunt.loadNpmTasks('grunt-jasmine-node');
-grunt.loadNpmTasks('grunt-jasmine-node-coverage');
 grunt.loadNpmTasks('grunt-exec');
+grunt.loadNpmTasks('grunt-mocha-test');
+grunt.loadNpmTasks('grunt-istanbul');
 
 grunt.initConfig({
-	coffeelint: {
-		app: ['src/**/*.coffee', '*.coffee'],
-		options: {
-			'max_line_length': {
-				level: 'ignore'
-			}
-		}
-	},
 	watch: {
 		scripts: {
-			files: ['src/**/*.{coffee,js}', '*.{coffee,js}',
-				'tests/core/*.{coffee,js}'
+			files: ['src/**/*.js', '*.js', 'tests/*.js'
 			],
 			tasks: ['all'],
 			options: {
@@ -32,54 +17,46 @@ grunt.initConfig({
 			}
 		}
 	},
-	jshint: {
-		all: ['src/**/*.js', '*.js', 'tests/core/*.js', 'examples/*/*.js'],
+	instrument: {
+		files: ['src/**/*.js','tests/**/*.js'],
 		options: {
-			esnext: true
+			lazy: false,
+			basePath: '.coverage'
 		}
 	},
-	coffee: {
-		multiple: {
+	jshint: {
+		all: ['src/**/*.js', '*.js', 'tests/**/*.js'],
+		options:{
+			esnext:true
+		}
+	},
+	mochaTest: {
+		test: {
 			options: {
-				sourceMap: true,
-				sourceMapDir: 'compiled/maps/'
+				reporter: 'spec',
+				clearRequireCache:true
 			},
-			expand: true,
-			cwd: 'src',
-			src: '**/*.coffee',
-			dest: 'compiled/',
-			ext: '.js'
-		}
-	},
-	copy: {
-		js: {
-			expand: true,
-			cwd: 'src/',
-			src: '**/*.js',
-			dest: 'compiled/'
-		}
-	},
-	codo: {
-		all: {
-			src: ['src/**/*.coffee'],
-			dest: 'docs/'
-		}
-	},
-	jasmine: {
-		src: ['tests/target/studio-with-dependencies-with-tests.js']
-	},
-	browserify: {
-		dist: {
-			files: {
-				'dist/studio-with-dependencies.js': ['compiled/core/studio.js']
-			}
+			src: ['tests/**/*.js']
 		},
-		testCore: {
-			files: {
-				'tests/target/studio-with-dependencies-with-tests.js': [
-					'tests/core/*.js'
-				]
-			}
+		cov: {
+			options: {
+				reporter: 'spec',
+				clearRequireCache:true
+			},
+			src: ['.coverage/tests/**/*.js']
+		}
+	},
+	storeCoverage: {
+		options: {
+			dir: '.coverage/reports'
+		}
+	},
+	makeReport: {
+		src: '.coverage/reports/**/*.json',
+		options: {
+			type: 'html',
+			dir: '.coverage/reports',
+			print: 'both'
 		}
 	},
 	release: {
@@ -95,19 +72,16 @@ grunt.initConfig({
 		express: 'node --debug examples/hello-express/index.js',
 		hapi: 'node --debug examples/hello-hapi/index.js',
 		restify: 'node --debug examples/hello-restify/index.js',
-		koa: 'node --harmony-generators --debug examples/hello-koa/index.js',
+		koa: 'node --harmony-generators --debug examples/hello-koa/index.js'
 	}
 
 });
-grunt.registerTask("test", ["jasmine"]);
-grunt.registerTask("all", ["all-coffee", "all-js", "browserify:dist",
-	"browserify:testCore", "test"
-]);
-grunt.registerTask("all-js", ["jshint:all", "copy:js"]);
-grunt.registerTask("all-coffee", ["coffeelint", "coffee:multiple"]);
+grunt.registerTask("cov-test", [ "instrument","mochaTest:cov", 'storeCoverage','makeReport']);
+grunt.registerTask("test", ["mochaTest:test"]);
+grunt.registerTask("coverage", ["jshint","cov-test"]);
+grunt.registerTask("all", ["jshint", "test"]);
 grunt.registerTask("default", ["all", "watch"]);
-grunt.registerTask("doc", ["codo:all"]);
-grunt.registerTask("prod", ["all", "browserify:dist", "release"]);
+grunt.registerTask("prod", ["all", "release"]);
 
 grunt.registerTask("example:express", 'exec:express');
 grunt.registerTask("example:hapi", 'exec:hapi');

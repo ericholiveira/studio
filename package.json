@@ -34,10 +34,13 @@
     "csextends": "1.0.3"
   },
   "scripts": {
-    "test": "grunt all"
+    "test": "node --harmony ./node_modules/.bin/grunt test",
+    "start": "node --harmony ./node_modules/.bin/grunt",
+    "coverage": "node --harmony ./node_modules/.bin/grunt coverage"
   },
   "readmeFilename": "README.md",
   "devDependencies": {
+    "chai": "^3.4.1",
     "co": "^4.5.1",
     "coffee-script": "1.8.0",
     "express": "^4.13.3",
@@ -55,12 +58,18 @@
     "grunt-exec": "0.4.6",
     "grunt-execute": "0.2.2",
     "grunt-express-server": "0.4.19",
+    "grunt-istanbul": "^0.6.1",
     "grunt-jasmine-node": "0.2.1",
     "grunt-jasmine-node-coverage": "0.2.0",
+    "grunt-mocha-test": "^0.12.7",
     "grunt-release": "0.13.0",
     "hapi": "^11.0.2",
+    "joi": "^7.2.2",
+    "jsmockito": "^1.0.5",
     "koa": "^0.19.1",
     "koa-router": "^4.3.2",
+    "mocha": "^2.3.4",
+    "restify": "^4.0.3",
     "source-map-support": "^0.3.2"
   }
 }

@@ -8,3 +8,5 @@ bin/
 coverage/
 compiled/
 .idea
+.coverage
+npm-debug.log
