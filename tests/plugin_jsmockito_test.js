@@ -1,6 +1,6 @@
 var expect = require("chai").expect;
 var Studio = require('../src/studio');
-var jsMockito = require('jsMockito').JsMockito;
+var jsMockito = require('jsmockito').JsMockito;
 Studio = Studio.module('plugin_jsmockito');
 describe("JSMockito plugin",function(){
     Studio.use(Studio.plugin.JsMockito(jsMockito));
