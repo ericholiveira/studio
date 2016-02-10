@@ -29,7 +29,7 @@ var createModel = function(modelName,fields){
     for(i=0;i<fields.length;i++){
         definitions[modelName].properties[fields[i].key] = {
             type: fields[i].schema._type
-        }
+        };
     }
 };
 var mapDocs = function(v){
@@ -43,7 +43,7 @@ var mapDocs = function(v){
         type = v.validator._meta && v.validator._meta[0] && v.validator._meta[0].type || v.validator._type;
         if(v.validator._type === 'object' && v.validator._type !== type ){
             createModel(type, v.validator._inner.children);
-            result.schema = {$ref:'#/definitions/'+type}
+            result.schema = {$ref:'#/definitions/'+type};
         }else{
             result.type = type;
         }
