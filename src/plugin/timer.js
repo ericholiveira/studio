@@ -8,13 +8,14 @@ var calculateResult = function(start,receiver,err){
 };
 module.exports = function(fn) {
     return function (options) {
-        options.onCall(function (message) {
+        options.onCall(function () {
+            var _args = arguments;
             var start = new Date().getTime();
-            return this.next(message).then(function (res) {
-                fn(calculateResult(start,message.receiver));
+            return this.next.apply(this,arguments).then(function (res) {
+                fn(calculateResult(start,_args[_args.length-1]));
                 return res;
             }).catch(function(err){
-                fn(calculateResult(start,message.receiver,err));
+                fn(calculateResult(start,_args[_args.length-1],err));
                 throw err;
             });
         });

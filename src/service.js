@@ -6,11 +6,8 @@ var listeners = require('./util/listeners');
 var generatorUtil = require('./util/generator');
 var clone = require('./util/clone');
 
-var _doProcess=function(message){
-    var body = message.body;
-    body.push(message.sender);
-    body.push(message.receiver);
-    return this.fn.apply(this,body);
+var _doProcess=function(){
+    return this.fn.apply(this,arguments);
 };
 
 module.exports = function serviceFactory(options) {
@@ -45,5 +42,3 @@ module.exports = function serviceFactory(options) {
 
     return result;
 };
-
-

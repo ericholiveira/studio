@@ -14,19 +14,17 @@ Router.prototype.deleteRoute = function(id){
     return delete _routes[id];
 };
 
-Router.prototype.send = function(sender,receiver){
-    var params = [].slice.call(arguments,2);
-    var route = _routes[receiver];
-    if(route){
-        var _message = clone({
-            sender: sender,
-            receiver: receiver,
-            body: params
-        });
-        return route.call(route,_message);
-    }else{
-        return _Promise.reject(exceptions.RouteNotFoundException(receiver));
-    }
+Router.prototype.send = function(receiver){
+    return function(){
+        var params = [].slice.call(arguments);
+        var message = clone(params);
+        message.push(receiver);
+        var route = _routes[receiver];
+        if(route){
+            return route.apply(route,message);
+        }
+        return _Promise.reject(exceptions.RouteNotFoundException(params[params.length-1]));
+    };
 };
 
 module.exports = new Router();
