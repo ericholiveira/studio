@@ -7,7 +7,6 @@ docs/
 bin/
 coverage/
 dist/
-src/
 tests/
 examples/
 .travis.yml

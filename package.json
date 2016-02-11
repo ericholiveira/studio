@@ -21,9 +21,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/onstagejs/studio.git"
+    "url": "https://github.com/ericholiveira/studio.git"
   },
-  "main": "./compiled/core/studio.js",
+  "main": "./src/studio.js",
   "dependencies": {
     "bluebird": "^3.2.2"
   },
