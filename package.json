@@ -1,6 +1,6 @@
 {
   "name": "studio",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "Micro services framework for nodejs",
   "author": {
     "name": "Erich Oliveira",
@@ -31,7 +31,7 @@
     "test": "node --harmony ./node_modules/.bin/grunt test",
     "start": "node --harmony ./node_modules/.bin/grunt",
     "coverage": "node --harmony ./node_modules/.bin/grunt coverage",
-    "prod":"node --harmony ./node_modules/.bin/grunt prod"
+    "prod": "node --harmony ./node_modules/.bin/grunt prod"
   },
   "readmeFilename": "README.md",
   "devDependencies": {
