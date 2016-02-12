@@ -14,7 +14,7 @@ var cloneProperties = function(newInstance,obj){
       newInstance[key] = clone(obj[key]);
   }
   return newInstance;
-}
+};
 var clone = function(obj) {
   "use strict";
   var flags, key, newInstance;

@@ -9,7 +9,6 @@ var defer = function() {
         _reject = reject;
     });
     return function(e,r){
-      "use strict";
         if(e) return _reject(e);
         _resolve(r);
     };

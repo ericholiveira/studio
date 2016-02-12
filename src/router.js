@@ -19,7 +19,6 @@ Router.prototype.deleteRoute = function(id){
 Router.prototype.send = function(rec){
   "use strict";
     return function(){
-      "use strict";
       var rt = _routes[rec];
       if(!rt){
         return _Promise.reject(exceptions.RouteNotFoundException(arguments[arguments.length -1]));

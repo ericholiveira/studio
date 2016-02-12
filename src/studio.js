@@ -1,4 +1,3 @@
-"use strict";
 var key;
 var exception= require('./exception');
 var _Studio= {
@@ -10,7 +9,6 @@ var _Studio= {
     module:function(moduleName){
       "use strict";
         var result = function(options){
-          "use strict";
             if(typeof options === 'string'){
                 return _Studio.ref(moduleName+'/'+options);
             }
@@ -21,7 +19,6 @@ var _Studio= {
         };
         copyStudioProperties(result);
         result.module=function(module2){
-          "use strict";
           return _Studio.module(moduleName+'/'+module2);
         };
         result._moduleName = moduleName;
