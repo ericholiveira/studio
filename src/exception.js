@@ -3,6 +3,7 @@ function StudioException(){}
 util.inherits(StudioException,Error);
 
 function RouteNotFoundException (route){
+  "use strict";
     if(!(this instanceof RouteNotFoundException)){
         return new RouteNotFoundException(route);
     }
@@ -13,6 +14,7 @@ function RouteNotFoundException (route){
 util.inherits(RouteNotFoundException,StudioException);
 
 function RouteAlreadyExistsException (route){
+  "use strict";
     if(!(this instanceof RouteAlreadyExistsException)){
         return new RouteAlreadyExistsException(route);
     }
@@ -23,6 +25,7 @@ function RouteAlreadyExistsException (route){
 util.inherits(RouteNotFoundException,StudioException);
 
 function ServiceNameOrIdNotFoundException (){
+  "use strict";
     if(!(this instanceof ServiceNameOrIdNotFoundException)){
         return new ServiceNameOrIdNotFoundException();
     }
@@ -32,6 +35,7 @@ function ServiceNameOrIdNotFoundException (){
 util.inherits(ServiceNameOrIdNotFoundException,StudioException);
 
 function ServiceFunctionNotFoundException (){
+  "use strict";
     if(!(this instanceof ServiceFunctionNotFoundException)){
         return new ServiceFunctionNotFoundException();
     }
@@ -41,6 +45,7 @@ function ServiceFunctionNotFoundException (){
 util.inherits(ServiceFunctionNotFoundException,StudioException);
 
 function FilteredMessageException (receiver){
+  "use strict";
     if(!(this instanceof FilteredMessageException)){
         return new FilteredMessageException(receiver);
     }

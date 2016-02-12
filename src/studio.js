@@ -1,3 +1,4 @@
+"use strict";
 var key;
 var exception= require('./exception');
 var _Studio= {
@@ -7,7 +8,9 @@ var _Studio= {
     exception: exception,
     defer:require('./util/promise_handlers'),
     module:function(moduleName){
+      "use strict";
         var result = function(options){
+          "use strict";
             if(typeof options === 'string'){
                 return _Studio.ref(moduleName+'/'+options);
             }
@@ -18,6 +21,7 @@ var _Studio= {
         };
         copyStudioProperties(result);
         result.module=function(module2){
+          "use strict";
           return _Studio.module(moduleName+'/'+module2);
         };
         result._moduleName = moduleName;
@@ -25,7 +29,6 @@ var _Studio= {
     },
     use : function(plugin,filter){
         return plugin({
-            onCall:function(funk) {require('./util/listeners').addOnCallListener(funk,filter);},
             onStart:function(listener){require('./util/listeners').addOnStartListener(listener,filter);},
             onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter);}
         },Studio);
@@ -41,12 +44,14 @@ var _Studio= {
 };
 
 var Studio = function Studio(options){
+  "use strict";
     if(typeof options === 'string'){
         return _Studio.ref(options);
     }
     return _Studio.service(options);
 };
 function copyStudioProperties(destination){
+  "use strict";
     for (key in _Studio){
         destination[key] = _Studio[key];
     }

@@ -6,7 +6,8 @@ var listeners = require('./util/listeners');
 var generatorUtil = require('./util/generator');
 var clone = require('./util/clone');
 module.exports = function serviceFactory(options) {
-    var _process, key, serv;
+  "use strict";
+  var _process, key, serv;
     if (typeof options === 'function') {
         _process = options;
         options = {
@@ -26,10 +27,12 @@ module.exports = function serviceFactory(options) {
 
     var result = ref(options.id);
     result.stop = function(){
+      "use strict";
         router.deleteRoute(options.id);
         listeners.notifyStop(serv);
     };
     result.start = function(){
+      "use strict";
         serviceFactory(options);
     };
     serv.__plugin_info.ref = result;

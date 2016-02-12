@@ -1,17 +1,14 @@
 var _Promise = require('bluebird');
-var isGeneratorFunction = require('./generator').isGeneratorFunction;
+var generatorUtil = require('./generator');
 var listeners = {
     onStart:[],
     onStop:[]
 };
 var addListener=function(type, listener){
+  "use strict";
     var opt={},helper;
     opt.filter = listener.filter;
-    if(isGeneratorFunction(listener.fn)){
-        opt.fn = _Promise.coroutine(listener.fn);
-    }else{
-        opt.fn = _Promise.method(listener.fn);
-    }
+    opt.fn = generatorUtil.toAsync(listener.fn);
     if(!opt.filter){
         opt.filter = function(){
             return true;
@@ -40,6 +37,7 @@ var addListener=function(type, listener){
     return listeners[type];
 };
 var notify = function(type, target){
+  "use strict";
     var i,len;
     var _listeners = listeners[type];
     for(i=0,len=_listeners.length;i<len;i++){
@@ -51,15 +49,19 @@ var notify = function(type, target){
 };
 module.exports={
     addOnStartListener:function(listener,filter){
+      "use strict";
         return addListener('onStart',{fn:listener,filter:filter});
     },
     addOnStopListener:function(listener,filter){
+      "use strict";
         return addListener('onStop',{fn:listener,filter:filter});
     },
     notifyStart:function(target){
+      "use strict";
         return notify('onStart',target);
     },
     notifyStop:function(target){
+      "use strict";
         return notify('onStop',target);
     }
 };

@@ -1,13 +1,23 @@
 var cloneArray = function(arr){
-    var i, len, results;
+  "use strict";
+  var i, len, results;
     results = [];
     for (i = 0, len = arr.length; i < len; i++) {
         results.push(clone(arr[i]));
     }
     return results;
 };
+var cloneProperties = function(newInstance,obj){
+  "use strict";
+  var key;
+  for (key in obj) {
+      newInstance[key] = clone(obj[key]);
+  }
+  return newInstance;
+}
 var clone = function(obj) {
-    var flags, key, newInstance;
+  "use strict";
+  var flags, key, newInstance;
     if (!obj || typeof obj !== 'object') {
         return obj;
     }
@@ -42,10 +52,7 @@ var clone = function(obj) {
         return cloneArray(obj);
     }
     newInstance = new obj.constructor();
-    for (key in obj) {
-        newInstance[key] = clone(obj[key]);
-    }
-    return newInstance;
+    return cloneProperties(newInstance,obj);
 };
 
 module.exports = clone;
