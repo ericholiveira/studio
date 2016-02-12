@@ -2,8 +2,7 @@ var _Promise = require('bluebird');
 var isGeneratorFunction = require('./generator').isGeneratorFunction;
 var listeners = {
     onStart:[],
-    onStop:[],
-    onCall:[]
+    onStop:[]
 };
 var addListener=function(type, listener){
     var opt={},helper;
@@ -57,30 +56,10 @@ module.exports={
     addOnStopListener:function(listener,filter){
         return addListener('onStop',{fn:listener,filter:filter});
     },
-    addOnCallListener:function(listener,filter){
-        return addListener('onCall',{fn:listener,filter:filter});
-    },
     notifyStart:function(target){
         return notify('onStart',target);
     },
     notifyStop:function(target){
         return notify('onStop',target);
-    },
-    getFirstOnCallListener:function(id,service){
-        var i,_listeners = listeners.onCall,aux = [],res= [];
-        for(i=_listeners.length-1;i>=0;i--){
-            if(_listeners[i].filter(id)) {
-                var bound ={
-                    next:aux[aux.length - 1] || service
-                };
-                var _list = _listeners[i].fn.bind(bound);
-                _list.next = bound.next;
-                aux.push(_list);
-            }
-        }
-        for(i=aux.length-1;i>=0;i--){
-            res.push(aux[i]);
-        }
-        return res[0] || service;
     }
 };

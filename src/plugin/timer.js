@@ -8,16 +8,18 @@ var calculateResult = function(start,receiver,err){
 };
 module.exports = function(fn) {
     return function (options) {
-        options.onCall(function () {
-            var _args = arguments;
-            var start = new Date().getTime();
-            return this.next.apply(this,arguments).then(function (res) {
-                fn(calculateResult(start,_args[_args.length-1]));
+        options.onStart(function (serv) {
+            var _fn = serv.fn;
+            serv.fn = function(){
+              var start = new Date().getTime();
+              return _fn.apply(serv,arguments).then(function (res) {
+                fn(calculateResult(start,serv.id));
                 return res;
-            }).catch(function(err){
-                fn(calculateResult(start,_args[_args.length-1],err));
+              }).catch(function(err){
+                fn(calculateResult(start,serv.id,err));
                 throw err;
-            });
+              });
+            };
         });
     };
 };

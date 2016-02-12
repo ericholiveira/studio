@@ -5,11 +5,6 @@ var exceptions = require('./exception');
 var listeners = require('./util/listeners');
 var generatorUtil = require('./util/generator');
 var clone = require('./util/clone');
-
-var _doProcess=function(){
-    return this.fn.apply(this,arguments);
-};
-
 module.exports = function serviceFactory(options) {
     var _process, key, serv;
     if (typeof options === 'function') {
@@ -27,7 +22,7 @@ module.exports = function serviceFactory(options) {
     serv.fn = generatorUtil.toAsync(serv.fn);
     serv.__plugin_info={};
 
-    router.createRoute(serv.id,_doProcess.bind(serv));
+    router.createRoute(serv.id,serv);
 
     var result = ref(options.id);
     result.stop = function(){

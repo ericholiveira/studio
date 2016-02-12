@@ -7,21 +7,20 @@ var _routes ={};
 var Router = function Router(){};
 Router.prototype.createRoute = function(id,service){
     if(_routes[id]) throw exceptions.RouteAlreadyExistsException(id);
-    _routes[id] = listeners.getFirstOnCallListener(id,service);
+    _routes[id] = service;
     return _routes[id];
 };
 Router.prototype.deleteRoute = function(id){
-    return delete _routes[id];
+   _routes[id] = null;
 };
 
 Router.prototype.send = function(receiver){
     return function(){
         var params = [].slice.call(arguments);
         var message = clone(params);
-        message.push(receiver);
         var route = _routes[receiver];
         if(route){
-            return route.apply(route,message);
+            return route.fn.apply(route,message);
         }
         return _Promise.reject(exceptions.RouteNotFoundException(params[params.length-1]));
     };

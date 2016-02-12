@@ -57,28 +57,4 @@ describe("Listeners tests",function() {
         Studio(function noop4(){}).stop();
     });
 
-    it("must support onCall",function(done){
-        var called_1=false;
-        var called_2=false;
-        Studio.use(function (options){
-            options.onCall(function * (message){
-                called_1 = true;
-                return yield this.next(message);
-            });
-        },'listeners/noop5');
-        Studio.use(function (options){
-            options.onCall(function (message){
-                called_2 = true;
-                return this.next(message);
-            });
-        },'listeners/noop5');
-        Studio(function noop5(message){
-            expect(message).to.equal('bla');
-            done();
-        });
-        Studio('noop5')('bla');
-        expect(called_1).to.equal(true);
-        expect(called_2).to.equal(true);
-    });
-
 });
