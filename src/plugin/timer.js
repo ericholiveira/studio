@@ -1,5 +1,5 @@
 var calculateResult = function(start,receiver,err){
-    var end = new Date().getTime();
+    var end = Date.now();
     return {
         time:end - start,
         receiver:receiver,
@@ -11,7 +11,7 @@ module.exports = function(fn) {
         options.onStart(function (serv) {
             var _fn = serv.fn;
             serv.fn = function(){
-              var start = new Date().getTime();
+              var start = Date.now();
               return _fn.apply(serv,arguments).then(function (res) {
                 fn(calculateResult(start,serv.id));
                 return res;
