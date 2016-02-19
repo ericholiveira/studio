@@ -21,7 +21,7 @@ Router.prototype.send = function(rec){
     return function(){
       var rt = _routes[rec];
       if(!rt){
-        return _Promise.reject(exceptions.RouteNotFoundException(arguments[arguments.length -1]));
+        return _Promise.reject(exceptions.RouteNotFoundException(rec));
       }
       switch(arguments.length){
           case 0:
