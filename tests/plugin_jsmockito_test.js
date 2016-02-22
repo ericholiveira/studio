@@ -46,7 +46,7 @@ describe("JSMockito plugin",function(){
     it("must support spy",function(done){
         var spy = jsMockito.studio.spy('plugin_jsmockito/basic');
         basicService(1,1).then(function(res){
-            jsMockito.verify(spy,jsMockito.Verifiers.once());
+            jsMockito.verify(spy,jsMockito.Verifiers.once())();
             expect(res).to.equal(2);
             done();
         }).catch(done);
