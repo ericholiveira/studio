@@ -1,13 +1,13 @@
-Studio.js
+Studio.js (v 0.11.X)
 ========
 
 <img src="http://ericholiveira.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
-Micro-services using actors model framework for JavaScript.
+Micro-services framework for Nodejs.
 
-Studio is a lightweight framework for node development to make easy to create reactive applications according to [reactive manifesto](http://www.reactivemanifesto.org/) principles. It uses an actor model (freely inspired by akka actors) implemented using [baconjs](https://github.com/baconjs/bacon.js) for reactive programming and [bluebird](https://github.com/petkaantonov/bluebird) a+ promises to solve the callback hell problem.
+Studio is a lightweight framework for node development to make easy to create reactive applications according to [reactive manifesto](http://www.reactivemanifesto.org/) principles. It uses micro-services (freely inspired by akka/erlang actors) implemented using [bluebird](https://github.com/petkaantonov/bluebird) a+ promises (or generators async/await) to solve the callback hell problem.
 
-The main goal is to make all systems response, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
+The main goal is to make all systems responsive, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
 
 Studio isn't only a library, it's a framework. It's really important to learn how to program and not only what each method can do.
 
@@ -17,9 +17,6 @@ I would love to receive feedback.Let me know if you've used it. What worked and 
 [![Build Status](https://travis-ci.org/ericholiveira/studio.svg?branch=master)](https://travis-ci.org/ericholiveira/studio)
 [![npm version](https://badge.fury.io/js/studio.svg)](http://badge.fury.io/js/studio)
 [![Dependency Status](https://david-dm.org/ericholiveira/studio.svg)](https://david-dm.org/ericholiveira/studio)
-[![devDependency Status](https://david-dm.org/ericholiveira/studio/dev-status.svg)](https://david-dm.org/ericholiveira/studio#info=devDependencies)
-[![Issue Stats](http://issuestats.com/github/ericholiveira/studio/badge/issue?style=flat)](http://issuestats.com/github/ericholiveira/studio)
-[![Issue Stats](http://issuestats.com/github/ericholiveira/studio/badge/pr?style=flat)](http://issuestats.com/github/ericholiveira/studio)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onstagejs/studio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![NPM](https://nodei.co/npm/studio.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/studio/)
@@ -29,12 +26,14 @@ Table of contents
 
 - [Install](#install)
 - [Intro](#intro)
-- [API](#api)
+- [Why](#why)
+- [Getting Started](#getting-started)
 - [Examples](#examples)
+- [Modules / namespacing](#modules)
 - [Filters](#filters)
-- [Streams](#streams)
 - [Timeouts](#timeouts)
 - [Co / Generators and flow-control](#generators)
+- [Proxy](#proxy)
 - [Plugins](#plugins)
 - [Zero Downtime Reload](#zero-downtime-reload)
 - [Pro tips](#pro-tips)
@@ -53,167 +52,251 @@ To install execute:
 Intro
 ========
 
-We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actor model](http://en.wikipedia.org/wiki/Actor_model). I present you [Studio](https://github.com/onstagejs/studio)
+We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actor model](http://en.wikipedia.org/wiki/Actor_model). I present you [Studio](https://github.com/ericholiveira/studio)
 
-Studio makes easy to create code without ANY dependency between your actors, so you can deploy all in a single machine or just easily change to each one in a different machine or anything between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be affraid of exceptions, Studio handles it to you), plugin and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express, restify, hapi and even koa) and flow-control libs (we have an example with Co for those who loves generators).
+Studio makes easy to create code without ANY dependency between your services, so you can deploy all in a single machine or just easily change to each one in a different machine or anything in between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be affraid of exceptions, Studio handles it to you), plugin and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express) and helps you with flow-control using [bluebird](https://github.com/petkaantonov/bluebird).
 
 Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.
 
-First of all, almost everything in a Studio-based application is an [Actor](http://ericholiveira.com/studio/docs/class/Actor.html).
+First of all, everything in a Studio-based application is aservice.
 
-So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON actor. Actors have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your actors to different servers and make a better use of it. Also, your actors have the free benefit of being naturally indempotent (each actor receives a COPY of the message, so one actor can't mess with the objects of another actor) increasing your code security, use [baconjs](https://github.com/baconjs/bacon.js) streams (which let you filter,map,buffer and do lots of different transformations to your messages) so you can keep your business rules apart for the validations increasing your code readability, and [bluebird](https://github.com/petkaantonov/bluebird) A+ promises to help you with the callback hell.
-
-The other important class on Studio is the [Driver](http://onstagejs.com/studio/docs/class/Driver.html).
-
-A driver takes your endpoint input and parses it in a message for a certain actor.
+So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON services. Services have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your servers to different servers and make a better use of it. Also, your services have the free benefit of being naturally indempotent (each service receives a COPY of the message, so one service can't mess with the objects of another service) increasing your code security.
 
 And this is it... this is all you need to create [reactive](http://reactivemanifesto.org) applications.
 
-
-API
+Why
 ========
 
-The API documentation can be accessed on [Docs](http://onstagejs.com/studio/docs/)
+Now you might be wondering why systems created with Studio can be called a reactive system. As stated by the [reactive manifesto](http://www.reactivemanifesto.org/), reactive systems are those who follow 4 principles:
+
+- Reponsive : 
+> Responsive systems focus on providing rapid and consistent response times, establishing reliable upper bounds so they deliver a consistent quality of service.
+
+Using Studio you just add a thin layer over your functions without comprimising the responsiveness while giving you the power to interact with your application in runtime as in [aspect-oriented programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+- Resilient :
+> The system stays responsive in the face of failure. This applies not only to highly-available, mission critical systems any system that is not resilient will be unresponsive after a failure. 
+
+This is critical for thoses using nodejs, Studio enforces you to use the best pratices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind (and idempotence) ir also makes easy to add redundance
+
+- Elastic : 
+> The system stays responsive under varying workload.
+
+This is critical for Studio. All service calls are async so you never release [zalgo](http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony), also every service call receives a copy of the parameters so a service cant mess with other service code. And for the last but not least using Studio plugins you can have measures of your code in realtime as using the [timer plugin](#timer) you can check the time needed to execute every single service call in your application and you can even send it easily for a statsd/grafana metrics dashboard.
+
+- Message driven :
+> Reactive Systems rely on asynchronous message-passing to establish a boundary between components that ensures loose coupling, isolation, location transparency, and provides the means to delegate errors as messages.
+
+All service calls in Studio are async, even if youre doing some sync code, Studio will make it run async. Also all call goes through the Studio router which enforces a deep clone of the parameters for security reasons, also all services are COMPLETELY DECOUPLED and isolated from each other
+
+So the main reason to use Studio is because it makes it to reason about your code and make it scalable as hell.
+
+Getting Started
+========
+
+To create a service all you need to do is pass a NAMED function to studio
+
+```js
+var Studio = require('studio');
+Studio(function myFirstService(){
+   return 'Hello World';
+});
+```
+
+To call a service all you need to do is pass the identifier of a service to studio (remember all service calls returns a promise)
+
+```js
+var Studio = require('studio');
+var myFirstServiceRef = Studio('myFirstService');
+myFirstServiceRef().then(function(result){
+	console.log(result); //Prints Hello World 
+});
+```
+
+You service can receive any number of arguments
+And also, you can get a reference to a service even if it was not instantiated yet (you only need it when calling) as in:
+
+
+```js
+var Studio = require('studio');
+//Get the reference for a non initialized service works perfectly
+var myServiceNotInstantiatedRef = Studio('myServiceNotInstantiated');
+
+Studio(function myServiceNotInstantiated(name){
+	return 'Hello '+name;
+});
+myServiceNotInstantiatedRef('John Doe').then(function(result){
+	console.log(result); //Prints Hello John Doe 
+});
+```
+
+Is that simple to run over Studio. No boilerplate required.
+
+Now the things can get more interesting if youre running on node > 4 or using the flag --harmony-generators, because studio supports generators out-of-the-box if they are available as in:
+
+```js
+var Studio = require('studio');
+var myFirstServiceRef = Studio('myFirstService');
+Studio(function myFirstService(){
+   return 'Hello World';
+});
+
+Studio(function * myFirstServiceWithGenerator(result){
+	var message = yield myFirstServiceRef();
+    console.log(message); // Prints Hello World
+   	return message + ' with Generators';
+});
+var myFirstServiceWithGeneratorRef = Studio('myFirstServiceWithGenerator');
+myFirstServiceWithGeneratorRef().then(function(result){
+	console.log(result); //Prints Hello World with Generators
+});
+```
+
+You can see all yieldable objects in the [generators](#generators) session
+ 
+Also if youre running on node > 4 or using the flag and --harmony-proxies. You can access the services easily:
+
+```js
+var Studio = require('studio');
+//Get a reference to all services, even those not created yet
+// So magical :)
+var allServices = Studio.services();
+
+Studio(function myFirstService(){
+   return 'Hello World';
+});
+
+Studio(function * myFirstServiceWithGenerator(result){
+	var message = yield allServices.myFirstService();
+    console.log(message); // Prints Hello World
+   	return message + ' with Generators';
+});
+
+allServices.myFirstServiceWithGenerator().then(function(result){
+	console.log(result); //Prints Hello World with Generators
+});
+```
 
 Examples
 ========
 
-Follow the link to see all available [examples](https://github.com/onstagejs/studio/tree/master/examples)
+Follow the link to see all available [examples](https://github.com/ericholiveira/studio/tree/master/examples)
 
 Studio works with any web framework.
 
-Here i`m going to put just a basic hello world with express, on [examples](https://github.com/onstagejs/studio/tree/master/examples) folder you can see the best pratices and more pratical examples ( with promises, errors, filters...)
-with Express, Restify , Koa or Hapi :
+Here i'm going to put just a basic hello world with express, on [examples](https://github.com/ericholiveira/studio/tree/master/examples) folder you can see the best pratices and more pratical examples ( with promises, errors, filters...):
 ```js
 var express = require('express');
 var Studio = require('studio'); //require Studio namespace
 var app = express(); // create an express app
-//The first thing we have to do is create a driver to listen to the request
-var driver = new Studio.Driver({
-/*
-Driver and Actor can receive an initialize function on constructor,
-this function is going to be executed on object creation
-*/
-	initialize: function () {
-        //Make express listen to '/' route
-		app.get('/', function (request, response) {
-		    /*
-		        we call the 'send' method of the driver passing express arguments,
-		        Studio calls the 'parser' function of this driver to build a message and then deliver
-		        this message to an actor, the send method ALWAYS returns a promise, so we call the
-		        'then' method of this promise to take the actors response
-		    */
-			driver.send(request, response).then(function (helloMessage) {
-				response.send(helloMessage);
-			});
-		});
-	},
-	/*
-	All drivers needs a parser function which takes any object and transforms
-	into an object with the fields 'sender', 'receiver', 'body', 'headers'
-	*/
-	parser: function (request, response) {
-	//Since we don't need any request info we just fill the receiver's id
-		return {
-			sender: null,
-			receiver: 'helloActor', // receiver identifier
-			body: null,
-			headers: null
-		};
-	}
+
+//Gets reference to helloService
+var helloService = Studio('helloService');
+//If you pass a String to Studio function it returns a reference for that service
+
+app.get('/', function(req, res) {
+  /* When this route is requested we send the message to the responsible
+   service using the 'helloService' function, all references returns a promise
+   when the promise is fulfilled the 'then' method is executed, if it is
+   rejected the 'catch' method is executed
+   */
+  helloService().then(function(message) {
+    res.send(message);
+  }).catch(function(message) {
+    res.send('Sorry, try again later => ' + message);
+  });
 });
-//Create an actor
-var hello = new Studio.Actor({
-	id: 'helloActor', // All Actors needs an identifier
-	/*
-	    All actors also needs a process function, this function is going to be executed
-	    when a message arrives this function can return any object or a promise,
-	    returning a object is going to automatically fulfill the sender promise.
-	    You can also throw an exception if any error occurs,
-	    and then the sender promise is going to be rejected
-	*/
-	process: function (body, headers, sender, receiver) {
-	/*An actor can communicate to others using the 'send' method as
-		this.send('otherActor',{foo:'bar'});
-	The 'send' message of an actor also returns a promise, so you can return it or use
-	then/catch to deal with the message. Also you can throw an exception here in case of fail
-	*/
-		return 'Hello World!!!';
-	}
-});
+//Create a service
+
+Studio(function helloService() {
+    /*
+    When Studio receives a NAMED function it will create a service with that name.
+    As stated before the since the decoupled nature of Studio you dont need to export a service
+    */
+    console.log(this.id + ' was called');
+    return 'Hello World!!!';
+  }
+);
 app.listen(3000);// Listen on port 3000
 ```
 
-On examples folder you can learn how to deal with errors, how to buffer or filter messages and much more.
+On examples folder you can learn how to deal with errors, filter messages and much more.
 
-If you think theres too much boilerplate to create an actor, you can define an actor using 3 different approaches. The 3 actors described above are the same:
+Modules
+========
+
+Studio have a built-in module system to prevent service identifier collision and it is insanely easy to use, all you have to do is prepend Studio calls with Studio.module("someModuleName")
 
 ```js
-new Studio.Actor({
-	id: 'helloActor',
-	process: function (body, headers, sender, receiver) {
-		return 'Hello World!!!';
-	}
+var Studio = require('studio'); //require Studio namespace
+var helloModule = Studio.module('hello');//Creates hello module
+
+//Creates service under hello module
+helloModule(function say(){
+	return 'hello';
 });
-```
-```js
-Studio.actorFactory({
-	helloActor: function (body, headers, sender, receiver) {
-		return 'Hello World!!!';
-	}
+
+var sayService = helloModule('say');
+
+Studio(function someServiceOnRootModule(){
+	return sayService();
 });
+
+var someServiceOnRootModuleRef = Studio('someServiceOnRootModule');
+
+someServiceOnRootModuleRef().then(function(result){
+	console.log(result);
+});
+
 ```
+
+Plugins
+========
+
+Plugins lets you have full control of whats going on with your services, this way you can enhance your services with a lot of cool capabilities like realtime metrics, timeout and any other cool stuff if you decide to create your own plugins. To use a plugin all you have to do is:
+
 ```js
-Studio.actorFactory(function helloActor (body, headers, sender, receiver) {return 'Hello World!!!';});
+	Studio.use(MY_SUPER_COOL_PLUGIN);
+```
+
+Plugins can listen to services creation and destruction(this way tou can intercept messages). The officially mantained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
+
+Studio.use method also receives an optional second parameter to filter the services that are going to receive the plugin this filter can be a string (to match only the service with that name), a regular expression, an array of strings or a function as:
+
+```js
+	Studio.use(MY_SUPER_COOL_PLUGIN_1, 'myService');
+    Studio.use(MY_SUPER_COOL_PLUGIN_2, /myService/g);
+    Studio.use(MY_SUPER_COOL_PLUGIN_3, ['myService1','myService2']);
+    Studio.use(MY_SUPER_COOL_PLUGIN_4, function(serviceId){
+    	return serviceId === 'myService';
+    });
 ```
 
 Filters
 ========
 
-Validation and filters are a common use for your actors, so the Studio already make it as a built-in resource. Any actor can have a "filter" function to handle this. As any other action on Studio, it already deals with async or sync results automatically.
+Validation and filters are a common use for your services, so the Studio already make it as a built-in resource. Any service can have a "filter" function to handle this (if you know [guards](https://en.wikipedia.org/wiki/Guard_(computer_science)) or asserts you know what a filter is). As any other action on Studio, it already deals with async or sync results automatically.
 
 ```js
-new Studio.Actor({
-  id: 'helloActorFiltered',
-  process: function(body, headers, sender, receiver) {
-    console.log('Received message to actor = ' + userActor.id);
+Studio(function helloFiltered(value){
+	console.log('Received message to actor = ' + userActor.id);
     return 'Hello';
-  },
+}).filter(function(value){
   /* Let's say you have a rule where the body needs to be greater than 0.
-     You could implement this logic on userActor 'process'
-     function, but a better approach would be to keep your filter logic away from
-     your business logic code. So all actors have the 'filter' method,
-     as process, this method can return any sync value or a promise, on this example we returns
-     a boolean value.
-     A message pass through the filter when:
-      - it returns true or returns any truthy value
-      - it resolves a promise with true or any truthy value
-      A message is rejected by the filter when:
-       - it returns false or returns any falsy value
-       - it resolves a promise with false or returns any falsy value
-       - it throws an exception
-       - it rejects a promise
+  You could implement this logic on helloFiltered
+  function, but a better approach would be to keep your filter logic away from
+  your business logic code. So all services have the 'filter' method, this method can return any 
+  sync value or a promise, on this example we returns a boolean value.
+  A message pass through the filter when:
+  - it returns true or returns any truthy value
+  - it resolves a promise with true or any truthy value
+  A message is rejected by the filter when:
+  - it returns false or returns any falsy value
+  - it resolves a promise with false or returns any falsy value
+  - it throws an exception
+  - it rejects a promise
   */
-  filter: function(body, headers, sender, receiver) {
-    return body>0; // As said before, you can also return a promise for async
-  }
-});
-```
-
-One important thing, you can also use to filter based on headers or on the sender, so its possible to use it to keep your actor private to your module (you just have to keep an namespace on all your modules actor id, 'myModule_myActor' for instance, and check the sender for it).
-
-Streams
-========
-
-As said before Studio uses Baconjs so you can use it to add any kind of transformation supported by Baconjs (like, buffer, map, throttling...). And its really easy to use it (you can see examples of buffer on examples folder, using any other transformation follows the same pattern)
-
-```js
-//Here we apply a map transformation
-myActor.addTransformation(function(stream) {
-  return stream.map(function(message) {
-    message.body = 'HELLO';
-    return message;
-  });
+	return value>0; // As said before, you can also return a promise for async
 });
 ```
 
@@ -221,62 +304,103 @@ Timeouts
 ========
 
 Studio also supports timeouts and is really easy to use.
-When a actor sends a message to another actor you just have to do:
+You can easily make sure that a service is going to respond in a timeframe or it fails, to do this, you will need to add the timeout plugin:
 
 ```js
-senderActor.send('receiverActorId',{foo:'bar'});
+Studio.use(Studio.plugin.timeout);
+Studio(function myServiceWithTImeout(){
+	var randomTime = Math.floor(Math.random()*100);
+    return Studio.promise.delay(randomTime);
+}).timeout(50);//Time in milliseconds
 ```
-
-To add a timeout to the message all you have to do is:
-
-```js
-var timeout = 1000;//1000 ms or 1 seg
-senderActor.sendWithTimeout(timeout,'receiverActorId',{foo:'bar'});
-````
-
-And if your message is not processed in <<timeout>> milisseconds the promise is going to be cancelled and fail.
 
 Generators
 ========
 
-If you use generators to control your system flow, you can also use Studio to it, and its incredibly simple the whole code can be seen in koa examples:
+Studio supports generators out-of-the-box if they are available (only available for node >4 or older versions running with --harmony-generators flag) as in:
 
 ```js
- new Studio.Actor({
-  id: 'chainActorCo',
-  initialize:function(opt){
-    //Wrap process function using co library, this way we can use yield and write cleaner code with generators
-    this.process = co.wrap(opt.process);
-  },
-  //On this case we define process function as a generator, so we can use yield keyword
-  process: function*(body, headers, sender, receiver) {
-    var messageToChainActor1 = 'actorCo -> ';
-    console.log('Received message to actor = ' + chainActorCo.id);
-    /*
-      As you can see the called actor (chainActor1) don't need any changes, so we can
-      communicate to actors using co or regular (non-co) actors without any changes, i.e.
-      we dont have to worry about the implementation of other actors, you can use Co, or any
-      generators/promise flow-control lib without any changes on your regular actors
-    */
-    return yield this.send('chainActor1', messageToChainActor1);
-  }
+var Studio = require('studio');
+var myFirstServiceRef = Studio('myFirstService');
+Studio(function myFirstService(){
+   return 'Hello World';
+});
+
+Studio(function * myFirstServiceWithGenerator(result){
+	var message = yield myFirstServiceRef();
+    console.log(message); // Prints Hello World
+   	return message + ' with Generators';
+});
+var myFirstServiceWithGeneratorRef = Studio('myFirstServiceWithGenerator');
+myFirstServiceWithGeneratorRef().then(function(result){
+	console.log(result); //Prints Hello World with Generators
 });
 ```
 
-Plugins
-========
+You can yield Promises, Arrays of Promises, Objects, and even callbacks using Studio.defer().
 
-Studio also makes easy to add plugin to enhance the usage. Plugins can listen to actors or drivers creation and destruction and also intercept all messages sent. By now we only have the [studio-timer plugin](https://github.com/onstagejs/studio-timer), this plugin calculate the time elapsed in all send messages. We also plan to implement a automatic discovery plugin, so, soon you will be able to deploy and redeploy your actor in multiple instances and keep the communication working with ZERO configuration.
+Examples:
 
-Zero downtime reload
-========
-
-Studio can listen to modification on your actors and reload it whenever anything changes, without the need to stop the application. By deafult, this feature is disabled and you have to enable it for each of your actors separetely. To do this just add a property <<watchPath:__filename>> on your actor on creation
 ```js
-new Studio.Actor({
-  id:'id',
-  watchPath:__filename,
-  process:function(){}
+var Studio = require('studio');
+var myFirstServiceRef = Studio('myFirstService');
+Studio(function myFirstService(){
+   return 'Hello World';
+});
+//Yielding promise
+Studio(function * myWithGeneratorYieldsPromise(result){
+	var message = yield myFirstServiceRef();
+    console.log(message); // Prints Hello World
+   	return message + ' with Generators';
+});
+//Yielding array
+Studio(function * myWithGeneratorYieldsArray(result){
+	var message = yield [myFirstServiceRef(),myFirstServiceRef()];
+    console.log(message[0]); // Prints Hello World
+    console.log(message[1]); // Prints Hello World
+   	return message[0] + ' with Generators';
+});
+
+//Yielding Object
+Studio(function * myWithGeneratorYieldsObject(result){
+	var message = yield 'Hello World';
+    console.log(message); // Prints Hello World
+   	return message + ' with Generators';
+});
+
+var fs = require('fs');
+//Yielding Callback
+Studio(function * myWithGeneratorYieldsObject(result){
+	// just place Studio.defer() instead of the callback function
+	var message = yield fs.readFile('SOME_FILE_NAME',Studio.defer());
+    console.log(message); // Prints the file content
+   	return message + ' with Generators';
+});
+```
+
+Proxy
+========
+
+If youre running on node > 4 or using --harmony-proxies flag. You can access the services easier:
+
+```js
+var Studio = require('studio');
+//Get a reference to all services, even those not created yet
+// So magical :)
+var allServices = Studio.services();
+
+Studio(function myFirstService(){
+   return 'Hello World';
+});
+
+Studio(function * myFirstServiceWithGenerator(result){
+	var message = yield allServices.myFirstService();
+    console.log(message); // Prints Hello World
+   	return message + ' with Generators';
+});
+
+allServices.myFirstServiceWithGenerator().then(function(result){
+	console.log(result); //Prints Hello World with Generators
 });
 ```
 
@@ -284,33 +408,30 @@ Pro tips
 ========
 
 - The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this [blog](https://blog.domenic.me/youre-missing-the-point-of-promises/) have a incredible explanation of what A+ promises means and how it saves you from callback hell
-- Studio uses [Baconjs](https://github.com/baconjs/bacon.js) streams to deliver messages, so use it, to filter , map,buffer and apply different transformations to your messages. Baconjs is a powerful tool to keep your code clean, you use it to keep your validations and non-functional requisites away from your actor process function. This way your actor will be more easy to read, mantainable and testable.
-- All your actor must be [idempotent](http://en.wikipedia.org/wiki/Idempotence) , Studio helps you to achieve this delivering to each actor a copy of the original message. Stop keep states on your code.
-- When dealing with stream transformation of an actor keep in mind you're dealing with (a copy of) raw message, the ray message have sender, receiver,body,headers and callback attributes, if you decide to filter a message you need to call the callback function manually to give to the blocked sender a response, the same applies for buffer.
-
+- All your services must be [idempotent](http://en.wikipedia.org/wiki/Idempotence) , Studio helps you to achieve this delivering to each service a copy of the original message. Stop keep states on your code.
 
 Dependencies
 ========
 Studio depends on:
-- [baconjs](https://github.com/baconjs/bacon.js) for stream manipulation
 - [bluebird](https://github.com/petkaantonov/bluebird) for a+ promises usage
-- [csextends](https://github.com/bevry/csextends) to make coffee classes extensible via javascript
+- [harmony-proxy](https://github.com/Swatinem/proxy) to help with proxy usage on node 0.11 and 0.12 (if you want to enable it) 
 
 Build
 ========
 
 To build the project you have to run:
 
-    grunt
+    npm install
+    npm run start
 
-This is going to generate js files (and source-maps) on "compiled" folder and a browserified version of Studio on "dist" folder
+This is going to install dependencies, lint and test the code
 
 Test
 ========
 
 Run test with:
 
-    npm test
+    npm run test
 
 License
 ========
