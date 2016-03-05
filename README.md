@@ -9,6 +9,8 @@ Studio is a lightweight framework for node development to make easy to create re
 
 The main goal is to make all systems responsive, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
 
+The plugin system and the decoupled nature of it enables you to have real time metrics in your services and we plan to implement on the next releases zero downtime reload and automatic clusterization.
+
 Studio isn't only a library, it's a framework. It's really important to learn how to program and not only what each method can do.
 
 I would love to receive feedback.Let me know if you've used it. What worked and what is wrong. Contribute and spread the word.
@@ -30,12 +32,12 @@ Table of contents
 - [Getting Started](#getting-started)
 - [Examples](#examples)
 - [Modules / namespacing](#modules)
-- [Filters](#filters)
-- [Timeouts](#timeouts)
 - [Co / Generators and flow-control](#generators)
 - [Proxy](#proxy)
 - [Plugins](#plugins)
-- [Zero Downtime Reload](#zero-downtime-reload)
+- [Filters](#filters)
+- [Timeouts](#timeouts)
+- [Realtime metrics](#realtime-metrics)
 - [Pro tips](#pro-tips)
 - [Dependencies](#dependencies)
 - [Build](#build)
@@ -250,69 +252,6 @@ someServiceOnRootModuleRef().then(function(result){
 
 ```
 
-Plugins
-========
-
-Plugins lets you have full control of whats going on with your services, this way you can enhance your services with a lot of cool capabilities like realtime metrics, timeout and any other cool stuff if you decide to create your own plugins. To use a plugin all you have to do is:
-
-```js
-	Studio.use(MY_SUPER_COOL_PLUGIN);
-```
-
-Plugins can listen to services creation and destruction(this way tou can intercept messages). The officially mantained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
-
-Studio.use method also receives an optional second parameter to filter the services that are going to receive the plugin this filter can be a string (to match only the service with that name), a regular expression, an array of strings or a function as:
-
-```js
-	Studio.use(MY_SUPER_COOL_PLUGIN_1, 'myService');
-    Studio.use(MY_SUPER_COOL_PLUGIN_2, /myService/g);
-    Studio.use(MY_SUPER_COOL_PLUGIN_3, ['myService1','myService2']);
-    Studio.use(MY_SUPER_COOL_PLUGIN_4, function(serviceId){
-    	return serviceId === 'myService';
-    });
-```
-
-Filters
-========
-
-Validation and filters are a common use for your services, so the Studio already make it as a built-in resource. Any service can have a "filter" function to handle this (if you know [guards](https://en.wikipedia.org/wiki/Guard_(computer_science)) or asserts you know what a filter is). As any other action on Studio, it already deals with async or sync results automatically.
-
-```js
-Studio(function helloFiltered(value){
-	console.log('Received message to actor = ' + userActor.id);
-    return 'Hello';
-}).filter(function(value){
-  /* Let's say you have a rule where the body needs to be greater than 0.
-  You could implement this logic on helloFiltered
-  function, but a better approach would be to keep your filter logic away from
-  your business logic code. So all services have the 'filter' method, this method can return any 
-  sync value or a promise, on this example we returns a boolean value.
-  A message pass through the filter when:
-  - it returns true or returns any truthy value
-  - it resolves a promise with true or any truthy value
-  A message is rejected by the filter when:
-  - it returns false or returns any falsy value
-  - it resolves a promise with false or returns any falsy value
-  - it throws an exception
-  - it rejects a promise
-  */
-	return value>0; // As said before, you can also return a promise for async
-});
-```
-
-Timeouts
-========
-
-Studio also supports timeouts and is really easy to use.
-You can easily make sure that a service is going to respond in a timeframe or it fails, to do this, you will need to add the timeout plugin:
-
-```js
-Studio.use(Studio.plugin.timeout);
-Studio(function myServiceWithTImeout(){
-	var randomTime = Math.floor(Math.random()*100);
-    return Studio.promise.delay(randomTime);
-}).timeout(50);//Time in milliseconds
-```
 
 Generators
 ========
@@ -402,6 +341,97 @@ Studio(function * myFirstServiceWithGenerator(result){
 allServices.myFirstServiceWithGenerator().then(function(result){
 	console.log(result); //Prints Hello World with Generators
 });
+```
+
+
+Plugins
+========
+
+Plugins lets you have full control of whats going on with your services, this way you can enhance your services with a lot of cool capabilities like realtime metrics, timeout and any other cool stuff if you decide to create your own plugins. To use a plugin all you have to do is:
+
+```js
+	Studio.use(MY_SUPER_COOL_PLUGIN);
+```
+
+Plugins can listen to services creation and destruction(this way tou can intercept messages). The officially mantained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
+
+Studio.use method also receives an optional second parameter to filter the services that are going to receive the plugin this filter can be a string (to match only the service with that name), a regular expression, an array of strings or a function as:
+
+```js
+	Studio.use(MY_SUPER_COOL_PLUGIN_1, 'myService');
+    Studio.use(MY_SUPER_COOL_PLUGIN_2, /myService/g);
+    Studio.use(MY_SUPER_COOL_PLUGIN_3, ['myService1','myService2']);
+    Studio.use(MY_SUPER_COOL_PLUGIN_4, function(serviceId){
+    	return serviceId === 'myService';
+    });
+```
+
+Filters
+========
+
+Validation and filters are a common use for your services, so the Studio already make it as a built-in resource. Any service can have a "filter" function to handle this (if you know [guards](https://en.wikipedia.org/wiki/Guard_(computer_science)) or asserts you know what a filter is). As any other action on Studio, it already deals with async or sync results automatically.
+
+```js
+Studio(function helloFiltered(value){
+	console.log('Received message to actor = ' + userActor.id);
+    return 'Hello';
+}).filter(function(value){
+  /* Let's say you have a rule where the body needs to be greater than 0.
+  You could implement this logic on helloFiltered
+  function, but a better approach would be to keep your filter logic away from
+  your business logic code. So all services have the 'filter' method, this method can return any 
+  sync value or a promise, on this example we returns a boolean value.
+  A message pass through the filter when:
+  - it returns true or returns any truthy value
+  - it resolves a promise with true or any truthy value
+  A message is rejected by the filter when:
+  - it returns false or returns any falsy value
+  - it resolves a promise with false or returns any falsy value
+  - it throws an exception
+  - it rejects a promise
+  */
+	return value>0; // As said before, you can also return a promise for async
+});
+```
+
+Timeouts
+========
+
+Studio also supports timeouts and is really easy to use.
+You can easily make sure that a service is going to respond in a timeframe or it fails, to do this, you will need to add the timeout plugin:
+
+```js
+Studio.use(Studio.plugin.timeout);
+Studio(function myServiceWithTImeout(){
+	var randomTime = Math.floor(Math.random()*100);
+    return Studio.promise.delay(randomTime);
+}).timeout(50);//Time in milliseconds
+```
+
+Real time metrics
+=================
+
+One of the cool things you can do with Studio plugins is to have real time metrics of all your services, if you want to log
+the time needed to execute on every call of every service you can do it easily with the timer plugin. This plugin also
+shows you the power you can take from custom plugin and [aspect programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+```js
+var Studio = require('studio');
+Studio.use(Studio.plugin.timer(function(res){
+    /*
+    here you define what to do with the execution info, now we are going just to print in the console, but
+    in production you probably will wants to send it to statsd of some other metric aggregator
+    */
+    console.log(res);//Prints the time taken on service execution and other infos
+}));
+Studio(function myService(){
+	var randomTime = Math.floor(Math.random()*100);
+    return Studio.promise.delay(randomTime);
+});//Time in milliseconds
+
+var myServiceRef = Studio('myService');
+
+setInterval(myServiceRef,500);
 ```
 
 Pro tips
