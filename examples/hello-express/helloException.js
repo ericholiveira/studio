@@ -1,11 +1,11 @@
 //Getting started comments on hello.js file
-var Studio = require('../../compiled/core/studio');
+var Studio = require('../../src/studio');
 var app = require('./app');
 
-var helloActorException = Studio.ref('helloActorException');
+var errorService = Studio('errorService');
 
 app.get('/exception', function(req, res) {
-  helloActorException().then(function(message) {
+  errorService().then(function(message) {
     res.send(message);
   }).catch(function(message) {
     res.send('Sorry, try again later => ' + message);

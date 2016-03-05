@@ -1,17 +1,15 @@
-var Studio = require('../../compiled/core/studio');
+var Studio = require('../../src/studio');
 
 
 
-var userActor = Studio.Actor({
-  id: 'helloActorFiltered',
-  process: function(body, headers, sender, receiver) {
-    console.log('Received message to actor = ' + userActor.id);
-    return 'Hello ' + body;
-  },
+Studio(function filteredService(body){
+  console.log(this.id + ' was called');
+  return 'Hello ' + body;
+}).filter(function(body){
   /* Let's say you have a rule where the username needs to start with lower case 'e'
-     or the username is rejected. You could implement this logic on userActor 'process'
+     or the username is rejected. You could implement this logic on service
      function, but a better approach would be to keep your filter logic away from
-     your business logic code. So all actors have the 'filter' method,
+     your business logic code. So all services have the 'filter' method,
      as process, this method can return any sync value or a promise, on this example we returns
      a boolean value.
      A message pass through the filter when:
@@ -23,8 +21,6 @@ var userActor = Studio.Actor({
        - it throws an exception
        - it rejects a promise
   */
-  filter: function(body, headers, sender, receiver) {
-    var filterResult = (body.charAt(0) === 'e');
-    return filterResult;
-  }
+  var filterResult = (body.charAt(0) === 'e');
+  return filterResult;
 });

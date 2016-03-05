@@ -1,11 +1,11 @@
 //Getting started comments on hello.js file
-var Studio = require('../../compiled/core/studio');
+var Studio = require('../../src/studio');
 var app = require('./app');
 
-var helloActorDelayed = Studio.ref('helloActorDelayed');
+var asyncService = Studio('asyncService');
 
 app.get('/delay', function(req, res) {
-  helloActorDelayed().then(function(message) {
+  asyncService().then(function(message) {
     res.send(message);
   }).catch(function(message) {
     res.send('Sorry, try again later => ' + message);
