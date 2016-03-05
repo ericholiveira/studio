@@ -39,7 +39,30 @@ var _Studio= {
         watch:require('./plugin/watch') // ALPHA , avoid usage in production
     }
 };
-
+if(typeof Proxy !=='undefined'){
+    var _Proxy = require('harmony-proxy');
+    var createProxy = function(context){
+        var contextFunction = function(){};
+        var container={};
+        var base = context._moduleName || '';
+        var baseRef= Studio.ref(base);
+        return new _Proxy(contextFunction, {
+            "get": function (target, name) {
+                if(!container[name]){
+                    container[name] = createProxy(context.module(name));
+                }
+                return container[name];
+            },
+            "set":function(){},
+            "apply":function(target, thisArg, argumentsList){
+                return baseRef.apply(thisArg,argumentsList);
+            }
+        });
+    };
+    _Studio.services=function(){
+        return createProxy(this);
+    };
+}
 var Studio = function Studio(options){
   "use strict";
     if(typeof options === 'string'){

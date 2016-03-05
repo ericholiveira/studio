@@ -25,13 +25,14 @@
   },
   "main": "./src/studio.js",
   "dependencies": {
-    "bluebird": "^3.2.2"
+    "bluebird": "^3.2.2",
+    "harmony-proxy": "^1.0.0"
   },
   "scripts": {
-    "test": "node --harmony ./node_modules/.bin/grunt test",
-    "start": "node --harmony ./node_modules/.bin/grunt",
-    "coverage": "node --harmony ./node_modules/.bin/grunt coverage",
-    "prod": "node --harmony ./node_modules/.bin/grunt prod"
+    "test": "node --harmony --harmony-proxies ./node_modules/.bin/grunt test",
+    "start": "node --harmony --harmony-proxies  ./node_modules/.bin/grunt",
+    "coverage": "node --harmony --harmony-proxies  ./node_modules/.bin/grunt coverage",
+    "prod": "node --harmony --harmony-proxies  ./node_modules/.bin/grunt prod"
   },
   "readmeFilename": "README.md",
   "devDependencies": {
@@ -52,7 +53,6 @@
     "grunt-jasmine-node-coverage": "0.2.0",
     "grunt-mocha-test": "^0.12.7",
     "grunt-release": "0.13.0",
-    "hapi": "^11.0.2",
     "joi": "^7.2.2",
     "jsmockito": "^1.0.5",
     "koa": "^1.1.2",
