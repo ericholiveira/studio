@@ -54,13 +54,13 @@ To install execute:
 Intro
 ========
 
-We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actor model](http://en.wikipedia.org/wiki/Actor_model). I present you [Studio](https://github.com/ericholiveira/studio)
+We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actors model](http://en.wikipedia.org/wiki/Actor_model). I present you [Studio](https://github.com/ericholiveira/studio)
 
-Studio makes easy to create code without ANY dependency between your services, so you can deploy all in a single machine or just easily change to each one in a different machine or anything in between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be affraid of exceptions, Studio handles it to you), plugin and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express) and helps you with flow-control using [bluebird](https://github.com/petkaantonov/bluebird).
+Studio makes easy to create code without ANY dependency between your services, so you can deploy all in a single machine or just easily change to each one in a different machine or anything in between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be affraid of exceptions, Studio handles it to you), plugins and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express) and helps you with flow-control using [bluebird](https://github.com/petkaantonov/bluebird).
 
 Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.
 
-First of all, everything in a Studio-based application is aservice.
+First of all, everything in a Studio-based application is a service.
 
 So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON services. Services have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your servers to different servers and make a better use of it. Also, your services have the free benefit of being naturally indempotent (each service receives a COPY of the message, so one service can't mess with the objects of another service) increasing your code security.
 
@@ -79,17 +79,17 @@ Using Studio you just add a thin layer over your functions without comprimising 
 - Resilient :
 > The system stays responsive in the face of failure. This applies not only to highly-available, mission critical systems any system that is not resilient will be unresponsive after a failure. 
 
-This is critical for thoses using nodejs, Studio enforces you to use the best pratices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind (and idempotence) ir also makes easy to add redundance
+This is critical for thoses using nodejs, Studio enforces you to use the best pratices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind (and idempotence) it also makes easy to add redundance
 
 - Elastic : 
 > The system stays responsive under varying workload.
 
-This is critical for Studio. All service calls are async so you never release [zalgo](http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony), also every service call receives a copy of the parameters so a service cant mess with other service code. And for the last but not least using Studio plugins you can have measures of your code in realtime as using the [timer plugin](#timer) you can check the time needed to execute every single service call in your application and you can even send it easily for a statsd/grafana metrics dashboard.
+This is critical for Studio. All service calls are async so you never release [zalgo](http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony), also every service call receives a copy of the parameters so a service cant mess with other service code. And for the last but not least using Studio plugins you can have measures of your code in realtime as using the [timer plugin](#timer) you can check the time needed to execute every single service call in your application and you can even send it easily for a statsd/grafana metrics dashboard. So this way you have an application ready to scale horizontally and also with the metrics to help you to decide when to do this.
 
 - Message driven :
 > Reactive Systems rely on asynchronous message-passing to establish a boundary between components that ensures loose coupling, isolation, location transparency, and provides the means to delegate errors as messages.
 
-All service calls in Studio are async, even if youre doing some sync code, Studio will make it run async. Also all call goes through the Studio router which enforces a deep clone of the parameters for security reasons, also all services are COMPLETELY DECOUPLED and isolated from each other
+All service calls in Studio are async, even if youre doing some sync code, Studio will make it run async. Also all call goes through the Studio router which enforces a deep clone of the parameters for security reasons, and all services are COMPLETELY DECOUPLED and isolated from each other
 
 So the main reason to use Studio is because it makes it to reason about your code and make it scalable as hell.
 
@@ -154,9 +154,9 @@ myFirstServiceWithGeneratorRef().then(function(result){
 });
 ```
 
-You can see all yieldable objects in the [generators](#generators) session
+You can yield Promises, Arrays of promises (for concurrency), Regular Objects or even Thunkable (node callbacks) you can see hthe examples in the [generators](#generators) session
  
-Also if youre running on node > 4 or using the flag and --harmony-proxies. You can access the services easily:
+Also if youre running on node > 4 or using the flag and --harmony-proxies. You can access the services easier:
 
 ```js
 var Studio = require('studio');
@@ -238,6 +238,10 @@ helloModule(function say(){
 	return 'hello';
 });
 
+/*
+Modules object have all the properties from Studio, but running only for that module
+so  helloModule('say'); return a reference to the service 'say' inside the module hello
+*/
 var sayService = helloModule('say');
 
 Studio(function someServiceOnRootModule(){
@@ -353,7 +357,7 @@ Plugins lets you have full control of whats going on with your services, this wa
 	Studio.use(MY_SUPER_COOL_PLUGIN);
 ```
 
-Plugins can listen to services creation and destruction(this way tou can intercept messages). The officially mantained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
+Plugins can listen to services creation and destruction(this way you can intercept messages). The officially mantained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
 
 Studio.use method also receives an optional second parameter to filter the services that are going to receive the plugin this filter can be a string (to match only the service with that name), a regular expression, an array of strings or a function as:
 
@@ -369,7 +373,7 @@ Studio.use method also receives an optional second parameter to filter the servi
 Filters
 ========
 
-Validation and filters are a common use for your services, so the Studio already make it as a built-in resource. Any service can have a "filter" function to handle this (if you know [guards](https://en.wikipedia.org/wiki/Guard_(computer_science)) or asserts you know what a filter is). As any other action on Studio, it already deals with async or sync results automatically.
+Validation and filters are a common use for your services, so Studio already make it as a built-in resource. Any service can have a "filter" function to handle this (if you know [guards](https://en.wikipedia.org/wiki/Guard_(computer_science)) or asserts you know what a filter is). As any other action on Studio, it already deals with async or sync results automatically.
 
 ```js
 Studio(function helloFiltered(value){
