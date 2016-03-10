@@ -36,6 +36,7 @@ var _Studio= {
         timeout:require('./plugin/timeout'),
         restify:require('./plugin/restify'),
         JsMockito:require('./plugin/jsmockito'),
+        retry:require('./plugin/retry'),
         watch:require('./plugin/watch') // ALPHA , avoid usage in production
     }
 };
