@@ -27,7 +27,8 @@ var _Studio= {
     use : function(plugin,filter){
         return plugin({
             onStart:function(listener){require('./util/listeners').addOnStartListener(listener,filter);},
-            onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter);}
+            onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter);},
+            interceptSend:function(listener){require('./util/listeners').addInterceptSend(listener,filter);}
         },Studio);
     },
     ref : require('./ref'),

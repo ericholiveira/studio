@@ -22,6 +22,26 @@ describe("Listeners tests",function() {
         expect(called_OnStop).to.equal(true);
     });
 
+    it("must support interceptSend",function(){
+        var message = 'hello';
+        var extra = '!!!';
+        Studio.use(function (options){
+            options.interceptSend(function(send,route){
+                expect(route).to.equal('listeners/interceptTest');
+                return function(){
+                    expect(arguments[0]).to.equal(message);
+                    return send.apply(this,arguments);
+                };
+            });
+        },'listeners/interceptTest');
+        return Studio(function interceptTest(param){
+            expect(param).to.equal(message);
+            return param + extra;
+        })(message).then(function(result){
+            expect(result).to.equal(message+extra);
+        });
+    });
+
     it("must accept string filters",function(){
         Studio.use(function (options){
             options.onStart(function(service){
