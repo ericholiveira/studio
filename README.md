@@ -1,5 +1,5 @@
-Studio.js (v 0.11.X)
-========
+Studio.js
+=========
 
 <img src="http://ericholiveira.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
