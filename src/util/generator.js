@@ -5,9 +5,9 @@ module.exports = {
         var constructor = obj.constructor || {};
         return 'GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName;
     },
-    toAsync: function(fn){
+    toAsync: function(fn,forceGenerator){
       "use strict";
-        if (this.isGeneratorFunction(fn)) {
+        if (forceGenerator || this.isGeneratorFunction(fn)) {
             return _Promise.coroutine(fn);
         }
         return _Promise.method(fn);

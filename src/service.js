@@ -5,9 +5,11 @@ var exceptions = require('./exception');
 var listeners = require('./util/listeners');
 var generatorUtil = require('./util/generator');
 var clone = require('./util/clone');
-module.exports = function serviceFactory(options) {
-  "use strict";
-  var _process, key, serv;
+module.exports = function serviceFactory(options, extra) {
+
+    "use strict";
+    var _process, serv;
+    extra = extra || {};
     if (typeof options === 'function') {
         _process = options;
         options = {
@@ -20,7 +22,7 @@ module.exports = function serviceFactory(options) {
     if (!options.id) throw exceptions.ServiceNameOrIdNotFoundException();
     if (!options.fn) throw exceptions.ServiceFunctionNotFoundException();
     serv = clone(options);
-    serv.fn = generatorUtil.toAsync(serv.fn);
+    serv.fn = generatorUtil.toAsync(serv.fn,extra.forceGenerator);
     serv.__plugin_info={};
 
     router.createRoute(serv.id,serv);

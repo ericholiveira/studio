@@ -1,21 +1,37 @@
 var key;
 var exception= require('./exception');
+var isGeneratorFunction = require('./util/generator').isGeneratorFunction;
 var _Studio= {
     router: require('./router'),
     service: require('./service'),
+    serviceClass : function(_class){
+        var _module = this.module(_class.name);
+        var _instance = new _class();
+        Object.keys(_instance).filter(function(k){
+            return typeof _instance[k] === 'function';
+        }).forEach(function(k){
+            var forceGenerator = isGeneratorFunction(_instance[k]);
+            console.log(forceGenerator);
+            _instance[k] = _module({
+                id: k,
+                fn:_instance[k].bind(_instance)
+            },{forceGenerator:forceGenerator});
+        });
+        return _instance;
+    },
     promise: require('bluebird'),
     exception: exception,
     defer:require('./util/promise_handlers'),
     module:function(moduleName){
       "use strict";
-        var result = function(options){
+        var result = function(options,extra){
             if(typeof options === 'string'){
-                return _Studio.ref(moduleName+'/'+options);
+                return _Studio.ref(moduleName+'/'+options,extra);
             }
             if(!options.id && !options.name) throw exception.ServiceNameOrIdNotFoundException();
             options.id = options.id || options.name;
             options.id = moduleName+'/'+options.id;
-            return _Studio.service(options);
+            return _Studio.service(options,extra);
         };
         copyStudioProperties(result);
         result.module=function(module2){
@@ -65,12 +81,12 @@ if(typeof Proxy !=='undefined'){
         return createProxy(this);
     };
 }
-var Studio = function Studio(options){
+var Studio = function Studio(options, extra){
   "use strict";
     if(typeof options === 'string'){
-        return _Studio.ref(options);
+        return _Studio.ref(options, extra);
     }
-    return _Studio.service(options);
+    return _Studio.service(options, extra);
 };
 function copyStudioProperties(destination){
   "use strict";
@@ -81,5 +97,4 @@ function copyStudioProperties(destination){
 copyStudioProperties(Studio);
 
 Studio.use(require('./plugin/filter'));
-Studio.use(require('./plugin/watch'));
 module.exports=Studio;
