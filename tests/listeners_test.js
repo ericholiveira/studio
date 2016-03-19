@@ -1,5 +1,6 @@
 var expect = require("chai").expect;
 var Studio = require('../src/studio');
+var otherModule = Studio.module('listeners2');
 Studio = Studio.module('listeners');
 describe("Listeners tests",function() {
     it("must support onStart and onStop",function(){
@@ -33,48 +34,87 @@ describe("Listeners tests",function() {
                     return send.apply(this,arguments);
                 };
             });
-        },'listeners/interceptTest');
+        }, function(route){
+            return route.indexOf('interceptTest') > 0;
+        });
         return Studio(function interceptTest(param){
             expect(param).to.equal(message);
             return param + extra;
         })(message).then(function(result){
             expect(result).to.equal(message+extra);
+            return otherModule(function _interceptTest(){
+                return null; //dont need expectation, because the module already expect route === listener/interceptTest
+            })();
         });
     });
 
-    it("must accept string filters",function(){
+    it("must accept string filters",function(done){
+        var e;
         Studio.use(function (options){
             options.onStart(function(service){
-                expect(service.id).to.equal('listeners/noop2');
+                try {
+                    expect(service.id).to.equal('listeners/noop2');
+                }catch(err){
+                        e = err;
+                }
             });
             options.onStop(function(service){
-                expect(service.id).to.equal('listeners/noop2');
+                try {
+                    expect(service.id).to.equal('listeners/noop2');
+                }catch(err){
+                    e = err;
+                }
             });
-        },'listeners/noop2');
+        }, function(route){
+            return route.indexOf('noop2') > 0;
+        });
+        //dont need expectation, because the module already expect route === listeners/noop2
+        otherModule(function _noop2(){}).stop();
         Studio(function noop2(){}).stop();
+        setTimeout(done.bind(null,e),10);
     });
 
-    it("must accept array filters",function(){
+    it("must accept array filters",function(done){
+        var e;
         Studio.use(function (options){
             options.onStart(function(service){
-                expect(service.id).to.equal('listeners/noop3');
+                try {
+                    expect(service.id).to.equal('listeners/noop3');
+                }catch(err){
+                    e = err;
+                }
             });
             options.onStop(function(service){
-                expect(service.id).to.equal('listeners/noop3');
+                try {
+                    expect(service.id).to.equal('listeners/noop3');
+                }catch(err){
+                    e = err;
+                }
             });
         },['listeners/noop3']);
         Studio(function noop3(){}).stop();
+        setTimeout(done.bind(null,e),10);
     });
-    it("must accept regex filters",function(){
+    it("must accept regex filters",function(done){
+        var e;
         Studio.use(function (options){
             options.onStart(function(service){
-                expect(service.id).to.equal('listeners/noop4');
+                try {
+                    expect(service.id).to.equal('listeners/noop4');
+                }catch(err){
+                    e = err;
+                }
             });
             options.onStop(function(service){
-                expect(service.id).to.equal('listeners/noop4');
+                try {
+                    expect(service.id).to.equal('listeners/noop4');
+                }catch(err){
+                    e = err;
+                }
             });
         },/listeners\/noop4/gi);
         Studio(function noop4(){}).stop();
+        setTimeout(done.bind(null,e),10);
     });
 
 });

@@ -41,10 +41,11 @@ var _Studio= {
         return result;
     },
     use : function(plugin,filter){
+        var self = this;
         return plugin({
-            onStart:function(listener){require('./util/listeners').addOnStartListener(listener,filter);},
-            onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter);},
-            interceptSend:function(listener){require('./util/listeners').addInterceptSend(listener,filter);}
+            onStart:function(listener){require('./util/listeners').addOnStartListener(listener,filter,self._moduleName);},
+            onStop:function(listener){require('./util/listeners').addOnStopListener(listener,filter,self._moduleName);},
+            interceptSend:function(listener){require('./util/listeners').addInterceptSend(listener,filter,self._moduleName);}
         },Studio);
     },
     ref : require('./ref'),
