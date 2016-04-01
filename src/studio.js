@@ -12,7 +12,6 @@ var _Studio= {
             return k !== 'constructor' && typeof _instance[k] === 'function';
         }).forEach(function(k){
             var forceGenerator = isGeneratorFunction(_instance[k]);
-            console.log(forceGenerator);
             _instance[k] = _module({
                 id: k,
                 fn:_instance[k].bind(_instance)
