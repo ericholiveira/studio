@@ -7,8 +7,9 @@ var _Studio= {
     serviceClass : function(_class){
         var _module = this.module(_class.name);
         var _instance = new _class();
-        Object.keys(_instance).filter(function(k){
-            return typeof _instance[k] === 'function';
+        var keys = Object.keys(_instance).concat(Object.getOwnPropertyNames(Object.getPrototypeOf(_instance)));
+        keys.filter(function(k){
+            return k !== 'constructor' && typeof _instance[k] === 'function';
         }).forEach(function(k){
             var forceGenerator = isGeneratorFunction(_instance[k]);
             console.log(forceGenerator);
