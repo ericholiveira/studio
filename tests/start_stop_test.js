@@ -6,10 +6,11 @@ describe("Start/stop feature",function(){
         return true;
     });
     it("must be stoppable",function(done){
-        Studio('basic')().then(function(result){
+        var basicService = Studio('basic');
+        basicService().then(function(result){
             expect(result).to.equal(true);
             _basic.stop();
-            return Studio('basic')();
+            return basicService();
         }).catch(function(exc){
             expect(exc.name).to.equal('ROUTE_NOT_FOUND');
             done();
