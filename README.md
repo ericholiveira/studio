@@ -9,7 +9,7 @@ Studio is a lightweight framework for node development to make easy to create re
 
 The main goal is to make all systems responsive, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
 
-The plugin system and the decoupled nature of it enables you to have real time metrics in your services and we plan to implement on the next releases zero downtime reload and automatic clusterization.
+The plugin system and the decoupled nature of it enables you to have real time metrics in your services , [ZERO CONFIGURATION CLUSTERIZATION ON DISTRIBUTED MACHINES](#cluster) and other improvements for your services.
 
 Studio isn't only a library, it's a framework. It's really important to learn how to program and not only what each method can do.
 
@@ -38,6 +38,7 @@ Table of contents
 - [Filters](#filters)
 - [Timeouts](#timeouts)
 - [Realtime metrics](#realtime-metrics)
+- [Cluster](#cluster)
 - [Pro tips](#pro-tips)
 - [Dependencies](#dependencies)
 - [Build](#build)
@@ -437,6 +438,11 @@ var myServiceRef = Studio('myService');
 
 setInterval(myServiceRef,500);
 ```
+
+Cluster
+========
+
+To clusterize your application without any configuration you need to add the [studio-cluster](https://github.com/ericholiveira/studio-cluster) plugin, follow the link to see how to use and examples of implementations, like the [distributed merge sort](https://github.com/ericholiveira/studio-cluster/tree/master/examples/mergesort)
 
 Pro tips
 ========
