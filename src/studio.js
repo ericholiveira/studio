@@ -52,10 +52,9 @@ var _Studio= {
     plugin : {
         timer:require('./plugin/timer'),
         timeout:require('./plugin/timeout'),
-        restify:require('./plugin/restify'),
         JsMockito:require('./plugin/jsmockito'),
         retry:require('./plugin/retry'),
-        watch:require('./plugin/watch') // ALPHA , avoid usage in production
+        richErrors:require('./plugin/rich_errors')
     }
 };
 if(typeof Proxy !=='undefined'){

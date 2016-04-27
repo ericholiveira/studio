@@ -38,7 +38,7 @@ Table of contents
 - [Filters](#filters)
 - [Timeouts](#timeouts)
 - [Realtime metrics](#realtime-metrics)
-- [Cluster](#cluster)
+- [Clustering](#cluster)
 - [Pro tips](#pro-tips)
 - [Dependencies](#dependencies)
 - [Build](#build)
@@ -135,7 +135,7 @@ myServiceNotInstantiatedRef('John Doe').then(function(result){
 
 Is that simple to run over Studio. No boilerplate required.
 
-Now the things can get more interesting if youre running on node > 4 or using the flag --harmony-generators, because studio supports generators out-of-the-box if they are available as in:
+Now the things can get more interesting if youre running on node >= 4 or using the flag --harmony-generators, because studio supports generators out-of-the-box if they are available as in:
 
 ```js
 var Studio = require('studio');
@@ -157,7 +157,7 @@ myFirstServiceWithGeneratorRef().then(function(result){
 
 You can yield Promises, Arrays of promises (for concurrency), Regular Objects or even Thunkable (node callbacks) you can see hthe examples in the [generators](#generators) session
  
-Also if youre running on node > 4 or using the flag and --harmony-proxies. You can access the services easier:
+Also if youre running on node >= 6 or using the flag and --harmony-proxies. You can access the services easier:
 
 ```js
 var Studio = require('studio');

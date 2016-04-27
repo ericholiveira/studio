@@ -1,0 +1,17 @@
+
+module.exports = function(fn) {
+  "use strict";
+  return function (options) {
+      options.onStart(function (serv) {
+          var _fn = serv.fn;
+          serv.fn = function(){
+            var args = arguments;
+            return _fn.apply(serv,args).catch(function (err) {
+              err._timestamp = Date.now();
+              err._params = [].slice.call(args);
+              throw err;
+            });
+          };
+      });
+  };
+};
