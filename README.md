@@ -39,6 +39,7 @@ Table of contents
 - [Timeouts](#timeouts)
 - [Realtime metrics](#realtime-metrics)
 - [Clustering](#cluster)
+- [TODO](#todo)
 - [Pro tips](#pro-tips)
 - [Dependencies](#dependencies)
 - [Build](#build)
@@ -443,6 +444,11 @@ Cluster
 ========
 
 To clusterize your application without any configuration you need to add the [studio-cluster](https://github.com/ericholiveira/studio-cluster) plugin, follow the link to see how to use and examples of implementations, like the [distributed merge sort](https://github.com/ericholiveira/studio-cluster/tree/master/examples/mergesort)
+
+TODO
+========
+
+> Create a plugin to support browser communication (this way users can call services from the browser as local services)
 
 Pro tips
 ========
