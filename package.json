@@ -1,6 +1,6 @@
 {
   "name": "studio",
-  "version": "0.12.3",
+  "version": "0.13.0",
   "description": "Micro services framework for nodejs",
   "author": {
     "name": "Erich Oliveira",
