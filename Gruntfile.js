@@ -63,8 +63,6 @@ grunt.initConfig({
 		options: {
 			bump: true,
 			npm: true,
-			changelog: 'CHANGELOG.md',
-			changelogText: '### <%= version %> - ' + grunt.template.today('yyyy-mm-dd') + '\n',
 			npmTag: "<%= version %>"
 		}
 	},
