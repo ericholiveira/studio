@@ -16,7 +16,7 @@ Studio isn't only a library, it's a framework. It's really important to learn ho
 I would love to receive feedback.Let me know if you've used it. What worked and what is wrong. Contribute and spread the word.
 
 
-Wants to learn more???? Join our slack channel: https://studiojs.slack.com
+Wants to learn more???? Join our slack channel: https://studiojs.slack.com/admin/shared_invites
 
 [![Build Status](https://travis-ci.org/ericholiveira/studio.svg?branch=master)](https://travis-ci.org/ericholiveira/studio)
 [![npm version](https://badge.fury.io/js/studio.svg)](http://badge.fury.io/js/studio)
