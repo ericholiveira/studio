@@ -1,9 +1,9 @@
 var cloneArray = function(arr){
   "use strict";
-  var i, len, results;
-    results = [];
-    for (i = 0, len = arr.length; i < len; i++) {
-        results.push(clone(arr[i]));
+  var i, results,len=arr.length;
+    results = new Array(len);
+    for (i = 0; i < len; i++) {
+        results[i]=clone(arr[i]);
     }
     return results;
 };
