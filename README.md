@@ -65,7 +65,7 @@ Studio encourages you to use the best pratices of nodejs, it helps you to write 
 
 First of all, everything in a Studio-based application is a service.
 
-So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON services. Services have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your servers to different servers and make a better use of it. Also, your services have the free benefit of being naturally indempotent (each service receives a COPY of the message, so one service can't mess with the objects of another service) increasing your code security.
+So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON services. Services have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your servers to different servers and make a better use of it. Also, your services have the free benefit of deep copying the parameters before the message is delivered (so one service can't mess with the objects of another service) increasing your code security.
 
 And this is it... this is all you need to create [reactive](http://reactivemanifesto.org) applications.
 
@@ -82,7 +82,7 @@ Using Studio you just add a thin layer over your functions without comprimising 
 - Resilient :
 > The system stays responsive in the face of failure. This applies not only to highly-available, mission critical systems any system that is not resilient will be unresponsive after a failure. 
 
-This is critical for thoses using nodejs, Studio enforces you to use the best pratices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind (and idempotence) it also makes easy to add redundance
+This is critical for thoses using nodejs, Studio enforces you to use the best pratices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind it also makes easy to add redundance
 
 - Elastic : 
 > The system stays responsive under varying workload.
@@ -455,7 +455,7 @@ Pro tips
 ========
 
 - The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this [blog](https://blog.domenic.me/youre-missing-the-point-of-promises/) have a incredible explanation of what A+ promises means and how it saves you from callback hell
-- All your services must be [idempotent](http://en.wikipedia.org/wiki/Idempotence) , Studio helps you to achieve this delivering to each service a copy of the original message. Stop keep states on your code.
+- You should avoid mutatins states , Studio helps you to achieve this delivering to each service a copy of the original message.
 
 Dependencies
 ========
