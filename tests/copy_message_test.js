@@ -47,8 +47,7 @@ describe("A message", function () {
 			toDelete: 'delete',
 			num: 1,
 			data: new Date(),
-			regExp: /[0-9]/gim,
-			buf: new Buffer(1)
+			regExp: /[0-9]/gim
 		};
 		var cloned = clone(message);
 		expect(2).to.equal(clone(2));

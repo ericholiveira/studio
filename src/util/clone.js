@@ -43,11 +43,6 @@ var clone = function(obj) {
         }
         return new RegExp(obj.source, flags);
     }
-    if (obj instanceof Buffer) {
-        newInstance = new Buffer(obj.length);
-        obj.copy(newInstance);
-        return newInstance;
-    }
     if (obj instanceof Array) {
         return cloneArray(obj);
     }
