@@ -462,7 +462,9 @@ From Zero To Hero
 ========
 
 I've also started a series of posts on my medium explaining the motivation and creating a small project with studio
+
 [Nodejs microservices. From Zero to Hero Pt1](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt1-279548cb4080)
+
 [Nodejs microservices. From Zero to Hero Pt2](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt2-72fbb2a1b1c4#.dpz6adn7c)
 
 Dependencies
