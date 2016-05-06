@@ -3,9 +3,11 @@ Studio.js
 
 <img src="http://ericholiveira.com/studio/images/STUDIO_logo.png" align="right" width="300px" />
 
-Micro-services framework for Nodejs.
+Micro services framework for Nodejs.
 
 Studio is a lightweight framework for node development to make easy to create reactive applications according to [reactive manifesto](http://www.reactivemanifesto.org/) principles. It uses micro-services (freely inspired by akka/erlang actors) implemented using [bluebird](https://github.com/petkaantonov/bluebird) a+ promises (or generators async/await) to solve the callback hell problem.
+
+Do you want clusterization? Realtime metrics? Easy async programming? Completely decoupled services? Stop worryng about throwing exceptions? Then I've  built this framework for you, because node needs a framework easy to use, yet giving your powerful features like realtime metrics and clusterization with no configuration (service discovery + rpc). Other frameworks relies on "actors", "commands", "brokers" and a lot of other complicated concepts, studio deals only with functions and promises, if you know both concepts you're ready to use and master it.
 
 The main goal is to make all systems responsive, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
 
