@@ -42,6 +42,7 @@ Table of contents
 - [Clustering](#cluster)
 - [TODO](#todo)
 - [Pro tips](#pro-tips)
+- [From Zero To Hero](#from-zero-to-hero)
 - [Dependencies](#dependencies)
 - [Build](#build)
 - [Test](#test)
@@ -456,6 +457,13 @@ Pro tips
 
 - The most important tip is LEARN HOW TO DEAL WITH A+ PROMISES, i think this [blog](https://blog.domenic.me/youre-missing-the-point-of-promises/) have a incredible explanation of what A+ promises means and how it saves you from callback hell
 - You should avoid mutatins states , Studio helps you to achieve this delivering to each service a copy of the original message.
+
+From Zero To Hero
+========
+
+I've also started a series of posts on my medium explaining the motivation and creating a small project with studio
+[Nodejs microservices. From Zero to Hero Pt1](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt1-279548cb4080)
+[Nodejs microservices. From Zero to Hero Pt2](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt2-72fbb2a1b1c4#.dpz6adn7c)
 
 Dependencies
 ========
