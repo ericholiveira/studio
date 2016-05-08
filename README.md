@@ -9,7 +9,7 @@ Studio is a lightweight framework for node development to make easy to create re
 
 Do you want clusterization? Realtime metrics? Easy async programming? Completely decoupled services? Stop worrying about throwing exceptions? Then I've  built this framework for you, because node needs a framework easy to use, yet giving your powerful features like realtime metrics and clusterization with no configuration (service discovery + rpc). Other frameworks relies on "actors", "commands", "brokers" and a lot of other complicated concepts, studio deals only with functions and promises, if you know both concepts you're ready to use and master it.
 
-The main goal is to make all systems responsive, fault tolerant, scalable and mantainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
+The main goal is to make all systems responsive, fault tolerant, scalable and maintainable. The development with Studio is (and always will be) as easy as possible, i'll keep a concise api, so other developers can create (and share) plugins for the framework.
 
 The plugin system and the decoupled nature of it enables you to have real time metrics in your services , [ZERO CONFIGURATION CLUSTERIZATION ON DISTRIBUTED MACHINES](#cluster) and other improvements for your services.
 
@@ -60,11 +60,11 @@ To install execute:
 Intro
 ========
 
-We all want our systems to be responsive, scalable, fault tolerant, mantainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actors model](http://en.wikipedia.org/wiki/Actor_model). I present you [Studio](https://github.com/ericholiveira/studio)
+We all want our systems to be responsive, scalable, fault tolerant, maintainable and for the last, but not least, easy and fun to develop. With this goals in mind i decided to build a [micro-services](http://martinfowler.com/articles/microservices.html) framework for nodejs using and architecture freely inspired on [actors model](http://en.wikipedia.org/wiki/Actor_model). I present you [Studio](https://github.com/ericholiveira/studio)
 
-Studio makes easy to create code without ANY dependency between your services, so you can deploy all in a single machine or just easily change to each one in a different machine or anything in between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be affraid of exceptions, Studio handles it to you), plugins and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express) and helps you with flow-control using [bluebird](https://github.com/petkaantonov/bluebird).
+Studio makes easy to create code without ANY dependency between your services, so you can deploy all in a single machine or just easily change to each one in a different machine or anything in between. It also enables operations timeouts, zero-downtime reload, let-it-crash approach (stop to be afraid of exceptions, Studio handles it to you), plugins and makes it nearly impossible to falls in a callback hell. Supports any web framework (we have examples with express) and helps you with flow-control using [bluebird](https://github.com/petkaantonov/bluebird).
 
-Studio encourages you to use the best pratices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.
+Studio encourages you to use the best practices of nodejs, it helps you to write simple, clean and completely decoupled code. And makes it very easy and fun.
 
 First of all, everything in a Studio-based application is a service.
 
@@ -77,15 +77,15 @@ Why
 
 Now you might be wondering why systems created with Studio can be called a reactive system. As stated by the [reactive manifesto](http://www.reactivemanifesto.org/), reactive systems are those who follow 4 principles:
 
-- Reponsive : 
+- Responsive : 
 > Responsive systems focus on providing rapid and consistent response times, establishing reliable upper bounds so they deliver a consistent quality of service.
 
-Using Studio you just add a thin layer over your functions without comprimising the responsiveness while giving you the power to interact with your application in runtime as in [aspect-oriented programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming)
+Using Studio you just add a thin layer over your functions without compromising the responsiveness while giving you the power to interact with your application in runtime as in [aspect-oriented programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming)
 
 - Resilient :
 > The system stays responsive in the face of failure. This applies not only to highly-available, mission critical systems any system that is not resilient will be unresponsive after a failure. 
 
-This is critical for thoses using nodejs, Studio enforces you to use the best pratices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind it also makes easy to add redundance
+This is critical for thoses using nodejs, Studio enforces you to use the best practices to avoid your process or any of workers to crash. And as all your services are written with async flow in mind it also makes easy to add redundance
 
 - Elastic : 
 > The system stays responsive under varying workload.
@@ -192,7 +192,7 @@ Follow the link to see all available [examples](https://github.com/ericholiveira
 
 Studio works with any web framework.
 
-Here i'm going to put just a basic hello world with express, on [examples](https://github.com/ericholiveira/studio/tree/master/examples) folder you can see the best pratices and more pratical examples ( with promises, errors, filters...):
+Here i'm going to put just a basic hello world with express, on [examples](https://github.com/ericholiveira/studio/tree/master/examples) folder you can see the best practices and more practical examples ( with promises, errors, filters...):
 ```js
 var express = require('express');
 var Studio = require('studio'); //require Studio namespace
@@ -363,7 +363,7 @@ Plugins lets you have full control of whats going on with your services, this wa
 	Studio.use(MY_SUPER_COOL_PLUGIN);
 ```
 
-Plugins can listen to services creation and destruction(this way you can intercept messages). The officially mantained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
+Plugins can listen to services creation and destruction(this way you can intercept messages). The officially maintained plugins are available under Studio.plugin parameter. You can check the [tests folder](https://github.com/ericholiveira/studio/tree/master/tests) to understand better how to use plugins.
 
 Studio.use method also receives an optional second parameter to filter the services that are going to receive the plugin this filter can be a string (to match only the service with that name), a regular expression, an array of strings or a function as:
 
