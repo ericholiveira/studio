@@ -5,7 +5,7 @@ describe("Timer plugin",function(){
     it("must calculate time timeout and reports no error",function(done){
         Studio.use(Studio.plugin.timer(function(res){
             expect(res.receiver).to.equal('plugin_timer/noop');
-            expect(res.time).to.gt(-1);
+            expect(res.time).to.gt(3);
             var u = expect(res.err).to.be.undefined;
             done();
         }),'plugin_timer/noop');

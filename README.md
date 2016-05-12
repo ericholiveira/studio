@@ -450,26 +450,32 @@ Real time metrics
 =================
 
 One of the cool things you can do with Studio plugins is to have real time metrics of all your services, if you want to log
-the time needed to execute on every call of every service you can do it easily with the timer plugin. This plugin also
-shows you the power you can take from custom plugin and [aspect programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming)
+the time needed to execute every call of every service you can do it easily with the timer plugin. This plugin also
+shows you the power you can get from a custom plugin and [aspect-oriented programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+The timer plugin uses process.hrtime() for sub-millisecond precision.
 
 ```js
 var Studio = require('studio');
+
 Studio.use(Studio.plugin.timer(function(res){
     /*
-    here you define what to do with the execution info, now we are going just to print in the console, but
-    in production you probably will wants to send it to statsd of some other metric aggregator
-    */
-    console.log(res);//Prints the time taken on service execution and other infos
+     * Here you define what to do with the execution info, now we are going just to print in the console, but
+     * in production you could send it to statsd or some other metric aggregator.
+     */
+    console.log('The receiver %s took %d ms to execute', res.receiver, res.time);
 }));
+
 Studio(function myService(){
 	var randomTime = Math.floor(Math.random()*100);
+
+    // Time in milliseconds
     return Studio.promise.delay(randomTime);
-});//Time in milliseconds
+});
 
 var myServiceRef = Studio('myService');
 
-setInterval(myServiceRef,500);
+setInterval(myServiceRef, 500);
 ```
 
 Cluster
