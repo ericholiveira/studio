@@ -37,6 +37,7 @@ Table of contents
 - [Modules / namespacing](#modules)
 - [Co / Generators and flow-control](#generators)
 - [Proxy](#proxy)
+- [Es6 Class](#es6-class)
 - [Plugins](#plugins)
 - [Filters](#filters)
 - [Timeouts](#timeouts)
@@ -353,6 +354,33 @@ allServices.myFirstServiceWithGenerator().then(function(result){
 });
 ```
 
+Es6 Class
+========
+
+If you're running on node >=4 or using --harmony flag, you can create your services easier:
+```js
+var Studio = require('studio');
+class Foo{
+	bar(){
+		return this.hello();
+	}
+	hello(){
+		return 'hello';
+	}
+	useExternal(){
+		var someExternalService = Studio('someExternalService');
+		return someExternalService();
+	}
+}
+Studio.serviceClass(Foo);
+
+//To acess from outside or other classes
+var fooModule = Studio('Foo');
+var barService = fooModule('bar')
+barService();
+```
+
+This way Studio automatically creates a namespace with the class name and a service for each function of this class
 
 Plugins
 ========
@@ -465,9 +493,11 @@ From Zero To Hero
 
 I've also started a series of posts on my medium explaining the motivation and creating a small project with studio
 
-[Nodejs microservices. From Zero to Hero Pt1](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt1-279548cb4080)
+[Nodejs microservices. From Zero to Hero Pt1 - Motivation](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt1-279548cb4080)
 
-[Nodejs microservices. From Zero to Hero Pt2](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt2-72fbb2a1b1c4#.dpz6adn7c)
+[Nodejs microservices. From Zero to Hero Pt2 - Basic Usage](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt2-72fbb2a1b1c4#.dpz6adn7c)
+
+[Nodejs microservices. From Zero to Hero Pt3 - Plugins and cluster](https://medium.com/@ericholiveira/nodejs-microservices-from-zero-to-hero-pt1-plugins-and-clustering-ddb60e9a8ee0#.v3m1jh2l5)
 
 Dependencies
 ========
