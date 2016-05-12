@@ -1,8 +1,8 @@
 var calculateResult = function(start,receiver,err){
   "use strict";
-    var end = Date.now();
+    var end = process.hrtime(start);
     return {
-        time:end - start,
+        time:(end[0] * 1e9 + end[1]) / 1e6,
         receiver:receiver,
         err:err
     };
@@ -13,7 +13,7 @@ module.exports = function(fn) {
         options.onStart(function (serv) {
             var _fn = serv.fn;
             serv.fn = function(){
-              var start = Date.now();
+              var start = process.hrtime();
               return _fn.apply(serv,arguments).then(function (res) {
                 fn(calculateResult(start,serv.id));
                 return res;
