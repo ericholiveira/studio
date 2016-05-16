@@ -375,8 +375,8 @@ class Foo{
 Studio.serviceClass(Foo);
 
 //To acess from outside or other classes
-var fooModule = Studio('Foo');
-var barService = fooModule('bar')
+var fooModule = Studio.module('Foo');
+var barService = fooModule('bar');
 barService();
 ```
 
