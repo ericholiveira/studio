@@ -18,7 +18,9 @@ Studio isn't only a library, it's a framework. It's really important to learn ho
 I would love to receive feedback.Let me know if you've used it. What worked and what is wrong. Contribute and spread the word.
 
 
-Wants to learn more???? Join our slack channel: https://studiojs.slack.com/admin/shared_invites
+Wants to learn more???? Click here to join our slack channel 
+
+[![Join the StudioJS chat](https://studiojs.herokuapp.com/badge.svg)](https://studiojs.herokuapp.com/)
 
 [![Build Status](https://travis-ci.org/ericholiveira/studio.svg?branch=master)](https://travis-ci.org/ericholiveira/studio)
 [![npm version](https://badge.fury.io/js/studio.svg)](http://badge.fury.io/js/studio)
@@ -375,8 +377,8 @@ class Foo{
 Studio.serviceClass(Foo);
 
 //To acess from outside or other classes
-var fooModule = Studio('Foo');
-var barService = fooModule('bar')
+var fooModule = Studio.module('Foo');
+var barService = fooModule('bar');
 barService();
 ```
 
