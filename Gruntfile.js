@@ -5,7 +5,7 @@ grunt.loadNpmTasks('grunt-release');
 grunt.loadNpmTasks('grunt-exec');
 grunt.loadNpmTasks('grunt-mocha-test');
 grunt.loadNpmTasks('grunt-istanbul');
-
+grunt.loadNpmTasks('grunt-browserify');
 grunt.initConfig({
 	watch: {
 		scripts: {
@@ -68,8 +68,14 @@ grunt.initConfig({
 	},
 	exec: {
 		express: 'node --debug examples/hello-express/index.js'
+	},
+	browserify: {
+	  dist: {
+	    files: {
+	      'browser/studio-with-dependecies.js': ['src/**/*.js']
+	    }
+	  }
 	}
-
 });
 grunt.registerTask("cov-test", [ "instrument","mochaTest:cov", 'storeCoverage','makeReport']);
 grunt.registerTask("test", ["mochaTest:test"]);

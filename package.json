@@ -38,6 +38,7 @@
     "co": "^4.5.1",
     "express": "^4.13.3",
     "grunt": "0.4.x",
+    "grunt-browserify": "^5.0.0",
     "grunt-cli": "0.1.13",
     "grunt-concurrent": "1.0.0",
     "grunt-contrib-copy": "0.8.2",
