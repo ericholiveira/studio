@@ -26,18 +26,24 @@ var _Studio= {
       "use strict";
         var result = function(options,extra){
             if(typeof options === 'string'){
-                return _Studio.ref(moduleName+'/'+options,extra);
+                return result.ref(options,extra);
             }
-            if(!options.id && !options.name) throw exception.ServiceNameOrIdNotFoundException();
-            options.id = options.id || options.name;
-            options.id = moduleName+'/'+options.id;
-            return _Studio.service(options,extra);
+            return result.service(options,extra);
         };
         copyStudioProperties(result);
         result.module=function(module2){
           return _Studio.module(moduleName+'/'+module2);
         };
         result._moduleName = moduleName;
+        result.service = function(options,extra){
+            if(!options.id && !options.name) throw exception.ServiceNameOrIdNotFoundException();
+            options.id = options.id || options.name;
+            options.id = moduleName+'/'+options.id;
+            return _Studio.service(options,extra);
+        };
+        result.ref = function(options,extra){
+            return _Studio.ref(moduleName+'/'+options,extra);
+        };
         return result;
     },
     use : function(plugin,filter){

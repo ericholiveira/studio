@@ -11,6 +11,14 @@ describe("Modules",function(){
             id:name,
             fn: function(){}
         });
+        Studio.module('module_test_SERV_1').service({
+            id:name,
+            fn: function(){}
+        });
+        Studio.module('module_test_SERV_2').service({
+            id:name,
+            fn: function(){}
+        });
         expect(true).to.equal(true);
     });
 
