@@ -71,7 +71,7 @@ Studio encourages you to use the best practices of nodejs, it helps you to write
 
 First of all, everything in a Studio-based application is a service.
 
-So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON services. Services have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your servers to different servers and make a better use of it. Also, your services have the free benefit of deep copying the parameters before the message is delivered (so one service can't mess with the objects of another service) increasing your code security.
+So if you're used to build SOA or micro-services all your services (and possible layers, as DAOs for instance) are going to be declared as a STATELESS SINGLETON services. Services have an unique identifier and communicate (always) asynchronously through message passing. The benefits of this approach is that it is really easy to take just some of your services to different servers and make a better use of it. Also, your services have the free benefit of deep copying the parameters before the message is delivered (so one service can't mess with the objects of another service) increasing your code security.
 
 And this is it... this is all you need to create [reactive](http://reactivemanifesto.org) applications.
 
