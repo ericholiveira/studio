@@ -1,7 +1,7 @@
 var expect = require("chai").expect;
 var Studio = require('../src/studio');
 var StudioAll = Studio.module('all_test');
-describe("Studio.services Tests",function(){
+describe("Studio.services Tests (Proxy)",function(){
     var studioAll = StudioAll.services();
     var studio = Studio.services();
     StudioAll(function basic(){

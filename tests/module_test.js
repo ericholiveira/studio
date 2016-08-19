@@ -1,6 +1,6 @@
 var expect = require("chai").expect;
 var Studio = require('../src/studio');
-describe("Modules",function(){
+describe("Studio modules",function(){
     it("must let services with same name from being created in different modules",function(){
         var name = 'name';
         Studio.module('module_test_1')({

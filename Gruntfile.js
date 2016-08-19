@@ -1,4 +1,5 @@
 var grunt = require("grunt");
+
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-contrib-jshint');
 grunt.loadNpmTasks('grunt-release');
@@ -6,6 +7,7 @@ grunt.loadNpmTasks('grunt-exec');
 grunt.loadNpmTasks('grunt-mocha-test');
 grunt.loadNpmTasks('grunt-istanbul');
 grunt.loadNpmTasks('grunt-browserify');
+
 grunt.initConfig({
 	watch: {
 		scripts: {
@@ -77,6 +79,7 @@ grunt.initConfig({
 	  }
 	}
 });
+
 grunt.registerTask("cov-test", [ "instrument","mochaTest:cov", 'storeCoverage','makeReport']);
 grunt.registerTask("test", ["mochaTest:test"]);
 grunt.registerTask("coverage", ["jshint","cov-test"]);

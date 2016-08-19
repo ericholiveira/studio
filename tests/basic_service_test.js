@@ -1,7 +1,7 @@
 var expect = require("chai").expect;
 var Studio = require('../src/studio');
 
-describe("Basic Tests",function(){
+describe("Basic Service Tests",function(){
     var _basic = Studio.service(function basic(){
         return true;
     });
