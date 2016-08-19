@@ -1,9 +1,37 @@
 var key;
 var exception= require('./exception');
 var isGeneratorFunction = require('./util/generator').isGeneratorFunction;
+/** 
+    @module Studio
+    This is the main object exposing all Studio methods
+*/
 var _Studio= {
     router: require('./router'),
     service: require('./service'),
+    /** @function
+    * @name serviceClass
+    * @desc Create a service for each method of a given es6 Class.
+    * The class MUST support an empty constructor and the methods can call other methods of this
+    * The class name will become a module on Studio.
+    * class using this
+    * @param {Class} _class. An es6 class
+    * @return {Object} An instance of this class with all their methods loaded by Studio
+    * @example
+    * class FooBar{
+    *   foo(param){
+    *       return this.bar(param);
+    *   }
+    *   bar(param){
+    *       return param+' says FooBar';
+    *   }
+    * }
+    * Studio.serviceClass(FooBar);// Loads all methods
+    * let fooBarModule = Studio.module('FooBar');
+    * let fooService = fooBarModule('foo');
+    * fooService('John').then((result)=>{
+    *   console.log(result); // Prints 'John says FooBar'
+    * });
+    */ 
     serviceClass : function(_class){
         var _module = this.module(_class.name);
         var _instance = new _class();
@@ -19,8 +47,27 @@ var _Studio= {
         });
         return _instance;
     },
+    /** Studio exposes Bluebird promises */
     promise: require('bluebird'),
+    /** All internal Studio exceptions */
     exception: exception,
+    /** @function
+    * @name defer
+    * @desc Enables the support of node-style callbacks inside a generator (es6 only).
+    * This function doesnt receive any parameter, think of this as flag for Studio to
+    * wait for the result of a callback without stoping the event loop. MUST be used with
+    * the 'yield' keyword
+    * @example
+    * let fs = require('fs');
+    * Studio(function * readFile(fileName){
+    *   let fileContent = yield fs.readFile(fileName,Studio.defer()); //Studio.defer() instead of a callbakc
+    *   return fileContent;
+    * });
+    * let readFileService = Studio('readFile');
+    * readFileService('foo.txt').then((result)=>{
+    *   console.log(result); // Prints the content of foo.txt
+    * });
+    */ 
     defer:require('./util/promise_handlers'),
     module:function(moduleName){
       "use strict";
