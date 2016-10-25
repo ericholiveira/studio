@@ -18,14 +18,20 @@ describe("Retry plugin",function(){
     });
 
     var retry1NoFilter_RetryCount = 0;
-    Studio(function retry1NoFilter(){
+    var retry1NoFilter_Param1,retry1NoFilter_Param2;
+    Studio(function retry1NoFilter(param1,param2){
+        retry1NoFilter_Param1 = param1;
+        retry1NoFilter_Param2 = param2;
         retry1NoFilter_RetryCount++;
         throw new Error('noRetry');
     }).retry({max:1});
     var retry1NoFilterService = Studio('retry1NoFilter');
     it("must retry without filters one time",function(done){
-        retry1NoFilterService().then(done).catch(function(e){
+        var param1 ='abc',param2=3;
+        retry1NoFilterService(param1,param2).then(done).catch(function(e){
             expect(retry1NoFilter_RetryCount).to.equal(2);
+            expect(retry1NoFilter_Param1).to.equal(param1);
+            expect(retry1NoFilter_Param2).to.equal(param2);
             done();
         });
     });
@@ -95,4 +101,93 @@ describe("Retry plugin",function(){
         });
     });
 
+
+    var retry1BeforeCall = Studio('retry1BeforeCall');
+    var retry1BeforeCall_Param1,retry1BeforeCall_Param2;
+    it("must call a function before running the service",function(done){
+        var now = new Date().getTime();
+        var param1 ='abc',param2=3;
+        var beforeInfo;
+        Studio(function retry1BeforeCall(param1,param2){
+            retry1BeforeCall_Param1 = param1;
+            retry1BeforeCall_Param2 = param2;
+            throw new Error('');
+        }).retry({max:1,beforeCall:function(options){
+            beforeInfo= options;
+        }});
+        retry1BeforeCall(param1,param2).then(done).catch(function(e){
+            expect(beforeInfo.service).to.equal('plugin_retry/retry1BeforeCall');
+            expect(beforeInfo.params[0]).to.equal(param1);
+            expect(beforeInfo.params[1]).to.equal(param2);
+            expect(beforeInfo.initialTimestamp).to.gte(now);
+            expect(beforeInfo.success).to.equal(null);
+            expect(beforeInfo.error).to.equal(null);
+            expect(beforeInfo.status).to.equal('PROCESSING');
+            expect(beforeInfo.finalTimestamp).to.equal(null);
+            expect(retry1NoFilter_Param1).to.equal(param1);
+            expect(retry1NoFilter_Param2).to.equal(param2);
+            done();
+        });
+    });
+
+
+    var retry1AfterCallService = Studio('retry1AfterCall');
+    var retry1AfterCall_Param1,retry1AfterCall_Param2;
+    it("must call a function after running the service on success",function(done){
+        var now = new Date().getTime();
+        var param1 ='abc',param2=3;
+        var afterInfo;
+        Studio(function retry1AfterCall(param1,param2){
+            retry1AfterCall_Param1 = param1;
+            retry1AfterCall_Param2 = param2;
+            return 'hello';
+        }).retry({max:1,afterCall:function(options){
+            afterInfo= options;
+        }});
+        retry1AfterCallService(param1,param2).then(function(res){
+            expect(afterInfo.service).to.equal('plugin_retry/retry1AfterCall');
+            expect(afterInfo.params[0]).to.equal(param1);
+            expect(afterInfo.params[1]).to.equal(param2);
+            expect(afterInfo.initialTimestamp).to.gte(now);
+            expect(afterInfo.success).to.equal('hello');
+            expect(afterInfo.error).to.equal(null);
+            expect(afterInfo.status).to.equal('SUCCESS');
+            expect(afterInfo.finalTimestamp).to.gte(now);
+            expect(retry1NoFilter_Param1).to.equal(param1);
+            expect(retry1NoFilter_Param2).to.equal(param2);
+            expect(res).to.equal('hello');
+            done();
+        });
+    });
+
+
+
+    var retry1AfterCallErrorService = Studio('retry1AfterCallError');
+    var retry1AfterCallError_Param1,retry1AfterCallError_Param2;
+    it("must call a function after running the service on error",function(done){
+        var now = new Date().getTime();
+        var param1 ='abc',param2=3;
+        var afterInfo;
+        Studio(function retry1AfterCallError(param1,param2){
+            retry1AfterCallError_Param1 = param1;
+            retry1AfterCallError_Param2 = param2;
+            throw new Error('error');
+        }).retry({max:1,afterCall:function(options){
+            afterInfo= options;
+        }});
+        retry1AfterCallErrorService(param1,param2).catch(function(e){
+            expect(afterInfo.service).to.equal('plugin_retry/retry1AfterCallError');
+            expect(afterInfo.params[0]).to.equal(param1);
+            expect(afterInfo.params[1]).to.equal(param2);
+            expect(afterInfo.initialTimestamp).to.gte(now);
+            expect(afterInfo.success).to.equal(null);
+            console.error(afterInfo.error);
+            expect(afterInfo.error.message).to.equal('error');
+            expect(afterInfo.status).to.equal('ERROR');
+            expect(afterInfo.finalTimestamp).to.gte(now);
+            expect(retry1AfterCallError_Param1).to.equal(param1);
+            expect(retry1AfterCallError_Param2).to.equal(param2);
+            done();
+        });
+    });
 });
