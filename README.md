@@ -44,6 +44,7 @@ Table of contents
 - [Filters](#filters)
 - [Timeouts](#timeouts)
 - [Realtime metrics](#realtime-metrics)
+- [Retry](#retry)
 - [Clustering](#cluster)
 - [TODO](#todo)
 - [Pro tips](#pro-tips)
@@ -479,6 +480,59 @@ var myServiceRef = Studio('myService');
 
 setInterval(myServiceRef, 500);
 ```
+
+Retry
+=====
+
+Studio supports retry a service call in the occurrence of error.
+
+```js
+var Studio = require('studio');
+
+Studio.use(Studio.plugin.retry());
+
+Studio(function myService(){
+	throw new Error('');
+}).retry({max:2});
+
+var myServiceRef = Studio('myService');
+
+setInterval(myServiceRef, 500);
+```
+
+It supports multiple configurations, and all can be applied for all services and overriden for individual services.
+
+```js
+var Studio = require('studio');
+
+Studio.use(Studio.plugin.retry({max:3})); //set the service to retry 3 times as default 
+
+Studio(function myService(){
+	throw new Error('');
+}).retry({max:2}); //set the service to retry 2 times
+
+Studio(function myOtherService(){
+	throw new Error('');
+}).retry();//set the service to retry. Will use the default max attempts 
+
+Studio(function yetAnotherService(){
+	throw new Error('');
+}); // this service will never retry (YOU MUST CALL .retry() to enable retry)
+
+var myServiceRef = Studio('myService');
+
+setInterval(myServiceRef, 500);
+```
+
+
+Name                | Description                                                                                                      | Default
+--------------------|------------------------------------------------------------------------------------------------------------------|---------------
+max                 | Number of retry attempts                                                                                         | 0
+filter              | A function to filter certain errors from retry (must return a boolean)                                           | retry for all errors
+initialInterval     | Interval between retries                                                                                         | 0
+factor              | A multiplication factor between retries                                                                          | 1
+beforeCall          | Function called BEFORE every service call, can be used to support stateful retries                               | -
+afterCall           | Function called AFTER all retries, can be used to support stateful retries (called on both, success and failures | -
 
 Cluster
 ========
