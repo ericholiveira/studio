@@ -1,3 +1,4 @@
+/*jshint -W054 */
 var isNode=new Function("try {return this===global;}catch(e){return false;}");
 var calculateResult = function(start,receiver,err){
   "use strict";
