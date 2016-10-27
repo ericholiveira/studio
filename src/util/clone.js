@@ -46,7 +46,12 @@ var clone = function(obj) {
     if (obj instanceof Array) {
         return cloneArray(obj);
     }
-    newInstance = new obj.constructor();
+    if (typeof obj.constructor === 'function') {
+        newInstance = new obj.constructor();
+    } else {
+        newInstance = {};
+    }
+    
     return cloneProperties(newInstance,obj);
 };
 
