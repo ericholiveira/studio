@@ -125,7 +125,7 @@ myFirstServiceRef().then(function(result){
 });
 ```
 
-Your service can receive any number of arguments
+Your service can receive any number of arguments.
 And also, you can get a reference to a service even if it was not instantiated yet (you only need it when calling) as in:
 
 
