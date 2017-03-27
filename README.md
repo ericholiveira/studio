@@ -188,6 +188,12 @@ allServices.myFirstServiceWithGenerator().then(function(result){
 });
 ```
 
+You can enable Studio logs via environment variable:
+```bash
+DEBUG=Studio node my-studio-app.js
+```
+
+
 Examples
 ========
 
