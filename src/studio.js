@@ -1,5 +1,6 @@
 var key;
 var exception= require('./exception');
+var logging= require('./logging');
 var isGeneratorFunction = require('./util/generator').isGeneratorFunction;
 /** 
     @module Studio
@@ -114,6 +115,7 @@ var _Studio= {
     */
     module:function(moduleName){
       "use strict";
+        logging.instance.log('Created module '+moduleName);
         var result = function(options,extra){
             if(typeof options === 'string'){
                 return result.ref(options,extra);
@@ -122,11 +124,15 @@ var _Studio= {
         };
         copyStudioProperties(result);
         result.module=function(module2){
+          logging.instance.log('Created module '+moduleName+'/'+module2);
           return _Studio.module(moduleName+'/'+module2);
         };
         result._moduleName = moduleName;
         result.service = function(options,extra){
-            if(!options.id && !options.name) throw exception.ServiceNameOrIdNotFoundException();
+            if(!options.id && !options.name) {
+              logging.instance.error('Throwing error ServiceNameOrIdNotFoundException');
+              throw exception.ServiceNameOrIdNotFoundException();
+            }
             options.id = options.id || options.name;
             options.id = moduleName+'/'+options.id;
             return _Studio.service(options,extra);
@@ -153,6 +159,7 @@ var _Studio= {
     * }]);// Enables otherPlugin4 only for services which names satisfies ANY filter in the array
     */
     use : function(plugin,filter){
+        logging.instance.log('%{nameSpace} use a new plugin');
         var self = this;
         return plugin({
             onStart:function(listener){require('./util/listeners').addOnStartListener(listener,filter,self._moduleName);},
@@ -230,5 +237,6 @@ function copyStudioProperties(destination){
 }
 copyStudioProperties(Studio);
 
+logging.instance.log('Importing %{nameSpace}');
 Studio.use(require('./plugin/filter'));
 module.exports=Studio;

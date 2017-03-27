@@ -25,6 +25,7 @@
   "main": "./src/studio.js",
   "dependencies": {
     "bluebird": "^3.2.2",
+    "debug": "^2.6.3",
     "harmony-proxy": "^1.0.0"
   },
   "scripts": {

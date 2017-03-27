@@ -1,6 +1,7 @@
 var router = require('./router');
 var _Promise = require('bluebird');
 var ref = require('./ref');
+var logging= require('./logging');
 var exceptions = require('./exception');
 var listeners = require('./util/listeners');
 var generatorUtil = require('./util/generator');
@@ -18,9 +19,16 @@ module.exports = function serviceFactory(options, extra) {
             fn: _process
         };
     }
+    logging.instance.log('Creating service ' + options.name);
     options.id = options.id || options.name;
-    if (!options.id) throw exceptions.ServiceNameOrIdNotFoundException();
-    if (!options.fn) throw exceptions.ServiceFunctionNotFoundException();
+    if (!options.id){
+        logging.instance.error('Throwing error ServiceNameOrIdNotFoundException');
+        throw exceptions.ServiceNameOrIdNotFoundException();
+    }
+    if (!options.fn){
+        logging.instance.error('Throwing error ServiceNameOrIdNotFoundException');
+        throw exceptions.ServiceFunctionNotFoundException();
+    }
     serv = clone(options);
     serv.fn = generatorUtil.toAsync(serv.fn,extra.forceGenerator);
     serv.__plugin_info={};
@@ -29,10 +37,12 @@ module.exports = function serviceFactory(options, extra) {
 
     var result = ref(options.id);
     result.stop = function(){
+        logging.instance.error('Service: stop ' + options.name);
         router.deleteRoute(options.id);
         listeners.notifyStop(serv);
     };
     result.start = function(){
+        logging.instance.error('Service: start ' + options.name);
         serviceFactory(options);
     };
     serv.__plugin_info.ref = result;
