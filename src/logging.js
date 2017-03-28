@@ -1,5 +1,5 @@
 
-const Debug = require('debug');
+var Debug = require('debug');
 
 function Logger(config) {
     config = config||{};
