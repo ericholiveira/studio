@@ -1,11 +1,14 @@
 var generatorUtil = require('../util/generator');
+var logging= require('../logging');
 module.exports = function(defaultOptions){
     "use strict";
     defaultOptions = defaultOptions || {};
     return function(options,Studio){
         var filterNoOp = function(){return true;};
         var noop = function(){};
+        logging.instance.log('Plugin: creating plugin retry');
         options.onStart(function(serv,ref){
+            logging.instance.log('Plugin: retry instantiation');
             ref.retry = function(localOptions){
                 var _fn = serv.fn;
                 localOptions = localOptions || {};
@@ -15,6 +18,7 @@ module.exports = function(defaultOptions){
                 var factor = +(localOptions.factor || defaultOptions.factor || 1);
                 var beforeCall = generatorUtil.toAsync(localOptions.beforeCall || defaultOptions.beforeCall || noop);
                 var afterCall = generatorUtil.toAsync(localOptions.afterCall || defaultOptions.afterCall || noop);
+                logging.instance.log('Plugin: retry invocation ' + filter);
                 filter = filter || function(){return true;};
                 serv.fn = function(){
                     var initialTimestamp = new Date().getTime();

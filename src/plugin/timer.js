@@ -1,4 +1,5 @@
 /*jshint -W054 */
+var logging= require('../logging');
 var isNode=new Function("try {return this===global;}catch(e){return false;}");
 var calculateResult = function(start,receiver,err){
   "use strict";
@@ -14,6 +15,7 @@ module.exports = function(fn) {
     return function (options) {
       if(isNode){
         options.onStart(function (serv) {
+          logging.instance.log('Plugin: creating plugin timeout');
           var _fn = serv.fn;
           serv.fn = function(){
             var start = process.hrtime();

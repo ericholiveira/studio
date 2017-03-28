@@ -1,6 +1,7 @@
 _Promise = require('bluebird');
 clone = require('./util/clone');
 exceptions = require('./exception');
+var logging= require('./logging');
 var listeners = require('./util/listeners');
 
 var _routes ={};
@@ -19,6 +20,7 @@ Router.prototype.deleteRoute = function(id){
 
 Router.prototype.send = function(rec){
     "use strict";
+    logging.instance.log('Routing: send to ' + rec);
     if(!_sends[rec]){
         _sends[rec] = function(){
             var rt = _routes[rec];
