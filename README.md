@@ -21,6 +21,7 @@ I would love to receive feedback.Let me know if you've used it. What worked and 
 Wants to learn more???? Click here to join our slack channel 
 
 [![Join the StudioJS chat](https://studiojs.herokuapp.com/badge.svg)](https://studiojs.herokuapp.com/)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fericholiveira%2Fstudio.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fericholiveira%2Fstudio?ref=badge_shield)
 
 [![Build Status](https://travis-ci.org/ericholiveira/studio.svg?branch=master)](https://travis-ci.org/ericholiveira/studio)
 [![npm version](https://badge.fury.io/js/studio.svg)](http://badge.fury.io/js/studio)
@@ -608,3 +609,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fericholiveira%2Fstudio.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fericholiveira%2Fstudio?ref=badge_large)
